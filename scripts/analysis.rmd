@@ -1,0 +1,48 @@
+---
+title: "Plant Species Diversity"
+author: NULL
+date: NULL
+output:
+  pdf_document: default
+  word_document: default
+header-includes:
+ - \usepackage[width=\textwidth]{caption}
+always_allow_html: yes
+csl: ../citations/citations/apa.csl
+bibliography: ../citations/citations/citations.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(dpi = 300) 
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+```
+
+Information on production at Ecological Sites implies some superficial, yet essential, components of plant diversity. 
+
+```{r Import Data}
+praw <- '../data/raw'
+f <- list.files(praw, pattern = 'csv')
+
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+rm(f, praw)
+```
+
+```{r}
+
+richness_A <- richness %>% # this without 0 production
+  filter(LOWER > 0) %>% 
+  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
+  count()
+
+richness_B <- richness %>% # this with 0 production
+  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
+  count()
+
+```
+
+
