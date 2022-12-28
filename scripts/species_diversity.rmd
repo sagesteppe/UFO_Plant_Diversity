@@ -40,13 +40,15 @@ photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>%
 rm(f, praw)
 ```
 
-```{r Lookup Noxious status}
-
+```{r Lookup Noxious status, eval = F}
 
 ```
 
 
-```{r Import and Subset AIM Species Richness Data}
+```{r Import and Subset AIM Species Richness Data, eval = F}
+
+aim_spp_inventory <- read.csv(file.path(praw, f[grep('AIM', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
 
 ```
 
@@ -57,7 +59,8 @@ richness_A <- richness %>% # this where production > 0 - represents expected ric
   group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
   count()   
 
-richness_B <- richness %>% # this with 0 production - represents all core gamma richness by ESD ??
+richness_B <- richness %>% # this with 0 production - 
+  # represents all core gamma richness by ESD ??
   group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
   count()
 
@@ -81,10 +84,14 @@ richness_B <- richness %>% # this with 0 production - represents all core gamma 
 
 ```{r Join Homebrewed ESD groups to Ecological Site Descriptions}
 
+esdM <- read.csv(file.path(praw, f[grep('modules', f)]))
+
 ```
 
 
 ```{r Boxplots of different ESG with ESDs and reference standards}
+
+cols <- qualitative_hcl(9, palette = "Dark 3") # these for matching with the species diversity. 
 
 ```
 

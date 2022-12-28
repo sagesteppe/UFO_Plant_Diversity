@@ -13,9 +13,30 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+While the overall focus of the Assess, Inventory and Monitor Program is at a broad scale and seeks to be indicative of general trends of landscape status, the Inventory work has resulted in the fine resolution mapping and recording of many finer scale processes. In particular a number of rare plant occurrences have been noted over the life of the project in the UFO. 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
 knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
 ```
+
+
+
+```{r Import AIM species richness}
+praw <- '../data/raw'
+f <- list.files(praw, pattern = 'csv')
+
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+```
+
+
+```{r Import tracked Plants}
+
+read.csv(file.path(praw, f[grep('CNHP', f)]))  %>% 
+  filter(MAJORGROUP == 'Vascular Plants')
+
+```
+
