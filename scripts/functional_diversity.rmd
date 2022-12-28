@@ -1,0 +1,21 @@
+---
+title: "Functional Diversity and Benchmarks"
+author: NULL
+date: NULL
+output:
+  pdf_document: default
+  word_document: default
+header-includes:
+ - \usepackage[width=\textwidth]{caption}
+always_allow_html: yes
+csl: ../citations/citations/apa.csl
+bibliography: ../citations/citations/citations.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(dpi = 300) 
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+```

@@ -1,0 +1,100 @@
+---
+title: "Plant Species Diversity"
+author: NULL
+date: NULL
+output:
+  pdf_document: default
+  word_document: default
+header-includes:
+ - \usepackage[width=\textwidth]{caption}
+always_allow_html: yes
+csl: ../citations/citations/apa.csl
+bibliography: ../citations/citations/citations.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(dpi = 300) 
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+```
+
+Information on production at Ecological Sites implies some superficial, yet essential, components of plant diversity. 
+
+```{r Import Data}
+praw <- '../data/raw'
+f <- list.files(praw, pattern = 'csv')
+
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+```
+
+```{r Lookup Grass and Shrub Status}
+
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
+  rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' ))
+
+rm(f, praw)
+```
+
+```{r Lookup Noxious status}
+
+
+```
+
+
+```{r Import and Subset AIM Species Richness Data}
+
+```
+
+```{r Filter Reference Datasets}
+
+richness_A <- richness %>% # this where production > 0 - represents expected richness for a site
+  filter(LOWER > 0) %>% 
+  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
+  count()   
+
+richness_B <- richness %>% # this with 0 production - represents all core gamma richness by ESD ??
+  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
+  count()
+
+
+
+
+# How many plots meet A for each standard ? And where do they sit relative to B ?
+
+# Let us split out Grass, into C3, C4, and annual - three categories
+# perhaps also split out Shrub into (resprout) and (non-resprout) / or narrow leaf / broadleaf
+
+
+# let us split out forbs into native and non-native
+# Create a facet wrap of each major functional group
+# - Shrub (resprout), Shrub (non-resprout),  - and then colour by ESD group.
+
+# so cols = TREE, SHRUB (NS), SHRUB (S), PG - C3, PG - C4, AG, PERENNIAL FORB, ANNUAL FORB,   
+
+```
+
+
+```{r Join Homebrewed ESD groups to Ecological Site Descriptions}
+
+```
+
+
+```{r Boxplots of different ESG with ESDs and reference standards}
+
+```
+
+
+```{r clean environment}
+
+```
+
+
+
+
+
+

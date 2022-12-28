@@ -1,0 +1,7 @@
+ls | awk '{printf("\"%s\"\n", $0)}' | sed 'p; s/\ /_/g' | xargs -n2 mv # replace all spaces in filenames with underscores
+
+
+for i in $(ls *.pdf); do
+	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
+-dNOPAUSE -dQUIET -dBATCH -sOutputFile=$(basename $i .pdf)_150dpi.pdf $i  ; rm $i
+done # reduce size of pdf files to 150, write a block to strip -dpi150

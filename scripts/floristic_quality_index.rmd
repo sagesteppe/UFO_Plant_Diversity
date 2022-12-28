@@ -1,0 +1,23 @@
+---
+title: "Floristic Quality Index"
+author: NULL
+date: NULL
+output:
+  pdf_document: default
+  word_document: default
+header-includes:
+ - \usepackage[width=\textwidth]{caption}
+always_allow_html: yes
+csl: ../citations/citations/apa.csl
+bibliography: ../citations/citations/citations.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(dpi = 300) 
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+```
+
+ https://cnhp.colostate.edu/download/documents/2020/CO_FQA_2020_Final_Report.pdf https://cnhp.colostate.edu/download/documents/cwic_docs/FQA_calculations.pdf r package here : https://github.com/equitable-equations/fqar
