@@ -13,10 +13,28 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+Floristic Quality Assessments (FQI) utilize the presence of vascular plant species in an area as indicators of the quality of the habitat. The fundamental assumption guiding the use of plants as indicators of habitat quality is that different species respond differently to the types and frequencies of disturbance. At one end of this spectrum are species which are able to persist, or may introduced to an area, after certain types of disturbance - e.g. compaction of soil via heavy vehicles. On the other end of the spectrum are taxa which may only grow in areas which receive episodic disturbances characteristic of their ecosystem - e.g. a 100 year flood in a wetland. The subjectively estimated likelihood of a species either persisting, or being removed from a site due to disturbance is expressed as a Conservatism Value (C-Value). C-Values range from 1 to 10 for plants native to North America, and 0 for plants introduced to the continent by since colonization by European Settlers, with highly disturbance tolerant plants being at the upper end of the spectrum. 
 
-Floristic Quality Assessments (FQI) utilize the vascular plant species which are present at a plot as indicators of the quality of the habitat. The fundamental assumption underlaying the use of plants as indicators is that different species respond differently in response to disturbances. Many species are able to persist, or become more common, at sites after a certain type of disturbance. On either end of this situation are species which may persist or become more common at sites due to multiple disturbances, or which may be removed entirely from a site. The subjectively estimated likelihood of a species either persisting, or being removed from a site due to disturbance is expressed as a *C-score* along a range of 1-10, wherin a lower value indicates...
 
-The use of FQI are uncommon in the Bureau of Land Management, perhaps in part due to the FQI originating in the Midwest, and the assignment of C-scores being a task which requires considerable amounts of human resources. In fact, Colorado is one of the few states with significant surface lands administered by the BLM which has C-Scores; additionally BLM CO staff assisted in developing these scores. A further requirement which hampers the utilization of these metrics are that each individual plant species, often times including subspecies, is assigned a separate C-Score,  the number of land management professionals which are capable of distinguishing taxa at these resolutions are limited (CITE). *Additional challenges with the utilization of C-scores are that they may ignore the potential of the Ecological Site to support varying vegetations*
+$$
+\overline{C} = \frac{\sum{} C_i}{S}
+$$
+
+Where: 
+  * $\overline{C}$ is the *mean coefficient of conservatism*, or for short *Mean C*
+  * $S$ is the number of species included in the calculation
+  * $C_i$ in particular $C$ is the Conservatism Value (C-Value), for each *$_i$*of the $S$ at the site
+  * $\sum{}$ is an operator, meaning that we will calculate the sum of all C-Values, $C$
+  
+$$
+\text{Floristic Quality Index} = \overline{C} * (\sqrt{S})
+$$
+Where:
+  * 
+
+The use of FQI are uncommon in the Bureau of Land Management, perhaps in part due to the FQI originating in the Midwest, and the assignment of C-scores being a task which requires considerable amounts of human resources (@spyreas2019floristic). In fact, Colorado is one of only two states with significant surface lands administered by the BLM which has existing C-Scores for every documented member of it's flora (@spyreas2019floristic); additionally BLM Colorado staff, including the lead state botanist, assisted in developing these scores (@cnhp2020fqi).
+
+A further requirement which hampers the utilization of these metrics are that each individual plant species, often times including subspecies, is assigned a separate C-Score,  the number of land management professionals which are capable of distinguishing taxa at these resolutions are limited (@kramer2015report, @ahrends2011conservation, @morrison2016observer). *Additional challenges with the utilization of C-scores are that they may ignore the potential of the Ecological Site to support varying vegetations*
 
 FQI are composed of several related metrics... Here we briefly perform the calculations on a range of them... We then utilize weighted analyses, similar to how we processed the AIM core indicators, to identify the floristic quality of our major strata of management interest. 
 
@@ -28,11 +46,9 @@ knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
 ```
 
- https://cnhp.colostate.edu/download/documents/2020/CO_FQA_2020_Final_Report.pdf
+https://cnhp.colostate.edu/download/documents/2020/CO_FQA_2020_Final_Report.pdf
  
- https://cnhp.colostate.edu/download/documents/cwic_docs/FQA_calculations.pdf r package here : https://github.com/equitable-equations/fqar
- 
- 
+https://cnhp.colostate.edu/download/documents/cwic_docs/FQA_calculations.pdf 
  
 ```{r Import AIM Data on raw LPI drops and Species Richness}
 praw <- '../data/raw'
