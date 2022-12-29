@@ -55,6 +55,9 @@ usda
 
 ###############################################################################
 # Access CNHP FQA Metrics
+# these are in a microsoft table, we just ripped them out using OPEN SOURCE
+# SOFTWARE. We should really have a discussion on why non-military branches of 
+# the gov't use software which cost a taxpayer money to use. 
 
 # In terminal the following is run: 
 # sudo apt install mdbtools
@@ -62,3 +65,21 @@ usda
 # mdb-tables FQA_calculator_2022_07_12.accdb # find all tables in the DB
 # mdb-count FQA_calculator_2022_07_12.accdb tFQASpeciesList_lu # how many records are there?
 # mdb-export FQA_calculator_2022_07_12.accdb tFQASpeciesList_lu > ../C-Values_export.csv # write out the results
+
+cvals <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>% 
+  select(National_USDASymbol, starts_with('FQA'), National_SciName_noAuthority, 
+         Ack_SciName_noAuthority, USDA_Duration, -'FQA_C-Value2006') %>% 
+  drop_na(FQA_Species)
+
+write.csv(cvals, file.path(ppro, 'C-Values_Table.csv'))
+
+
+
+
+
+
+
+
+
+
+
