@@ -13,6 +13,8 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
@@ -22,12 +24,24 @@ knitr::opts_chunk$set(warning = F)
 
 Information on production at Ecological Sites implies some superficial, yet essential, components of plant diversity. 
 
-```{r Import Data}
-praw <- '../data/raw'
-f <- list.files(praw, pattern = 'csv')
+### run analyses for both LPI and SR, most of these things are pretty much dirt common and should be found on lines without much hassle !?
 
-richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
-  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+```{r paths and files}
+praw <- '../data/raw'
+ppro <- '../data/processed'
+f <- list.files(praw, pattern = 'csv')
+fp <- list.files(ppro, pattern = 'csv')
+```
+
+```{r Import Data for both Species Richness and LPI, eval = F}
+
+aim_rich <- read.csv(file.path(ppro, fp[grep('AIM_Rich', fp)]))
+
+aim_lpi <- read.csv(file.path(ppro, fp[grep('AIM_LPI', fp)]))
+
+esds <- read.csv(file.path(praw, f[grep('Plot.*ESD', f)])) %>% drop_na()
+
+# aim_data <-  # CREATE BOOLEAN COLUMN, 1 = ON LPI, 0 - MISSING FROM LPI - 
 
 ```
 
@@ -35,36 +49,40 @@ richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>%
 
 photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
   rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
-  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' ))
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
 
-rm(f, praw)
+# %>%  
+  #left_join(, photosynthetic, by = 'SYMBOL')
+
+rm(f, praw, photosynthetic)
 ```
 
-```{r Lookup Noxious status, eval = F}
+```{r Lookup Nativity status, eval = F}
 
+nativity <- read.csv(file.path(ppro, fp[grep('Native', fp)]))
+
+# %>%  
+  #left_join(, photosynthetic, by = 'SYMBOL')
+
+rm(nativity)
 ```
 
-
-```{r Import and Subset AIM Species Richness Data, eval = F}
-
-aim_spp_inventory <- read.csv(file.path(praw, f[grep('AIM', f)])) %>% 
-  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
-
-```
 
 ```{r Filter Reference Datasets}
 
-richness_A <- richness %>% # this where production > 0 - represents expected richness for a site
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+# this where production > 0 - represents expected richness for a site
+production_zero <- richness %>% 
   filter(LOWER > 0) %>% 
   group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
   count()   
 
-richness_B <- richness %>% # this with 0 production - 
+production <- richness %>% # this with 0 production - 
   # represents all core gamma richness by ESD ??
   group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
   count()
-
-
 
 
 # How many plots meet A for each standard ? And where do they sit relative to B ?
@@ -102,6 +120,6 @@ cols <- qualitative_hcl(9, palette = "Dark 3") # these for matching with the spe
 
 
 
-
+# References
 
 

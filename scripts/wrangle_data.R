@@ -28,7 +28,7 @@ usda <- usda %>%
     str_detect(FULL_NAME, 'Boerhavia erecta') ~ 'erecta'
   ))
 
-write.csv(usda, file.path(ppro, f[grep('USDA', f)]))
+write.csv(usda, file.path(ppro, f[grep('USDA', f)]), row.names = F)
 rm(usda)
 
 ###############################################################################
@@ -60,10 +60,10 @@ cvals <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
          Ack_SciName_noAuthority, USDA_Duration, -'FQA_C-Value2006') %>% 
   drop_na(FQA_Species)
 
-write.csv(cvals, file.path(ppro, 'C-Values_Table.csv'))
+write.csv(cvals, file.path(ppro, 'C-Values_Table.csv'), row.names = F)
 
 ################################################################################
-# we will finish processing the CNHP rare plants here. 
+# finish processing the CNHP rare plants here. 
 
 usda_look <- cvals %>%
   select(National_USDASymbol, FQA_SciName_noAuthority, National_SciName_noAuthority)
@@ -93,10 +93,26 @@ missed <- cnhp %>%
 
 cnhp <- bind_rows(retrieved_names, missed) 
 
-write.csv(cnhp, file.path(ppro, 'Rare_Plants_BLM_CO.csv'))
+write.csv(cnhp, file.path(ppro, 'Rare_Plants_BLM_CO.csv'), row.names = F)
 
 rm(snames, gnames, missedN, missedS, inner_names, cvals, missed, retrieved_names, 
    usda_look, cnhp)
+
+
+################################################################################
+# Nativity dataset
+
+nativity <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>% 
+  select(SYMBOL = National_USDASymbol, BINOMIAL_NAT =  National_SciName_noAuthority, 
+         BINOMIAL_ACKER = Ack_SciName_noAuthority, DURATION = USDA_Duration, NATIVITY = National_NativeStatus) %>% 
+  drop_na() 
+
+write.csv(nativity, file.path(ppro, 'Native_Status.csv'), row.names = F)
+
+################################################################################
+
+
+rm(f, praw, ppro)
 
 
 

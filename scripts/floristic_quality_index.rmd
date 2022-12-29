@@ -36,7 +36,6 @@ FQA scores are tied to the regional list of C-values, accordingly they cannot be
 
 
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
@@ -51,12 +50,19 @@ library(tidyverse)
 # fqi <- function(x){sum(x)/length(x) * sqrt(length(x))}
 ```
 
-```{r Import AIM Data on raw LPI drops and Species Richness}
+```{r Import AIM Species Richness Data}
 praw <- '../data/raw'
+ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
+fp <- list.files(ppro, pattern = 'csv')
 
-richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
-  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+# spp <- 
+
+cvals <- read.csv(file.path(ppro, fp[grep('C-Values', fp)])) %>% 
+  select(National_USDASymbol, FQA_C.Value2020_Numeric, FQA_NativeStatus, Ack_SciName_noAuthority, USDA_Duration)
+
+
+
 ```
 
 
