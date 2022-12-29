@@ -20,7 +20,7 @@ The use of FQI are uncommon in the Bureau of Land Management, perhaps in part du
 
 While C-values exist for virtually all states East of the Continental Divide, Colorado is one of only two states with significant surface lands administered by the BLM which has existing C-values for every documented member of it's flora (@spyreas2019floristic); additionally BLM Colorado staff, including the lead state botanist, assisted in developing these scores (@cnhp2020fqi). Here we utilize C-values, to supplement our formal AIM analysis, and to attempt to develop a map of the habitat quality of the UFO field office. 
 
-The Floristic Quality (FQ) Assessments are comprised of two core indices Mean Coefficient of Conservatism (Mean C) and Floristic Quality Index (FQI). While many novel permutations of these calculations exist, they seem to offer little insight in addition to the pair of main indices and appear only useful for niche applications (@spyreas2019floristic). As the general goal of the FQA is the assessment of parcels of land, the location of study areas across different habitat types is accepted, and as we used a weighted stratified sample design our points meet the assumptions implicit in the FQA sample design (CITE, @spyreas2019floristic). FQ Assessments have yet to converge on a standardized size for conducting the species inventory, and while Mean-C is affected by plot size FQI is relatively robust against small plot size, however the size of the AIM plot has been shown to be adequate for noting enough species to conduct the analyses (@spyreas2016scale). In several applications C-values have been shown to be stable across sampling time, in part perhaps due to a propensity for many species at a site to share the same C-values (@spyreas2016scale, @matthews2015null, @bried2013floristic). C-values have also been shown capable of distinguishing habitat variability more effectively than the traditional  diversity metrics (@taft2006estimating). Practicioners of varying degrees of skill are likely to have minimal effects on the estimates of the FQA indices due to the species encoding some degrees of redundant information (@bried2018experts, @spyreas2019floristic).
+The Floristic Quality (FQ) Assessments are comprised of two core indices Mean Coefficient of Conservatism (Mean C) and Floristic Quality Index (FQI) (see Appendix A for equations). While many novel permutations of these calculations exist, they seem to offer little insight in addition to the pair of main indices and appear only useful for niche applications (@spyreas2019floristic). As the general goal of the FQA is the assessment of parcels of land, the location of study areas across different habitat types is accepted, and as we used a weighted stratified sample design our points meet the assumptions implicit in the FQA sample design (CITE, @spyreas2019floristic). FQ Assessments have yet to converge on a standardized size for conducting the species inventory, and while Mean-C is affected by plot size FQI is relatively robust against small plot size, however the size of the AIM plot has been shown to be adequate for noting enough species to conduct the analyses (@spyreas2016scale). In several applications C-values have been shown to be stable across sampling time, in part perhaps due to a propensity for many species at a site to share the same C-values (@spyreas2016scale, @matthews2015null, @bried2013floristic). C-values have also been shown capable of distinguishing habitat variability more effectively than the traditional  diversity metrics (@taft2006estimating). Practicioners of varying degrees of skill are likely to have minimal effects on the estimates of the FQA indices due to the species encoding some degrees of redundant information (@bried2018experts, @spyreas2019floristic).
 
 Utility and Limitations of FQA
 
@@ -35,7 +35,35 @@ FQA scores are tied to the regional list of C-values, accordingly they cannot be
 
 
 
-### Indices 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(dpi = 300) 
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+```
+
+```{r load libraries and define functions}
+library(tidyverse)
+
+# mcoc <- function(x){sum(x)/length(x)} 
+# fqi <- function(x){sum(x)/length(x) * sqrt(length(x))}
+```
+
+```{r Import AIM Data on raw LPI drops and Species Richness}
+praw <- '../data/raw'
+f <- list.files(praw, pattern = 'csv')
+
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+```
+
+
+
+\newpage
+
+### Appendix A - Indices
 
 Mean Coefficient of Conservatism: 
 $$
@@ -61,31 +89,7 @@ Where:
   \item[] $\sqrt{S}$ is the square root of the number of species included in the calculation  
 \end{enumerate}
 
-
-@swink1994plants
-
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F)
-knitr::opts_chunk$set(dpi = 300) 
-knitr::opts_chunk$set(message = F)
-knitr::opts_chunk$set(warning = F)
-```
-
-```{r load libraries and define functions}
-library(tidyverse)
-
-mcoc <- function(x){sum(x)/length(x)} 
-fqi <- function(x){sum(x)/length(x) * sqrt(length(x))}
-```
-
-```{r Import AIM Data on raw LPI drops and Species Richness}
-praw <- '../data/raw'
-f <- list.files(praw, pattern = 'csv')
-
-richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
-  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
-```
+Equations from @swink1994plants, modified for more simple formulations. 
 
 
 \newpage
