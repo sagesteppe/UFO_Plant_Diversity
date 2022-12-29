@@ -21,17 +21,15 @@ usda <- read.csv(file.path(praw, f[grep('USDA', f)])) %>%
 
 # check to see if we can mark genera as such... 
 
-usda %>% 
+usda <- usda %>% 
   mutate(SPECIES = case_when(
     str_detect(toupper(GENUS), SYMBOL) ~ NA,
     str_detect(FULL_NAME, 'Asplenium platyneuron') ~ 'platyneuron',
     str_detect(FULL_NAME, 'Boerhavia erecta') ~ 'erecta'
   ))
 
-?str_detect
-
 write.csv(usda, file.path(ppro, f[grep('USDA', f)]))
-
+rm(usda)
 
 ###############################################################################
 # CNHP Rare Species and Vegetation Types download and subset
@@ -43,15 +41,6 @@ cnhp <- read.csv(file.path(praw, f[grep('CNHP', f)]))  %>%
          BLM_RANK = replace_na(BLM_RANK, F)
          )  %>% 
 select(-MAJORGROUP, -SELEMENTID, -CNHPSENS:-TRACK, -OTHERSTATUS, -COSTATUS)
-
-
-# add column for USDA look up symbol. 
-
-
-usda
-
-
-
 
 ###############################################################################
 # Access CNHP FQA Metrics
@@ -73,12 +62,41 @@ cvals <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
 
 write.csv(cvals, file.path(ppro, 'C-Values_Table.csv'))
 
+################################################################################
+# we will finish processing the CNHP rare plants here. 
 
+usda_look <- cvals %>%
+  select(National_USDASymbol, FQA_SciName_noAuthority, National_SciName_noAuthority)
 
+# add column for USDA look up symbol to the rare plants
 
+snames <- left_join(cnhp, usda_look, by = c('SNAME' = 'National_SciName_noAuthority')) %>% 
+  drop_na(National_USDASymbol)
+gnames <- left_join(cnhp, usda_look, by = c('GNAME' = 'National_SciName_noAuthority'))%>% 
+  drop_na(National_USDASymbol)
 
+inner_names <- inner_join(snames, gnames)
+missedN <- anti_join(gnames, snames, by = 'National_USDASymbol')
+missedS <- anti_join(snames, gnames, by = 'National_USDASymbol')
+retrieved_names <- bind_rows(inner_names, missedS, missedN)
 
+missed <- cnhp %>% 
+  filter(!GNAME %in% c(retrieved_names$GNAME) & BLM_RANK == T) %>% # these not BLM addressed 
+  left_join(., usda_look, by = c(SNAME = 'FQA_SciName_noAuthority')) %>% 
+  mutate(National_USDASymbol = case_when(
+    SNAME == 'Boechera crandallii' ~' ARCR5',
+    SNAME == 'Aquilegia chrysantha var. rydbergii' ~ 'AQCHR',
+    SNAME == 'Asclepias uncialis' ~ 'ASUN4',
+    SNAME == 'Gilia stenothyrsa' ~ 'ALST12' 
+    # we miss a couple species but they are local endemics not known to the UFO
+  ))
 
+cnhp <- bind_rows(retrieved_names, missed) 
+
+write.csv(cnhp, file.path(ppro, 'Rare_Plants_BLM_CO.csv'))
+
+rm(snames, gnames, missedN, missedS, inner_names, cvals, missed, retrieved_names, 
+   usda_look, cnhp)
 
 
 

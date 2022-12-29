@@ -1,0 +1,541 @@
+"","GNAME","SNAME","SCOMNAME","GRANK","SRANK","ENDEMIC","USESA","BLM_RANK","National_USDASymbol","FQA_SciName_noAuthority","National_SciName_noAuthority"
+"1","Abronia nana var. nana","Abronia nana var. nana","Dwarf Sand Verbena","G4T3T4","S1","N",NA,FALSE,"ABNAN","Abronia nana var. nana",NA
+"2","Abutilon incanum","Abutilon incanum","Hoary Mallow","G5?","SH","N",NA,FALSE,"ABIN","Abutilon incanum",NA
+"3","Acorus calamus","Acorus calamus","Sweet Flag","G4?","S1","N",NA,FALSE,"ACCA4","Acorus calamus",NA
+"4","Adiantum aleuticum","Adiantum aleuticum","Aleutian Maidenhair Fern","G5?","S1","N",NA,FALSE,"ADAL","Adiantum aleuticum",NA
+"5","Agastache foeniculum","Agastache foeniculum","Lavender Hyssop","G5","S2","N",NA,FALSE,"AGFO","Agastache foeniculum",NA
+"6","Aletes anisatus","Aletes anisatus","Rocky Mountain Aletes","G3G4","S3S4","Y",NA,FALSE,"ALAN3","Cymopterus anisatus",NA
+"7","Aletes humilis","Aletes humilis","Larimer Aletes","G2G3","S2S3","Y",NA,FALSE,"ALHU","Aletes humilis",NA
+"8","Aletes macdougalii ssp. breviradiatus","Aletes macdougalii ssp. breviradiatus","Mesa Verde Aletes","G3T2T3","S1","N",NA,FALSE,"ALMAB","Aletes macdougalii ssp. breviradiatus",NA
+"9","Aletes sessiliflorus","Aletes sessiliflorus","New Mexico False Carrot","G3","S1","N",NA,FALSE,"ALSE5","Cymopterus sessiliflorus",NA
+"10","Aliciella sedifolia","Aliciella sedifolia","Stonecrop Gilia","G1","S1","Y",NA,FALSE,"ALSE11","Aliciella sedifolia",NA
+"11","Allionia incarnata","Allionia incarnata","Trailing Windmills","G5","S2","N",NA,FALSE,"ALIN","Allionia incarnata",NA
+"12","Allium nevadense","Allium nevadense","Nevada Onion","G4","S2","N",NA,FALSE,"ALNE","Allium nevadense",NA
+"13","Allium schoenoprasum","Allium schoenoprasum","Wild Chives","G5","S1","N",NA,FALSE,"ALSCS","Allium schoenoprasum",NA
+"14","Alopecurus carolinianus","Alopecurus carolinianus","Carolina Foxtail","G5","S1","N",NA,FALSE,"ALCA4","Alopecurus carolinianus",NA
+"15","Amaranthus wrightii","Amaranthus wrightii","Wright's Amaranth","G5","S1","N",NA,FALSE,"AMWR","Amaranthus wrightii",NA
+"16","Ambrosia linearis","Ambrosia linearis","Plains Ragweed","G3","S3","Y",NA,FALSE,"AMLI3","Ambrosia linearis",NA
+"17","Ammannia robusta","Ammannia robusta","Grand Redstem","G5","S2","N",NA,FALSE,"AMRO3","Ammannia robusta",NA
+"18","Amorpha nana","Amorpha nana","Dwarf Wild Indigo","G5","S2","N",NA,FALSE,"AMNA","Amorpha nana",NA
+"19","Amsonia jonesii","Amsonia jonesii","Jones Blue Star","G4","S2","N",NA,TRUE,"AMJO","Amsonia jonesii",NA
+"20","Anagallis minima","Anagallis minima","Chaffweed","G5","S1","N",NA,FALSE,"ANMI4","Anagallis minima",NA
+"21","Anemone virginiana var. cylindroidea","Anemone virginiana var. cylindroidea","Tall Thimbleweed","G5T4T5","S1","N",NA,FALSE,"ANVIC","Anemone virginiana var. cylindroidea",NA
+"22","Apios americana","Apios americana","American Groundnut","G5","S1","N",NA,FALSE,"APAM","Apios americana",NA
+"23","Aquilegia saximontana","Aquilegia saximontana","Rocky Mountain Columbine","G3","S3","Y",NA,FALSE,"AQSA","Aquilegia saximontana",NA
+"24","Aralia racemosa ssp. bicrenata","Aralia racemosa ssp. bicrenata","American Spikenard","G5T3T5Q","S1","N",NA,FALSE,"ARRAB2","Aralia racemosa ssp. bicrenata",NA
+"25","Argyrochosma fendleri","Argyrochosma fendleri","Fendler Cloak- fern","G3","S3","N",NA,FALSE,"ARFE5","Argyrochosma fendleri",NA
+"26","Argythamnia humilis","Argythamnia humilis","Low Silverbush","G5","S2","N",NA,FALSE,"ARHU5","Argythamnia humilis",NA
+"27","Aristida basiramea","Aristida basiramea","Forktip Threeawn","G5","S2","N",NA,FALSE,"ARBA2","Aristida basiramea",NA
+"28","Aristida havardii","Aristida havardii","Havard's Threeawn","G5","S1","N",NA,FALSE,"ARHA3","Aristida havardii",NA
+"29","Aristida purpurea var. wrightii","Aristida purpurea var. wrightii","Wright's Threeawn","G5TNR","S1","N",NA,FALSE,"ARPUW","Aristida purpurea var. wrightii",NA
+"30","Artemisia parryi","Artemisia parryi","Parry's Wormwood","G3","S3","N",NA,FALSE,"ARPA17","Artemisia parryi",NA
+"31","Artemisia pattersonii","Artemisia pattersonii","Patterson's Wormwood","G3G4","S2S3","N",NA,FALSE,"ARPA18","Artemisia pattersonii",NA
+"32","Asclepias hallii","Asclepias hallii","Hall's Milkweed","G3","S3","N",NA,FALSE,"ASHA6","Asclepias hallii",NA
+"33","Asclepias involucrata","Asclepias involucrata","Dwarf Milkweed","G5","S1","N",NA,FALSE,"ASIN14","Asclepias involucrata",NA
+"34","Asclepias involucrata","Asclepias involucrata","Dwarf Milkweed","G5","S1","N",NA,FALSE,"ASIN14","Asclepias macrosperma",NA
+"35","Asclepias macrotis","Asclepias macrotis","Long- hood Milkweed","G4","S2","N",NA,FALSE,"ASMA","Asclepias macrotis",NA
+"36","Asclepias oenotheroides","Asclepias oenotheroides","Zizotes Milkweed","G4G5","S1","N",NA,FALSE,"ASOE","Asclepias oenotheroides",NA
+"37","Asclepias stenophylla","Asclepias stenophylla","Narrow- leaved Milkweed","G4G5","S2","N",NA,FALSE,"ASST","Asclepias stenophylla",NA
+"38","Asplenium platyneuron","Asplenium platyneuron","Ebony Spleenwort","G5","S1","N",NA,FALSE,"ASPL","Asplenium platyneuron",NA
+"39","Asplenium resiliens","Asplenium resiliens","Black- stemmed Spleenwort","G5","S1","N",NA,FALSE,"ASRE","Asplenium resiliens",NA
+"40","Asplenium septentrionale","Asplenium septentrionale","Grass- fern","G5","S3S4","N",NA,FALSE,"ASSE","Asplenium septentrionale",NA
+"41","Aster alpinus var. vierhapperi","Aster alpinus var. vierhapperi","Alpine Aster","G5T5","S1","N",NA,FALSE,"ASALV","Aster alpinus var. vierhapperi",NA
+"42","Astragalus albulus","Astragalus albulus","Cibola Milkvetch","G3G4","S1","N",NA,FALSE,"ASAL5","Astragalus albulus",NA
+"43","Astragalus americanus","Astragalus americanus","American Milkvetch","G5","SH","N",NA,FALSE,"ASAM3","Astragalus americanus",NA
+"44","Astragalus anisus","Astragalus anisus","Gunnison Milkvetch","G2G3","S3","Y",NA,TRUE,"ASAN4","Astragalus anisus",NA
+"45","Astragalus argophyllus var. martinii","Astragalus argophyllus var. martinii","Meadow Milkvetch","G5T4","S2","N",NA,FALSE,"ASARM","Astragalus argophyllus var. martinii",NA
+"46","Astragalus bodinii","Astragalus bodinii","Bodin Milkvetch","G4","S2","N",NA,FALSE,"ASBO","Astragalus bodinii",NA
+"47","Astragalus brandegeei","Astragalus brandegeei","Brandegee Milkvetch","G3G4","S1S2","N",NA,FALSE,"ASBR5","Astragalus brandegeei",NA
+"48","Astragalus calycosus var. scaposus","Astragalus calycosus var. scaposus","Torrey's Milkvetch","G5T3?","S2","N",NA,FALSE,"ASCAS","Astragalus calycosus var. scaposus",NA
+"49","Astragalus cerussatus","Astragalus cerussatus","Powdery Milkvetch","G3G4","S3S4","Y",NA,FALSE,"ASCE2","Astragalus cerussatus",NA
+"50","Astragalus cibarius","Astragalus cibarius","Browse Milkvetch","G4","S2","N",NA,FALSE,"ASCI2","Astragalus cibarius",NA
+"51","Astragalus coltonii var. moabensis","Astragalus coltonii var. moabensis","Colton Milkvetch","G4T3?","S2S3","N",NA,FALSE,"ASCOM2","Astragalus coltonii var. moabensis",NA
+"52","Astragalus cronquistii","Astragalus cronquistii","Cronquist's Milkvetch","G2","S2","N",NA,FALSE,"ASCR4","Astragalus cronquistii",NA
+"53","Astragalus debequaeus","Astragalus debequaeus","DeBeque Milkvetch","G2","S2","Y",NA,TRUE,"ASDE11","Astragalus debequaeus",NA
+"54","Astragalus desperatus var. neeseae","Astragalus desperatus var. neeseae","Horseshoe Milkvetch","G5T2","S1","N",NA,TRUE,"ASDEN","Astragalus desperatus var. neeseae",NA
+"55","Astragalus deterior","Astragalus deterior","Cliff Palace Milkvetch","G1G2","S1S2","Y",NA,FALSE,"ASDE4","Astragalus deterior",NA
+"56","Astragalus detritalis","Astragalus detritalis","Debris Milkvetch","G3","S2S3","N",NA,TRUE,"ASDE5","Astragalus detritalis",NA
+"57","Astragalus duchesnensis","Astragalus duchesnensis","Duchesne Milkvetch","G3","S1S2","N",NA,TRUE,"ASDU2","Astragalus duchesnensis",NA
+"58","Astragalus eastwoodiae","Astragalus eastwoodiae","Eastwood Milkvetch","G3","S2S3","N",NA,FALSE,"ASEA2","Astragalus eastwoodiae",NA
+"59","Astragalus gilviflorus","Astragalus gilviflorus","Plains Milkvetch","G5","S2","N",NA,FALSE,"ASGI5","Astragalus gilviflorus",NA
+"60","Astragalus humillimus","Astragalus humillimus","Mancos Milkvetch","G1","S1","N","LE",FALSE,"ASHU","Astragalus humillimus",NA
+"61","Astragalus iodopetalus","Astragalus iodopetalus","Violet Milkvetch","G3","S2","N",NA,FALSE,"ASIO2","Astragalus iodopetalus",NA
+"62","Astragalus jejunus","Astragalus jejunus","Starveling Milkvetch","G3","S1","N",NA,FALSE,"ASJE2","Astragalus jejunus",NA
+"63","Astragalus leptaleus","Astragalus leptaleus","Park Milkvetch","G3G4","S2","N",NA,FALSE,"ASLE9","Astragalus leptaleus",NA
+"64","Astragalus lutosus","Astragalus lutosus","Dragon Milkvetch","G4","S3S4","N",NA,FALSE,"ASLU2","Astragalus lutosus",NA
+"65","Astragalus microcymbus","Astragalus microcymbus","Skiff Milkvetch","G1","S1","Y",NA,TRUE,"ASMI3","Astragalus microcymbus",NA
+"66","Astragalus missouriensis var. humistratus","Astragalus missouriensis var. humistratus","Missouri Milkvetch","G5T1","S1","N",NA,FALSE,"ASMIH2","Astragalus missouriensis var. humistratus",NA
+"67","Astragalus molybdenus","Astragalus molybdenus","Leadville Milkvetch","G3","S3","Y",NA,FALSE,"ASMO8","Astragalus molybdenus",NA
+"68","Astragalus monumentalis var. cottamii","Astragalus monumentalis var. cottamii","Monument Valley Milkvetch","G4T4","S1S2","N",NA,FALSE,"ASMOC2","Astragalus monumentalis var. cottamii",NA
+"69","Astragalus musiniensis","Astragalus musiniensis","Ferron's Milkvetch","G3","S1","N",NA,TRUE,"ASMU3","Astragalus musiniensis",NA
+"70","Astragalus naturitensis","Astragalus naturitensis","Naturita Milkvetch","G3?","S3","N",NA,TRUE,"ASNA","Astragalus naturitensis",NA
+"71","Astragalus nelsonianus","Astragalus nelsonianus","Nelson Milkvetch","G3","S1","N",NA,FALSE,"ASNE3","Astragalus pectinatus var. platyphyllus",NA
+"72","Astragalus oocalycis","Astragalus oocalycis","Arboles Milkvetch","G4","S3","N",NA,FALSE,"ASOO","Astragalus oocalycis",NA
+"73","Astragalus osterhoutii","Astragalus osterhoutii","Kremmling Osterhout Milkvetch","G1","S1","Y","LE",FALSE,"ASOS","Astragalus osterhoutii",NA
+"74","Astragalus piscator","Astragalus piscator","Fisher Towers Milkvetch","G2G3","S1","N",NA,TRUE,"ASPI6","Astragalus piscator",NA
+"75","Astragalus plattensis","Astragalus plattensis","Platte River Milkvetch","G5","S1","N",NA,FALSE,"ASPL2","Astragalus plattensis",NA
+"76","Astragalus proximus","Astragalus proximus","Aztec Milkvetch","G4","S2","N",NA,FALSE,"ASPR8","Astragalus proximus",NA
+"77","Astragalus rafaelensis","Astragalus rafaelensis","San Rafael Milkvetch","G3","S2S3","N",NA,TRUE,"ASRA3","Astragalus rafaelensis",NA
+"78","Astragalus ripleyi","Astragalus ripleyi","Ripley Milkvetch","G3","S2","N",NA,TRUE,"ASRI2","Astragalus ripleyi",NA
+"79","Astragalus schmolliae","Astragalus schmolliae","Chapin Mesa Milkvetch","G1","S1","Y","C",FALSE,"ASSC5","Astragalus schmolliae",NA
+"80","Astragalus sesquiflorus","Astragalus sesquiflorus","Sandstone Milkvetch","G3G4","S1","N",NA,TRUE,"ASSE7","Astragalus sesquiflorus",NA
+"81","Astragalus sparsiflorus","Astragalus sparsiflorus","Front Range Milkvetch","G2","S2","Y",NA,FALSE,"ASSP5","Astragalus sparsiflorus",NA
+"82","Astragalus tortipes","Astragalus tortipes","Sleeping Ute Milkvetch","G1","S1","Y",NA,FALSE,"ASTO9","Astragalus tortipes",NA
+"83","Astragalus wetherillii","Astragalus wetherillii","Wetherill's Milkvetch","G3","S3","N",NA,FALSE,"ASWE2","Astragalus wetherillii",NA
+"84","Astrolepis integerrima","Astrolepis integerrima","Southwestern Cloak Fern","G5","S1","N",NA,FALSE,"ASIN19","Astrolepis integerrima",NA
+"85","Bergia texana","Bergia texana","Texas Bergia","G5","S2","N",NA,FALSE,"BETE","Bergia texana",NA
+"86","Besseya ritteriana","Besseya ritteriana","Ritter's Coral- drops","G3G4","S3S4","Y",NA,FALSE,"BERI","Besseya ritteriana",NA
+"87","Besseya wyomingensis","Besseya wyomingensis","Kittentail","G5","S1","N",NA,FALSE,"BEWY","Besseya wyomingensis",NA
+"88","Bothriochloa springfieldii","Bothriochloa springfieldii","Springfield Bluestem","G5","S1","N",NA,FALSE,"BOSP3","Bothriochloa springfieldii",NA
+"89","Botrychium ascendens","Botrychium ascendens","Upward Lobed Moonwort","G3","S1","N",NA,FALSE,"BOAS2","Botrychium ascendens",NA
+"90","Botrychium crenulatum","Botrychium crenulatum","Crenulate Moonwort","G4","S1","N",NA,FALSE,"BOCR","Botrychium lunaria var. crenulatum",NA
+"91","Botrychium echo","Botrychium echo","Reflected Moonwort","G4","S3S4","N",NA,FALSE,"BOEC","Botrychium echo",NA
+"92","Botrychium hesperium","Botrychium hesperium","Western Moonwort","G4","S3","N",NA,FALSE,"BOHE5","Botrychium hesperium",NA
+"93","Botrychium lanceolatum var. lanceolatum","Botrychium lanceolatum var. lanceolatum","Lance- leaved Moonwort","G5T4T5","S3","N",NA,FALSE,"BOLAL","Botrychium lanceolatum ssp. lanceolatum",NA
+"94","Botrychium minganense","Botrychium minganense","Mingan's moonwort","G5","S3","N",NA,FALSE,"BOMI","Botrychium minganense",NA
+"95","Botrychium multifidum","Botrychium multifidum","Leathery Grape Fern","G5","S1S2","N",NA,FALSE,"BOMU","Sceptridium multifidum",NA
+"96","Botrychium paradoxum","Botrychium paradoxum","Paradox Moonwort","G3G4","S1","N",NA,FALSE,"BOPA9","Botrychium paradoxum",NA
+"97","Botrychium pinnatum","Botrychium pinnatum","Northern Moonwort","G5","S2","N",NA,FALSE,"BOPI","Botrychium pinnatum",NA
+"98","Botrychium simplex","Botrychium simplex","Least Moonwort","G5","S2","N",NA,FALSE,"BOSI","Botrychium simplex",NA
+"99","Botrychium simplex","Botrychium simplex","Least Moonwort","G5","S2","N",NA,FALSE,"BOSI","Botrychium simplex var. compositum",NA
+"100","Botrychium simplex","Botrychium simplex","Least Moonwort","G5","S2","N",NA,FALSE,"BOSI","Botrychium simplex var. simplex",NA
+"101","Botrychium spathulatum","Botrychium spathulatum","Spatulate Moonwort","G3","S1","N",NA,FALSE,"BOSP4","Botrychium spathulatum",NA
+"102","Botrychium tunux","Botrychium tunux","Moosewort","G3G4","S2","N",NA,FALSE,"BOTU3","Botrychium tunux",NA
+"103","Braya glabella ssp. glabella","Braya glabella ssp. glabella","Arctic Braya","G5T5?","S1S2","N",NA,FALSE,"BRGLG","Braya glabella ssp. glabella",NA
+"104","Calochortus flexuosus","Calochortus flexuosus","Weak- stemmed Mariposa Lily","G4","S2","N",NA,FALSE,"CAFL","Calochortus flexuosus",NA
+"105","Camissonia andina","Camissonia andina","Mountain Camissonia","G4","S1","N",NA,FALSE,"CAAN14","Holmgrenia andina",NA
+"106","Camissonia eastwoodiae","Camissonia eastwoodiae","Eastwood Evening- primrose","G3","S2","N",NA,TRUE,"CAEA","Chylismia eastwoodiae",NA
+"107","Campanula aparinoides","Campanula aparinoides","Marsh Bellflower","G5","S1","N",NA,FALSE,"CAAP2","Campanula aparinoides",NA
+"108","Carex backii","Carex backii","Back's sedge","G5","S1","N",NA,FALSE,"CABA3","Carex backii",NA
+"109","Carex capitata","Carex capitata","Capitate Sedge","G5","S2","N",NA,FALSE,"CACA13","Carex capitata",NA
+"110","Carex concinna","Carex concinna","Low Northern Sedge","G5","S1","N",NA,FALSE,"CACO10","Carex concinna",NA
+"111","Carex conoidea","Carex conoidea","Open Field Sedge","G5","S1","N",NA,FALSE,"CACO14","Carex conoidea",NA
+"112","Carex crawei","Carex crawei","Crawe Sedge","G5","S1","N",NA,FALSE,"CACR3","Carex crawei",NA
+"113","Carex crawfordii","Carex crawfordii","Crawford's Sedge","G5","S1","N",NA,FALSE,"CACR4","Carex crawfordii",NA
+"114","Carex diandra","Carex diandra","Lesser Panicled Sedge","G5","S2","N",NA,FALSE,"CADI4","Carex diandra",NA
+"115","Carex exsiccata","Carex exsiccata","Western inflated sedge","G5","S1","N",NA,FALSE,"CAEX5","Carex exsiccata",NA
+"116","Carex gravida","Carex gravida","Heavy Sedge","G5","S3","N",NA,FALSE,"CAGR4","Carex gravida",NA
+"117","Carex infirminervia","Carex infirminervia","Weak- nerved Sedge","G5","S1","N",NA,FALSE,"CAIN7","Carex infirminervia",NA
+"118","Carex laeviculmis","Carex laeviculmis","Smoothstem sedge","G5","S1","N",NA,FALSE,"CALA13","Carex laeviculmis",NA
+"119","Carex lasiocarpa","Carex lasiocarpa","Slender Sedge","G5","S2","N",NA,FALSE,"CALA11","Carex lasiocarpa",NA
+"120","Carex leporinella","Carex leporinella","Sierra Hare Sedge","G5","S2","N",NA,FALSE,"CALE9","Carex leporinella",NA
+"121","Carex leptalea","Carex leptalea","Bristle- stalk Sedge","G5","S1","N",NA,FALSE,"CALE10","Carex leptalea",NA
+"122","Carex limosa","Carex limosa","Mud Sedge","G5","S2S3","N",NA,FALSE,"CALI7","Carex limosa",NA
+"123","Carex livida","Carex livida","Livid Sedge","G5","S1","N",NA,FALSE,"CALI","Carex livida",NA
+"124","Carex microglochin","Carex microglochin","Small- tipped sedge","G5","S2","N",NA,FALSE,"CAMI6","Carex microglochin",NA
+"125","Carex norvegica","Carex norvegica","Norway Sedge","G5","S1","N",NA,FALSE,"CANO2","Carex norvegica",NA
+"126","Carex oreocharis","Carex oreocharis","Grassy- slope Sedge","G3","S3","N",NA,FALSE,"CAOR","Carex oreocharis",NA
+"127","Carex peckii","Carex peckii","Peck Sedge","G5","S1","N",NA,FALSE,"CAPE11","Carex peckii",NA
+"128","Carex perglobosa","Carex perglobosa","Globe Sedge","G3G4","S3","N",NA,FALSE,"CAPE12","Carex perglobosa",NA
+"129","Carex retrorsa","Carex retrorsa","Retrorse Sedge","G5","S1","N",NA,FALSE,"CARE4","Carex retrorsa",NA
+"130","Carex sartwellii","Carex sartwellii","Sartwell's Sedge","G5","S2","N",NA,FALSE,"CASA8","Carex sartwellii",NA
+"131","Carex saximontana","Carex saximontana","Rocky Mountain Sedge","G5","S1","N",NA,FALSE,"CASA9","Carex saximontana",NA
+"132","Carex scirpoidea","Carex scirpoidea","Canadian Single- spike Sedge","G5","S2","N",NA,FALSE,"CASC10","Carex scirpoidea",NA
+"133","Carex sprengelii","Carex sprengelii","Sprengel's Sedge","G5","S2","N",NA,FALSE,"CASP7","Carex sprengelii",NA
+"134","Carex stenoptila","Carex stenoptila","Small- winged Sedge","G3","S3","N",NA,FALSE,"CAST4","Carex stenoptila",NA
+"135","Carex sychnocephala","Carex sychnocephala","Many- headed Sedge","G5","SH","N",NA,FALSE,"CASY","Carex sychnocephala",NA
+"136","Carex tenera","Carex tenera","Quill Sedge","G5","S1","N",NA,FALSE,"CATE3","Carex tenera var. tenera",NA
+"137","Carex tenuiflora","Carex tenuiflora","Slender- flower Sedge","G5","S1","N",NA,FALSE,"CATE5","Carex tenuiflora",NA
+"138","Carex torreyi","Carex torreyi","Torrey Sedge","G4G5","S1","N",NA,FALSE,"CATO3","Carex torreyi",NA
+"139","Carex wootonii","Carex wootonii","Wooton's Sedge","G3G4","S1","N",NA,FALSE,"CAWO","Carex wootonii",NA
+"140","Castilleja lineata","Castilleja lineata","Marsh- meadow Indian- paintbrush","G4?","S2S3","N",NA,FALSE,"CALI5","Castilleja lineata",NA
+"141","Castilleja puberula","Castilleja puberula","Downy Indian- paintbrush","G3","S2S3","N",NA,FALSE,"CAPU19","Castilleja puberula",NA
+"142","Ceanothus martinii","Ceanothus martinii","Utah Mountain Lilac","G4","S1","N",NA,FALSE,"CEMA2","Ceanothus martinii",NA
+"143","Centaurium arizonicum","Centaurium arizonicum","Arizona Centaury","G5?","S1","N",NA,FALSE,"CEAR12","Centaurium arizonicum",NA
+"144","Chamaesyce parryi","Chamaesyce parryi","Dune Spurge","G5","S2","N",NA,FALSE,"CHPA28","Chamaesyce parryi",NA
+"145","Cheilanthes eatonii","Cheilanthes eatonii","Eaton's Lip Fern","G5?","S3","N",NA,FALSE,"CHEA","Cheilanthes eatonii",NA
+"146","Cheilanthes wootonii","Cheilanthes wootonii","Wooton's Lip Fern","G5","S1","N",NA,FALSE,"CHWO","Cheilanthes wootonii",NA
+"147","Chenopodium cycloides","Chenopodium cycloides","Sandhill Goosefoot","G3G4","S2","N",NA,FALSE,"CHCY","Chenopodium cycloides",NA
+"148","Chionophila jamesii","Chionophila jamesii","Rocky Mountain Snowlover","G4?","S3S4","N",NA,FALSE,"CHJA","Chionophila jamesii",NA
+"149","Cirsium barnebyi","Cirsium barnebyi","Barneby's Thistle","G3G4","S3","N",NA,FALSE,"CIBA","Cirsium barnebyi",NA
+"150","Cirsium ownbeyi","Cirsium ownbeyi","Ownbey's Thistle","G3","S2","N",NA,FALSE,"CIOW","Cirsium ownbeyi",NA
+"151","Cirsium perplexans","Cirsium perplexans","Adobe Hills Thistle","G3","S3","Y",NA,FALSE,"CIPE5","Cirsium perplexans",NA
+"152","Claytonia rubra","Claytonia rubra","Redstem Spring Beauty","G5","S1","N",NA,FALSE,"CLRU2","Claytonia rubra",NA
+"153","Cleomella angustifolia","Cleomella angustifolia","Northern Rhombopod","G5","SH","N",NA,FALSE,"CLAN","Cleomella angustifolia",NA
+"154","Cleomella palmeriana","Cleomella palmeriana","Rocky Mountain Rhombopod","G3G4","S3","N",NA,FALSE,"CLPA3","Cleomella palmeriana",NA
+"155","Collomia grandiflora","Collomia grandiflora","Showy Collomia","G5","S1","N",NA,FALSE,"COGR4","Collomia grandiflora",NA
+"156","Commelina dianthifolia","Commelina dianthifolia","Birdbill Day- flower","G5","S1","N",NA,FALSE,"CODI4","Commelina dianthifolia",NA
+"157","Conimitella williamsii","Conimitella williamsii","Williams Bishop's Cap","G4","S1","N",NA,FALSE,"COWI","Conimitella williamsii",NA
+"158","Conopholis alpina var. mexicana","Conopholis alpina var. mexicana","Squaw- root","G5T5","S1","N",NA,FALSE,"COALM","Conopholis alpina var. mexicana",NA
+"159","Corispermum navicula","Corispermum navicula","North Park Bugseed","G1Q","S1","Y",NA,TRUE,"CONA4","Corispermum navicula",NA
+"160","Corydalis caseana ssp. brandegeei","Corydalis caseana ssp. brandegeei","Sierra Corydalis","G5T3T4","S3S4","N",NA,FALSE,"COCAB2","Corydalis caseana ssp. brandegeei",NA
+"161","Crassula aquatica","Crassula aquatica","Water Pygmyweed","G5","S1","N",NA,FALSE,"CRAQ","Crassula aquatica",NA
+"162","Crataegus chrysocarpa","Crataegus chrysocarpa","Yellow Hawthorn","G5","S1","N",NA,FALSE,"CRCH","Crataegus chrysocarpa",NA
+"163","Crataegus saligna","Crataegus saligna","Willow Hawthorn","G3G4","S3","Y",NA,FALSE,"CRSA2","Crataegus saligna",NA
+"164","Cryptogramma stelleri","Cryptogramma stelleri","Slender Rock- brake","G5","S2","N",NA,TRUE,"CRST2","Cryptogramma stelleri",NA
+"165","Cymopterus duchesnensis","Cymopterus duchesnensis","Uinta Basin Spring- parsley","G3","S2","N",NA,TRUE,"CYDU","Cymopterus duchesnensis",NA
+"166","Cymopterus planosus","Cymopterus planosus","Rocky Mountain Wavewing","G3G4","S3S4","Y",NA,FALSE,"CYPL","Cymopterus planosus",NA
+"167","Cypripedium fasciculatum","Cypripedium fasciculatum","Clustered Lady's- slipper","G4","S3S4","N",NA,FALSE,"CYFA","Cypripedium fasciculatum",NA
+"168","Cystopteris montana","Cystopteris montana","Mountain Bladder Fern","G5","S1","N",NA,FALSE,"CYMO3","Cystopteris montana",NA
+"169","Cystopteris utahensis","Cystopteris utahensis","Utah Bladderfern","G3?","S1","N",NA,FALSE,"CYUT2","Cystopteris utahensis",NA
+"170","Dalea cylindriceps","Dalea cylindriceps","Andean Prairie- clover","G3","S2S3","N",NA,FALSE,"DACY","Dalea cylindriceps",NA
+"171","Delphinium robustum","Delphinium robustum","Wahatoya Creek Larkspur","G2G3","S2?","N",NA,FALSE,"DERO","Delphinium robustum",NA
+"172","Desmodium obtusum","Desmodium obtusum","Stiff Tick- trefoil","G4G5","SH","N",NA,FALSE,"DEOB5","Desmodium obtusum",NA
+"173","Dimorphocarpa wislizeni","Dimorphocarpa wislizeni","Spectacle- pod","G4G5","S2","N",NA,FALSE,"DIWI2","Dimorphocarpa wislizeni",NA
+"174","Draba borealis","Draba borealis","Northern Rockcress","G5?","S2","N",NA,FALSE,"DRBO","Draba borealis",NA
+"175","Draba crassa","Draba crassa","Thick- leaf Whitlow- grass","G3G4","S3","N",NA,FALSE,"DRCR","Draba crassa",NA
+"176","Draba exunguiculata","Draba exunguiculata","Clawless Draba","G2","S2","Y",NA,FALSE,"DREX3","Draba exunguiculata",NA
+"177","Draba fladnizensis","Draba fladnizensis","Arctic Draba","G5","S3","N",NA,FALSE,"DRFL","Draba fladnizensis",NA
+"178","Draba globosa","Draba globosa","Rockcress Draba","G3","S1","N",NA,FALSE,"DRGL6","Draba globosa",NA
+"179","Draba graminea","Draba graminea","San Juan Draba","G3","S3","Y",NA,FALSE,"DRGR2","Draba graminea",NA
+"180","Draba grayana","Draba grayana","Gray's Peak Whitlow- grass","G3","S3","N",NA,FALSE,"DRGR3","Draba grayana",NA
+"181","Draba incerta","Draba incerta","Yellowstone Whitlow- grass","G5","S1","N",NA,FALSE,"DRIN2","Draba incerta",NA
+"182","Draba oligosperma","Draba oligosperma","Woods Draba","G5","S3","N",NA,FALSE,"DROL","Draba oligosperma",NA
+"183","Draba rectifructa","Draba rectifructa","Mountain Draba","G3G4","S3","N",NA,FALSE,"DRRE","Draba rectifructa",NA
+"184","Draba smithii","Draba smithii","Smith Whitlow- grass","G2","S2","N",NA,FALSE,"DRSM","Draba smithii",NA
+"185","Draba streptobrachia","Draba streptobrachia","Colorado Divide Draba","G3","S3","N",NA,FALSE,"DRST5","Draba streptobrachia",NA
+"186","Draba ventosa","Draba ventosa","Wind River Draba","G3","S1","N",NA,FALSE,"DRVE","Draba ventosa",NA
+"187","Draba weberi","Draba weberi","Weber's Draba","G1","S1","Y",NA,FALSE,"DRWE","Draba weberi",NA
+"188","Drosera anglica","Drosera anglica","English Sundew","G5","S1","N",NA,FALSE,"DRAN","Drosera anglica",NA
+"189","Drosera rotundifolia","Drosera rotundifolia","Roundleaf Sundew","G5","S2","N",NA,FALSE,"DRRO","Drosera rotundifolia",NA
+"190","Drymaria effusa var. depressa","Drymaria effusa var. depressa","Spreading Drymaria","G4T4","S1","N",NA,FALSE,"DREFD","Drymaria depressa",NA
+"191","Dryopteris expansa","Dryopteris expansa","Spreading Wood Fern","G5","S1","N",NA,FALSE,"DREX2","Dryopteris expansa",NA
+"192","Elatine rubella","Elatine rubella","Southwestern Waterwort","G5","S2","N",NA,FALSE,"ELRU","Elatine rubella",NA
+"193","Eleocharis wolfii","Eleocharis wolfii","Wolf's Spikerush","G3G5","S1","N",NA,FALSE,"ELWO","Eleocharis wolfii",NA
+"194","Enceliopsis nudicaulis","Enceliopsis nudicaulis","Nakedstem","G5","S1","N",NA,FALSE,"ENNU","Enceliopsis nudicaulis",NA
+"195","Enneapogon desvauxii","Enneapogon desvauxii","Spike Pappusgrass","G5","S2","N",NA,FALSE,"ENDE","Enneapogon desvauxii",NA
+"196","Epipactis gigantea","Epipactis gigantea","Giant Helleborine","G4","S1S2","N",NA,FALSE,"EPGI","Epipactis gigantea",NA
+"197","Eragrostis curtipedicellata","Eragrostis curtipedicellata","Gummy Lovegrass","G5","S1","N",NA,FALSE,"ERCU","Eragrostis curtipedicellata",NA
+"198","Erigeron abajoensis","Erigeron abajoensis","Abajo Daisy","G1G2","S1","N",NA,FALSE,"ERAB3","Erigeron abajoensis",NA
+"199","Erigeron humilis","Erigeron humilis","Low Fleabane","G5","S1","N",NA,FALSE,"ERHU","Erigeron humilis",NA
+"200","Erigeron kachinensis","Erigeron kachinensis","Kachina Daisy","G3","S1","N",NA,TRUE,"ERKA","Erigeron kachinensis",NA
+"201","Erigeron lanatus","Erigeron lanatus","Woolly Fleabane","G4","S2","N",NA,FALSE,"ERLA","Erigeron lanatus",NA
+"202","Erigeron nematophyllus","Erigeron nematophyllus","Needleleaf Daisy","G3","S3","N",NA,FALSE,"ERNE2","Erigeron nematophyllus",NA
+"203","Erigeron radicatus","Erigeron radicatus","Taproot Daisy","G3G4","S1","N",NA,FALSE,"ERRA2","Erigeron radicatus",NA
+"204","Erigeron scopulinus","Erigeron scopulinus","Winn Falls Fleabane","G3?","S1","N",NA,FALSE,"ERSC7","Erigeron scopulinus",NA
+"205","Erigeron wilkenii","Erigeron wilkenii","Wilken Fleabane","G1","S1","Y",NA,FALSE,"ERWI2","Erigeron wilkenii",NA
+"206","Eriogonum acaule","Eriogonum acaule","Single- stemmed Wild Buckwheat","G3","S1","N",NA,TRUE,"ERAC3","Eriogonum acaule",NA
+"207","Eriogonum bicolor","Eriogonum bicolor","Pretty Buckwheat","G3G4","S2","N",NA,FALSE,"ERBI","Eriogonum bicolor",NA
+"208","Eriogonum brandegeei","Eriogonum brandegeei","Brandegee Wild Buckwheat","G1G2","S1S2","Y",NA,TRUE,"ERBR9","Eriogonum brandegeei",NA
+"209","Eriogonum clavellatum","Eriogonum clavellatum","Comb Wash Buckwheat","G2","S1","N",NA,TRUE,"ERCL2","Eriogonum clavellatum",NA
+"210","Eriogonum coloradense","Eriogonum coloradense","Colorado Wild Buckwheat","G2","S2","Y",NA,TRUE,"ERCO11","Eriogonum coloradense",NA
+"211","Eriogonum contortum","Eriogonum contortum","Grand Buckwheat","G3","S2","N",NA,TRUE,"ERCO13","Eriogonum contortum",NA
+"212","Eriogonum ephedroides","Eriogonum ephedroides","Ephedra Buckwheat","G3","S1","N",NA,TRUE,"EREP","Eriogonum ephedroides",NA
+"213","Eriogonum exilifolium","Eriogonum exilifolium","Dropleaf Buckwheat","G3","S3","N",NA,FALSE,"EREX2","Eriogonum exilifolium",NA
+"214","Eriogonum leptocladon var. leptocladon","Eriogonum leptocladon var. leptocladon","Sand Buckwheat","G5T3T4","S1","N",NA,FALSE,"ERLEL","Eriogonum leptocladon var. leptocladon",NA
+"215","Eriogonum leptocladon var. ramosissimum","Eriogonum leptocladon var. ramosissimum","Eastwood Sand Buckwheat","G5T5","S1","N",NA,FALSE,"ERLER","Eriogonum leptocladon var. ramosissimum",NA
+"216","Eriogonum leptophyllum","Eriogonum leptophyllum","Slenderleaf Buckwheat","G3G4","S2","N",NA,FALSE,"ERLE10","Eriogonum leptophyllum",NA
+"217","Eriogonum palmerianum","Eriogonum palmerianum","Palmer Buckwheat","G4","S1","N",NA,FALSE,"ERPA11","Eriogonum palmerianum",NA
+"218","Eriogonum pauciflorum","Eriogonum pauciflorum","Few flowered Wild Buckwheat","G5","S2","N",NA,FALSE,"ERPA9","Eriogonum pauciflorum",NA
+"219","Eriogonum pelinophilum","Eriogonum pelinophilum","Clay- loving Wild Buckwheat","G2","S2","Y","LE",FALSE,"ERPE10","Eriogonum pelinophilum",NA
+"220","Eriogonum scabrellum","Eriogonum scabrellum","Westwater Buckwheat","G3","S1","N",NA,FALSE,"ERSC4","Eriogonum scabrellum",NA
+"221","Eriogonum tumulosum","Eriogonum tumulosum","Woodside Buckwheat","G3Q","S2S3","N",NA,TRUE,"ERTU2","Eriogonum tumulosum",NA
+"222","Eriogonum viridulum","Eriogonum viridulum","Clay Hill Buckwheat","G4Q","SH","N",NA,TRUE,"ERVI13","Eriogonum viridulum",NA
+"223","Eriophorum chamissonis","Eriophorum chamissonis","Rusty Cottongrass","G5","S3","N",NA,FALSE,"ERCH7","Eriophorum chamissonis",NA
+"224","Eriophorum gracile","Eriophorum gracile","Slender Cottongrass","G5","S1S2","N",NA,FALSE,"ERGR8","Eriophorum gracile",NA
+"225","Euthamia gymnospermoides","Euthamia gymnospermoides","Texas Goldentop","G5","S1","N",NA,FALSE,"EUGY","Euthamia gymnospermoides",NA
+"226","Eutrema penlandii","Eutrema penlandii","Mosquito Range Mustard","G2","S2","Y","LT",FALSE,"EUPE10","Eutrema penlandii",NA
+"227","Festuca hallii","Festuca hallii","Hall Fescue","G5","S1","N",NA,FALSE,"FEHA3","Festuca hallii",NA
+"228","Fimbristylis puberula var. interior","Fimbristylis puberula var. interior","Hairy Fimbry","G5T5","S1","N",NA,FALSE,"FIPUI","Fimbristylis puberula var. interior",NA
+"229","Frasera coloradensis","Frasera coloradensis","Colorado Green Gentian","G2G3","S2S3","Y",NA,FALSE,"FRCO7","Frasera coloradensis",NA
+"230","Frasera paniculata","Frasera paniculata","Tufted Green Gentian","G4","S1","N",NA,TRUE,"FRPA2","Frasera paniculata",NA
+"231","Fritillaria pudica","Fritillaria pudica","Yellow Bell","G5","S1","N",NA,FALSE,"FRPU2","Fritillaria pudica",NA
+"232","Gentianella tortuosa","Gentianella tortuosa","Cathedral Bluff Dwarf Gentian","G3?","S1","N",NA,TRUE,"GETO","Gentianella tortuosa",NA
+"233","Geranium bicknellii","Geranium bicknellii","Bicknell's Cranesbill","G5","S2","N",NA,FALSE,"GEBI2","Geranium bicknellii",NA
+"234","Goodyera repens","Goodyera repens","Dwarf Rattlesnake- plantain","G5","S3S4","N",NA,FALSE,"GORE2","Goodyera repens",NA
+"235","Grindelia arizonica","Grindelia arizonica","Arizona Gumweed","G4","S2","N",NA,FALSE,"GRAR2","Grindelia arizonica",NA
+"236","Grindelia fastigiata","Grindelia fastigiata","Pointed Gumweed","G3","S3","N",NA,FALSE,"GRFA","Grindelia fastigiata",NA
+"237","Guilleminea densa","Guilleminea densa","Dense Cottonflower","G5","S1","N",NA,FALSE,"GUDE","Guilleminea densa",NA
+"238","Gutierrezia elegans","Gutierrezia elegans","Lone Mesa Snakeweed","G1","S1","Y",NA,TRUE,"GUEL2","Gutierrezia elegans",NA
+"239","Hackelia besseyi","Hackelia besseyi","Bessey's Stickseed","G2G3","S2","N",NA,FALSE,"HABE3","Hackelia besseyi",NA
+"240","Hackelia gracilenta","Hackelia gracilenta","Mesa Verde Stickseed","G1G2","S1S2","Y",NA,FALSE,"HAGR10","Hackelia gracilenta",NA
+"241","Halimolobos virgata","Halimolobos virgata","Virgate Halimolobos","G3","S2","N",NA,FALSE,"HAVI3","Transberingia bursifolia ssp. virgata",NA
+"242","Hesperochiron pumilus","Hesperochiron pumilus","Dwarf Hesperochiron","G4","SH","N",NA,FALSE,"HEPU6","Hesperochiron pumilus",NA
+"243","Heterocodon rariflorum","Heterocodon rariflorum","Western Pearl- flower","G5","SH","N",NA,FALSE,"HERA3","Heterocodon rariflorum",NA
+"244","Heterosperma pinnatum","Heterosperma pinnatum","Wingpetal","G5?","S1","N",NA,FALSE,"HEPI2","Heterosperma pinnatum",NA
+"245","Heterotheca stenophylla","Heterotheca stenophylla","Stiffleaf False Goldenaster","G4","S1","N",NA,FALSE,"HEST3","Heterotheca stenophylla",NA
+"246","Heuchera richardsonii","Heuchera richardsonii","Richardson's Alum- root","G5","S1","N",NA,FALSE,"HERI","Heuchera richardsonii",NA
+"247","Heuchera rubescens","Heuchera rubescens","Red Alum- root","G5","S1","N",NA,FALSE,"HERU","Heuchera rubescens",NA
+"248","Hypoxis hirsuta","Hypoxis hirsuta","Yellow Stargrass","G5","S1","N",NA,FALSE,"HYHI2","Hypoxis hirsuta",NA
+"249","Iliamna crandallii","Iliamna crandallii","Crandall's Wild- hollyhock","G2Q","S2","Y",NA,FALSE,"ILCR","Iliamna crandallii",NA
+"250","Iliamna grandiflora","Iliamna grandiflora","Large- flower Globe- mallow","G3?Q","S1S2","N",NA,FALSE,"ILGR","Iliamna grandiflora",NA
+"251","Ipomopsis aggregata ssp. weberi","Ipomopsis aggregata ssp. weberi","Rabbit Ears Gilia","G5T3Q","S3","Y",NA,FALSE,"IPAGW","Ipomopsis aggregata ssp. weberi",NA
+"252","Ipomopsis congesta ssp. crebrifolia","Ipomopsis congesta ssp. crebrifolia","Compact Gilia","G5T3T4","S1","N",NA,FALSE,"IPCOC","Ipomopsis congesta ssp. crebrifolia",NA
+"253","Ipomopsis globularis","Ipomopsis globularis","Hoosier Pass Ipomopsis","G2","S2","Y",NA,FALSE,"IPGL","Ipomopsis globularis",NA
+"254","Ipomopsis multiflora","Ipomopsis multiflora","Many- flowered Gilia","G4?","S1","N",NA,FALSE,"IPMU3","Ipomopsis multiflora",NA
+"255","Ipomopsis polyantha","Ipomopsis polyantha","Pagosa Skyrocket","G1","S1","Y","LE",FALSE,"IPPO","Ipomopsis polyantha",NA
+"256","Ipomopsis ramosa","Ipomopsis ramosa","Coral Ipomopsis","G1","S1","Y",NA,FALSE,"IPRA","Ipomopsis ramosa",NA
+"257","Juncus brachycephalus","Juncus brachycephalus","Small- headed Rush","G5","S1","N",NA,FALSE,"JUBR2","Juncus brachycephalus",NA
+"258","Juncus brevicaudatus","Juncus brevicaudatus","Narrow- panicled Rush","G5","S1","N",NA,FALSE,"JUBR4","Juncus brevicaudatus",NA
+"259","Juncus bryoides","Juncus bryoides","Minute Rush","G4","S1","N",NA,FALSE,"JUBR5","Juncus bryoides",NA
+"260","Juncus vaseyi","Juncus vaseyi","Vasey Bulrush","G5","S1","N",NA,FALSE,"JUVA","Juncus vaseyi",NA
+"261","Kobresia simpliciuscula","Kobresia simpliciuscula","Simple Kobresia","G5","S2","N",NA,FALSE,"KOSI2","Kobresia simpliciuscula",NA
+"262","Koenigia islandica","Koenigia islandica","Island Koenigia","G4","S2","N",NA,FALSE,"KOIS","Koenigia islandica",NA
+"263","Krigia biflora","Krigia biflora","Two- flowered Dwarf Dandelion","G5","S2","N",NA,FALSE,"KRBI","Krigia biflora",NA
+"264","Lepidium crenatum","Lepidium crenatum","Alkaline Pepperwort","G2G3","S2","N",NA,FALSE,"LECR12","Lepidium crenatum",NA
+"265","Lepidium huberi","Lepidium huberi","Huber's Pepperweed","G2","S2","N",NA,FALSE,"LEHU8","Lepidium huberi",NA
+"266","Leptochloa dubia","Leptochloa dubia","Green Sprangletop","G5","S1","N",NA,FALSE,"LEDU","Disakisperma dubia",NA
+"267","Liatris lancifolia","Liatris lancifolia","Lanceleaf Gay- feather","G4","S1","N",NA,FALSE,"LILA","Liatris lancifolia",NA
+"268","Liatris ligulistylis","Liatris ligulistylis","Rocky Mountain Gay- feather","G5?","S2","N",NA,FALSE,"LILI","Liatris ligulistylis",NA
+"269","Liatris squarrosa var. glabrata","Liatris squarrosa var. glabrata","Scaly Blazing Star","G5T5","S1","N",NA,FALSE,"LISQG","Liatris squarrosa var. glabrata",NA
+"270","Lilium philadelphicum","Lilium philadelphicum","Wood Lily","G5","S3S4","N",NA,FALSE,"LIPH","Lilium philadelphicum",NA
+"271","Linum kingii","Linum kingii","Yellow Flax","G5","S2","N",NA,FALSE,"LIKI2","Linum kingii",NA
+"272","Listera borealis","Listera borealis","Northern Twayblade","G5","S2","N",NA,FALSE,"LIBO4","Listera borealis",NA
+"273","Listera convallarioides","Listera convallarioides","Broad- leaved Twayblade","G5","S2","N",NA,FALSE,"LICO5","Listera convallarioides",NA
+"274","Lobelia cardinalis","Lobelia cardinalis","Cardinal Flower","G5","S2","N",NA,FALSE,"LOCA2","Lobelia cardinalis",NA
+"275","Lomatium bicolor var. leptocarpum","Lomatium bicolor var. leptocarpum","Oregon Biscuitroot","G4T3T4","S1","N",NA,FALSE,"LOBIL","Lomatium leptocarpum",NA
+"276","Lomatium concinnum","Lomatium concinnum","Colorado Desert- parsley","G2G3","S2S3","Y",NA,TRUE,"LOCO2","Lomatium concinnum",NA
+"277","Lomatium eastwoodiae","Lomatium eastwoodiae","Eastwood Desert- parsley","G3G4","S3S4","Y",NA,FALSE,"LOEA","Lomatium eastwoodiae",NA
+"278","Lomatium foeniculaceum ssp. macdougalii","Lomatium foeniculaceum ssp. macdougalii","Desert- parsley","G5T4T5","S1","N",NA,FALSE,"LOFOM","Lomatium foeniculaceum var. macdougalii",NA
+"279","Lomatogonium rotatum","Lomatogonium rotatum","Marsh Felwort","G5","S2","N",NA,FALSE,"LORO","Lomatogonium rotatum",NA
+"280","Lupinus crassus","Lupinus crassus","Payson Lupine","G2","S2","Y",NA,TRUE,"LUCR2","Lupinus crassus",NA
+"281","Luzula subcapitata","Luzula subcapitata","Colorado Wood- rush","G3","S3","Y",NA,FALSE,"LUSU9","Luzula subcapitata",NA
+"282","Lycopus uniflorus","Lycopus uniflorus","Northern Bugleweed","G5","S1","N",NA,FALSE,"LYUN","Lycopus uniflorus",NA
+"283","Lygodesmia doloresensis","Lygodesmia doloresensis","Dolores River Skeletonplant","G1G2","S1S2","N",NA,TRUE,"LYDO","Lygodesmia grandiflora var. doloresensis",NA
+"284","Machaeranthera coloradoensis","Machaeranthera coloradoensis","Colorado Tansy- aster","G3","S3","N",NA,FALSE,"MACO13","Xanthisma coloradoense",NA
+"285","Mahonia haematocarpa","Mahonia haematocarpa","Colorado Mahonia","G5","SH","N",NA,FALSE,"MAHA4","Berberis haematocarpa",NA
+"286","Mentzelia pumila var. lagarosa","Mentzelia pumila var. lagarosa","Dwarf Mentzelia","G4T2T3","S1","N",NA,FALSE,"MEPUL","Mentzelia lagarosa",NA
+"287","Mertensia alpina","Mertensia alpina","Alpine Bluebells","G4?","S3S4","N",NA,FALSE,"MEAL7","Mertensia alpina",NA
+"288","Mertensia humilis","Mertensia humilis","Rocky Mountain Bluebells","G2","S1","N",NA,FALSE,"MEHU2","Mertensia humilis",NA
+"289","Mimulus eastwoodiae","Mimulus eastwoodiae","Eastwood Monkeyflower","G3G4","S1S2","N",NA,FALSE,"MIEA","Mimulus eastwoodiae",NA
+"290","Mimulus gemmiparus","Mimulus gemmiparus","Rocky Mountain Monkeyflower","G1","S1","Y",NA,FALSE,"MIGE","Mimulus gemmiparus",NA
+"291","Mimulus lewisii","Mimulus lewisii","Lewis Monkeyflower","G5","S2","N",NA,FALSE,"MILE2","Mimulus lewisii",NA
+"292","Mimulus ringens","Mimulus ringens","Square- stem Monkeyflower","G5","SH","N",NA,FALSE,"MIRI","Mimulus ringens",NA
+"293","Monardella odoratissima","Monardella odoratissima","Mountain Wild Mint","G4G5","S2","N",NA,FALSE,"MOOD","Monardella odoratissima",NA
+"294","Muhlenbergia depauperata","Muhlenbergia depauperata","Sixweeks Muhly","G5","S1","N",NA,FALSE,"MUDE","Muhlenbergia depauperata",NA
+"295","Muhlenbergia thurberi","Muhlenbergia thurberi","Thurber's Muhly","G3G4Q","S2","N",NA,FALSE,"MUTH","Muhlenbergia thurberi",NA
+"296","Myosurus cupulatus","Myosurus cupulatus","Western Mousetail","G4","S1","N",NA,FALSE,"MYCU","Myosurus cupulatus",NA
+"297","Myosurus nitidus","Myosurus nitidus","Western Mousetail","G3G4","SH","N",NA,FALSE,"MYNI","Myosurus nitidus",NA
+"298","Myriophyllum verticillatum","Myriophyllum verticillatum","Whorled Water- milfoil","G5","S2","N",NA,FALSE,"MYVE3","Myriophyllum verticillatum",NA
+"299","Nama dichotomum","Nama dichotomum","Livemore Fiddleleaf","G4","S1","N",NA,FALSE,"NADI","Nama dichotomum",NA
+"300","Nama retrorsum","Nama retrorsum","Betatakin Nama","G3","S1","N",NA,FALSE,"NARE","Nama retrorsum",NA
+"301","Navarretia saximontana","Navarretia saximontana","Rocky Mountain Pincuchion- plant","G4?","S2","N",NA,FALSE,"NASA3","Navarretia saximontana",NA
+"302","Nolina texana","Nolina texana","Texas Beargrass","G5","S1","N",NA,FALSE,"NOTE","Nolina texana",NA
+"303","Oenothera acutissima","Oenothera acutissima","Narrow- leaf Evening Primrose","G2","S2","N",NA,TRUE,"OEAC","Oenothera acutissima",NA
+"304","Oenothera canescens","Oenothera canescens","Spotted Evening Primrose","G4G5","S1","N",NA,FALSE,"OECA3","Oenothera canescens",NA
+"305","Oenothera engelmannii","Oenothera engelmannii","Engelmann's Evening Primrose","G4","S1","N",NA,FALSE,"OEEN","Oenothera engelmannii",NA
+"306","Oenothera grandis","Oenothera grandis","Showy Evening Primrose","G5?","S1","N",NA,FALSE,"OEGR2","Oenothera grandis",NA
+"307","Oenothera harringtonii","Oenothera harringtonii","Arkansas Valley Evening Primrose","G3","S3","Y",NA,FALSE,"OEHA6","Oenothera harringtonii",NA
+"308","Oenothera longissima","Oenothera longissima","Long- stem Evening Primrose","G4","S1","N",NA,FALSE,"OELO","Oenothera longissima",NA
+"309","Oenothera rhombipetala","Oenothera rhombipetala","Four- point Evening Primrose","G4G5","S1","N",NA,FALSE,"OERH","Oenothera rhombipetala",NA
+"310","Onoclea sensibilis","Onoclea sensibilis","Sensitive Fern","G5","SH","N",NA,FALSE,"ONSE","Onoclea sensibilis",NA
+"311","Oonopsis engelmannii","Oonopsis engelmannii","Engelmann Goldenweed","G3","S3","N",NA,FALSE,"OOEN","Oönopsis engelmannii",NA
+"312","Oonopsis foliosa var. monocephala","Oonopsis foliosa var. monocephala","Rayless Goldenweed","G3G4T2","S2","Y",NA,FALSE,"OOFOM","Oönopsis monocephala",NA
+"313","Oonopsis wardii","Oonopsis wardii","Ward's Goldenweed","G3","S1","N",NA,FALSE,"OOWA","Oönopsis wardii",NA
+"314","Oreoxis humilis","Oreoxis humilis","Pikes Peak Spring Parsley","G1","S1","Y",NA,FALSE,"ORHU","Cymopterus humilis",NA
+"315","Oxytropis besseyi var. obnapiformis","Oxytropis besseyi var. obnapiformis","Bessey Locoweed","G5T2","S2S3","N",NA,TRUE,"OXBEO","Oxytropis besseyi var. obnapiformis",NA
+"316","Oxytropis parryi","Oxytropis parryi","Parry's Crazy- weed","G5","S1","N",NA,FALSE,"OXPA2","Oxytropis parryi",NA
+"317","Packera debilis","Packera debilis","Rocky Mountain Ragwort","G4","S1","N",NA,FALSE,"PADE22","Packera debilis",NA
+"318","Packera mancosana","Packera mancosana","Mancos Shale Packera","G1","S1","Y",NA,FALSE,"PAMA2","Packera mancosana",NA
+"319","Parnassia kotzebuei","Parnassia kotzebuei","Kotzebue's Grass- of- Parnassus","G5","S2","N",NA,FALSE,"PAKO3","Parnassia kotzebuei",NA
+"320","Parryella filifolia","Parryella filifolia","Narrowleaf Dunebroom","G3G4","SH","N",NA,FALSE,"PAFI4","Parryella filifolia",NA
+"321","Pediomelum aromaticum","Pediomelum aromaticum","Paradox Breadroot","G3","S2","N",NA,TRUE,"PEAR7","Pediomelum aromaticum",NA
+"322","Pediomelum cuspidatum","Pediomelum cuspidatum","Largebract Indian Breadfruit","G4","S1","N",NA,FALSE,"PECU3","Pediomelum cuspidatum",NA
+"323","Pediomelum linearifolium","Pediomelum linearifolium","Narrowleaf Breadroot","G4?","S1","N",NA,FALSE,"PELI10","Pediomelum linearifolium",NA
+"324","Pediomelum megalanthum","Pediomelum megalanthum","Large- flowered Breadroot","G4?","S3S4","N",NA,FALSE,"PEME7","Pediomelum megalanthum",NA
+"325","Pellaea breweri","Pellaea breweri","Brewer's Cliff- brake","G5","S2","N",NA,FALSE,"PEBR4","Pellaea breweri",NA
+"326","Pellaea glabella ssp. simplex","Pellaea glabella ssp. simplex","Smooth Cliff- brake","G5T4?","S2","N",NA,FALSE,"PEGLS3","Pellaea glabella ssp. simplex",NA
+"327","Pellaea wrightiana","Pellaea wrightiana","Wright's Cliff- brake","G5","S2","N",NA,FALSE,"PEWR","Pellaea wrightiana",NA
+"328","Penstemon arenicola","Penstemon arenicola","Red Desert Beardtongue","G3G4","S1","N",NA,FALSE,"PEAR","Penstemon arenicola",NA
+"329","Penstemon breviculus","Penstemon breviculus","Little Penstemon","G3","S2","N",NA,FALSE,"PEBR9","Penstemon breviculus",NA
+"330","Penstemon cobaea","Penstemon cobaea","Cobaea Beardtongue","G4","S1","N",NA,FALSE,"PECO4","Penstemon cobaea",NA
+"331","Penstemon cyathophorus","Penstemon cyathophorus","Middle Park Penstemon","G3","S3","N",NA,FALSE,"PECY6","Penstemon cyathophorus",NA
+"332","Penstemon debilis","Penstemon debilis","Parachute Penstemon","G1","S1","Y","LT",FALSE,"PEDE22","Penstemon debilis",NA
+"333","Penstemon degeneri","Penstemon degeneri","Degener Beardtongue","G2","S2","Y",NA,TRUE,"PEDE12","Penstemon degeneri",NA
+"334","Penstemon eriantherus","Penstemon eriantherus","Fuzzytongue Penstemon","G4G5","S1","N",NA,FALSE,"PEER","Penstemon eriantherus",NA
+"335","Penstemon fremontii var. glabrescens","Penstemon fremontii var. glabrescens","Fremont's Beardtongue","G3G4T2","S2","Y",NA,FALSE,"PEFRG","Penstemon fremontii var. glabrescens",NA
+"336","Penstemon gibbensii","Penstemon gibbensii","Gibbens' Beardtongue","G1G2","S1","N",NA,TRUE,"PEGI4","Penstemon gibbensii",NA
+"337","Penstemon grahamii","Penstemon grahamii","Graham Beardtongue","G2G3","S1","N",NA,TRUE,"PEGR6","Penstemon grahamii",NA
+"338","Penstemon grandiflorus","Penstemon grandiflorus","Large- flower Beardtongue","G5?","S1","N",NA,FALSE,"PEGR7","Penstemon grandiflorus",NA
+"339","Penstemon harbourii","Penstemon harbourii","Harbour Beardtongue","G3G4","S3S4","Y",NA,FALSE,"PEHA10","Penstemon harbourii",NA
+"340","Penstemon harringtonii","Penstemon harringtonii","Harrington Beardtongue","G3","S3","Y",NA,TRUE,"PEHA11","Penstemon harringtonii",NA
+"341","Penstemon jamesii","Penstemon jamesii","James' Beardtongue","G4","S1","N",NA,FALSE,"PEJA","Penstemon jamesii",NA
+"342","Penstemon laricifolius ssp. exilifolius","Penstemon laricifolius ssp. exilifolius","Larch- leaf Beardtongue","G4T3","S2","N",NA,FALSE,"PELAE","Penstemon laricifolius ssp. exilifolius",NA
+"343","Penstemon mensarum","Penstemon mensarum","Grand Mesa Penstemon","G2","S2","Y",NA,FALSE,"PEME2","Penstemon mensarum",NA
+"344","Penstemon penlandii","Penstemon penlandii","Kremmling Beardtongue","G1","S1","Y","LE",FALSE,"PEPE25","Penstemon penlandii",NA
+"345","Penstemon radicosus","Penstemon radicosus","Matroot Penstemon","G5","S1","N",NA,FALSE,"PERA2","Penstemon radicosus",NA
+"346","Penstemon retrorsus","Penstemon retrorsus","Adobe Beardtongue","G3","S3","Y",NA,FALSE,"PERE7","Penstemon retrorsus",NA
+"347","Penstemon scariosus var. albifluvis","Penstemon scariosus var. albifluvis","White River Penstemon","G4T1","S1","N",NA,TRUE,"PESCA","Penstemon scariosus var. albifluvis",NA
+"348","Penstemon scariosus var. cyanomontanus","Penstemon scariosus var. cyanomontanus","Plateau Penstemon","G4T2","S2","N",NA,FALSE,"PESCC","Penstemon scariosus var. cyanomontanus",NA
+"349","Penstemon teucrioides","Penstemon teucrioides","Germander Beardtongue","G3","S3","P",NA,FALSE,"PETE9","Penstemon teucrioides",NA
+"350","Penstemon utahensis","Penstemon utahensis","Utah Penstemon","G4","S2","N",NA,FALSE,"PEUT","Penstemon utahensis",NA
+"351","Penstemon versicolor","Penstemon versicolor","Variable- color Beardtongue","G3?","S3?","Y",NA,FALSE,"PEVE9","Penstemon versicolor",NA
+"352","Penstemon yampaensis","Penstemon yampaensis","Yampa Beardtongue","G2","S2S3","N",NA,TRUE,"PEYA2","Penstemon yampaensis",NA
+"353","Phacelia constancei","Phacelia constancei","Constance's Phacelia","G4","S1","N",NA,FALSE,"PHCO19","Phacelia constancei",NA
+"354","Phacelia denticulata","Phacelia denticulata","Rocky Mountain Phacelia","G3","S2","N",NA,FALSE,"PHDE2","Phacelia denticulata",NA
+"355","Phacelia formosula","Phacelia formosula","North Park Phacelia","G2","S2","Y","LE",FALSE,"PHFO2","Phacelia formosula",NA
+"356","Phacelia incana","Phacelia incana","Hoary Phacelia","G3G4","S1","N",NA,FALSE,"PHIN9","Phacelia incana",NA
+"357","Phacelia splendens","Phacelia splendens","Patch Phacelia","G3","S3","N",NA,FALSE,"PHSP3","Phacelia splendens",NA
+"358","Phalaris caroliniana","Phalaris caroliniana","May Grass","G5?","S1","N",NA,FALSE,"PHCA6","Phalaris caroliniana",NA
+"359","Phippsia algida","Phippsia algida","Snow Grass","G5","S2","N",NA,FALSE,"PHAL","Phippsia algida",NA
+"360","Phlox caryophylla","Phlox caryophylla","Pagosa Phlox","G3","S3","N",NA,FALSE,"PHCA14","Phlox caryophylla",NA
+"361","Phyla lanceolata","Phyla lanceolata","Fogfruit","G5","S1","N",NA,FALSE,"PHLA3","Phyla lanceolata",NA
+"362","Physaria alpina","Physaria alpina","Avery Peak Twinpod","G2","S2","Y",NA,FALSE,"PHAL10","Physaria alpina",NA
+"363","Physaria bellii","Physaria bellii","Bell's Twinpod","G2G3","S2S3","Y",NA,FALSE,"PHBE2","Physaria bellii",NA
+"364","Physaria brassicoides","Physaria brassicoides","Rydberg's Double Twinpod","G5","S1","N",NA,FALSE,"PHBR5","Physaria brassicoides",NA
+"365","Physaria floribunda var. osterhoutii","Physaria floribunda var. osterhoutii","Colorado Twinpod","G4?T2","S2","Y",NA,FALSE,"PHFLO2","Physaria floribunda var. osterhoutii",NA
+"366","Physaria obcordata","Physaria obcordata","Piceance Twinpod","G1G2","S1S2","Y","LT",FALSE,"PHOB","Physaria obcordata",NA
+"367","Physaria rollinsii","Physaria rollinsii","Rollins' Twinpod","G1G2","S1S2","Y",NA,FALSE,"PHRO4","Physaria rollinsii",NA
+"368","Physaria scrotiformis","Physaria scrotiformis","West Silver Bladderpod","G1","S1","Y",NA,FALSE,"PHSC","Physaria scrotiformis",NA
+"369","Physaria vitulifera","Physaria vitulifera","Fiddleleaf Twinpod","G3","S3","Y",NA,FALSE,"PHVI7","Physaria vitulifera",NA
+"370","Poliomintha incana","Poliomintha incana","Purple Sage","G5","S1","N",NA,FALSE,"POIN3","Poliomintha incana",NA
+"371","Polygala subspinosa","Polygala subspinosa","Spiny Milkwort","G4?","S1","N",NA,FALSE,"POSU2","Polygala subspinosa",NA
+"372","Polypodium hesperium","Polypodium hesperium","Western Polypody","G5","S1S2","N",NA,FALSE,"POHE3","Polypodium hesperium",NA
+"373","Polypodium saximontanum","Polypodium saximontanum","Rocky Mountain Polypody","G3?","S3","N",NA,FALSE,"POSA19","Polypodium saximontanum",NA
+"374","Polystichum scopulinum","Polystichum scopulinum","Crag Holly Fern","G4","S1","N",NA,FALSE,"POSC5","Polystichum scopulinum",NA
+"375","Potamogeton diversifolius","Potamogeton diversifolius","Waterthread Pondweed","G5","S1","N",NA,FALSE,"PODI","Potamogeton diversifolius",NA
+"376","Potentilla ambigens","Potentilla ambigens","Southern Rocky Mountain Cinquefoil","G3","S2","N",NA,FALSE,"POAM6","Potentilla ambigens",NA
+"377","Potentilla subviscosa","Potentilla subviscosa","Navajo Cinquefoil","G4?","SH","N",NA,FALSE,"POSU6","Potentilla subviscosa",NA
+"378","Primula egaliksensis","Primula egaliksensis","Greenland Primrose","G4G5","S2","N",NA,FALSE,"PREG","Primula egaliksensis",NA
+"379","Proatriplex pleiantha","Proatriplex pleiantha","Mancos Saltbush","G3","S1","N",NA,FALSE,"PRPL2","Atriplex pleiantha",NA
+"380","Prosopis glandulosa","Prosopis glandulosa","Honey Mesquite","G5?","S1","N",NA,FALSE,"PRGL2","Prosopis glandulosa",NA
+"381","Prunus angustifolia","Prunus angustifolia","Sandhill Plum","G5","S1","N",NA,FALSE,"PRAN3","Prunus angustifolia",NA
+"382","Prunus gracilis","Prunus gracilis","Oklahoma Plum","G4G5","S1","N",NA,FALSE,"PRGR","Prunus gracilis",NA
+"383","Prunus rivularis","Prunus rivularis","Creek Plum","G4","S1","N",NA,FALSE,"PRRI","Prunus rivularis",NA
+"384","Ptilagrostis porteri","Ptilagrostis porteri","Porter Feathergrass","G2","S2","N",NA,FALSE,"PTPO","Ptilagrostis porteri",NA
+"385","Puccinellia parishii","Puccinellia parishii","Parish's Alkali Grass","G2G3","S1","N",NA,FALSE,"PUPA","Puccinellia parishii",NA
+"386","Pyrola picta","Pyrola picta","Pictureleaf Wintergreen","G4G5","S3S4","N",NA,FALSE,"PYPI2","Pyrola picta",NA
+"387","Reverchonia arenaria","Reverchonia arenaria","Sand Reverchonia","G4G5","S1","N",NA,FALSE,"REAR","Reverchonia arenaria",NA
+"388","Rhynchospora alba","Rhynchospora alba","White Beakrush","G5","S1","N",NA,FALSE,"RHAL3","Rhynchospora alba",NA
+"389","Ribes americanum","Ribes americanum","American Currant","G5","S2","N",NA,FALSE,"RIAM2","Ribes americanum",NA
+"390","Ribes niveum","Ribes niveum","Snow Gooseberry","G3?","S1","N",NA,FALSE,"RINI2","Ribes niveum",NA
+"391","Rorippa tenerrima","Rorippa tenerrima","Modoc Yellowcress","G5","S1","N",NA,FALSE,"ROTE","Rorippa tenerrima",NA
+"392","Rotala ramosior","Rotala ramosior","Toothcup","G5","S1","N",NA,FALSE,"RORA","Rotala ramosior",NA
+"393","Rubus neomexicanus","Rubus neomexicanus","New Mexico Blackberry","G5","S1","N",NA,FALSE,"RUNE","Rubus neomexicanus",NA
+"394","Salix arizonica","Salix arizonica","Arizona Willow","G2G3","S1","N",NA,FALSE,"SAAR14","Salix arizonica",NA
+"395","Salix calcicola","Salix calcicola","Lime- loving Willow","G4G5","S1","N",NA,FALSE,"SACA37","Salix calcicola",NA
+"396","Salix candida","Salix candida","Hoary or Silver Willow","G5","S2","N",NA,FALSE,"SACA4","Salix candida",NA
+"397","Salix cascadensis","Salix cascadensis","Cascade Willow","G5","S1","N",NA,FALSE,"SACA6","Salix cascadensis",NA
+"398","Salix discolor","Salix discolor","Pussy Willow","G5","S1","N",NA,FALSE,"SADI","Salix discolor",NA
+"399","Salix gooddingii","Salix gooddingii","Goodding's Willow","G5","S1","N",NA,FALSE,"SAGO","Salix gooddingii",NA
+"400","Salix myrtillifolia","Salix myrtillifolia","Low Blueberry Willow","G5","S1","N",NA,FALSE,"SAMY","Salix myrtillifolia",NA
+"401","Salix nigra","Salix nigra","Black Willow","G5","S1","N",NA,FALSE,"SANI","Salix nigra",NA
+"402","Salix serissima","Salix serissima","Autumn Willow","G5","S1","N",NA,FALSE,"SASE2","Salix serissima",NA
+"403","Saussurea weberi","Saussurea weberi","Weber Saussurea","G3","S2S3","N",NA,FALSE,"SAWE","Saussurea weberi",NA
+"404","Sclerocactus glaucus","Sclerocactus glaucus","Colorado Hookless Cactus","G2G3","S2S3","Y","LT",FALSE,"SCGL3","Sclerocactus glaucus",NA
+"405","Scutellaria lateriflora","Scutellaria lateriflora","Blue Skullcap","G5","S1","N",NA,FALSE,"SCLA2","Scutellaria lateriflora",NA
+"406","Selaginella weatherbiana","Selaginella weatherbiana","Weatherby's Spike- moss","G3G4","S3S4","N",NA,FALSE,"SEWE3","Selaginella weatherbiana",NA
+"407","Senecio fremontii var. inexpectatus","Senecio fremontii var. inexpectatus","La Sal Mountains' Groundsel","G5T1","S1","N",NA,FALSE,"SEFRI","Senecio fremontii var. inexpectatus",NA
+"408","Senecio rapifolius","Senecio rapifolius","Open- woods Ragwort","G4?","S3","N",NA,FALSE,"SERA","Senecio rapifolius",NA
+"409","Silphium integrifolium var. laeve","Silphium integrifolium var. laeve","Wholeleaf Rosinweed","G5T4?","SH","N",NA,FALSE,"SIINL","Silphium integrifolium var. laeve",NA
+"410","Silphium laciniatum","Silphium laciniatum","Compass- plant","G5","SH","N",NA,FALSE,"SILA3","Silphium laciniatum",NA
+"411","Sisyrinchium angustifolium","Sisyrinchium angustifolium","Narrowleaf Blue- eyed- grass","G5","S1","N",NA,FALSE,"SIAN3","Sisyrinchium angustifolium",NA
+"412","Sisyrinchium demissum","Sisyrinchium demissum","Stiff Blue- eyed- grass","G5","S2","N",NA,FALSE,"SIDE4","Sisyrinchium demissum",NA
+"413","Sisyrinchium pallidum","Sisyrinchium pallidum","Pale Blue- eyed- grass","G3","S3","N",NA,TRUE,"SIPA11","Sisyrinchium pallidum",NA
+"414","Smilax lasioneura","Smilax lasioneura","Herbaceous Greenbrier","G5","S3S4","N",NA,FALSE,"SMLA3","Smilax lasioneura",NA
+"415","Sparganium eurycarpum","Sparganium eurycarpum","Broadfruit Bur- reed","G5","S2","N",NA,FALSE,"SPEU","Sparganium eurycarpum",NA
+"416","Sphaeromeria argentea","Sphaeromeria argentea","Nuttall's False- sagebrush","G3G4","S1","N",NA,FALSE,"SPAR2","Sphaeromeria argentea",NA
+"417","Sphaeromeria capitata","Sphaeromeria capitata","Rock- tansy","G4","S1","N",NA,TRUE,"SPCA8","Sphaeromeria capitata",NA
+"418","Spiranthes diluvialis","Spiranthes diluvialis","Ute Ladies' Tresses","G2G3","S2","N","LT",FALSE,"SPDI6","Spiranthes diluvialis",NA
+"419","Sporobolus flexuosus","Sporobolus flexuosus","Mesa Dropseed","G5","S1","N",NA,FALSE,"SPFL2","Sporobolus flexuosus",NA
+"420","Sporobolus nealleyi","Sporobolus nealleyi","Nealley's Dropseed","G5","S2","N",NA,FALSE,"SPNE","Sporobolus nealleyi",NA
+"421","Stanleya albescens","Stanleya albescens","Arizona Prince- plume","G3","S2","N",NA,FALSE,"STAL2","Stanleya albescens",NA
+"422","Stellaria irrigua","Stellaria irrigua","Altai Chickweed","G4?","S3","N",NA,FALSE,"STIR","Stellaria irrigua",NA
+"423","Stenosiphon linifolius","Stenosiphon linifolius","False Gaura","G5","S1","N",NA,FALSE,"STLI2","Oenothera glaucifolia",NA
+"424","Stillingia sylvatica","Stillingia sylvatica","Queen's Delight","G5","S1","N",NA,FALSE,"STSY","Stillingia sylvatica",NA
+"425","Sullivantia hapemanii var. purpusii","Sullivantia hapemanii var. purpusii","Hanging Garden Sullivantia","G3T3","S3","Y",NA,FALSE,"SUHAP","Sullivantia hapemanii var. purpusii",NA
+"426","Telesonix jamesii","Telesonix jamesii","James' Telesonix","G3G4","S3","N",NA,FALSE,"TEJA","Telesonix jamesii",NA
+"427","Thalictrum heliophilum","Thalictrum heliophilum","Sun- loving Meadowrue","G2","S2","Y",NA,TRUE,"THHE2","Thalictrum heliophilum",NA
+"428","Thamnosma texana","Thamnosma texana","Dutchman's Breeches","G5","SH","N",NA,FALSE,"THTE2","Thamnosma texana",NA
+"429","Thelypodiopsis juniperorum","Thelypodiopsis juniperorum","Juniper Tumble Mustard","G2","S2","N",NA,FALSE,"THJU","Thelypodiopsis juniperorum",NA
+"430","Thelypodium paniculatum","Thelypodium paniculatum","Northwestern Thelypody","G2","SH","N",NA,FALSE,"THPA6","Thelypodium paniculatum",NA
+"431","Townsendia fendleri","Townsendia fendleri","Fendler's Townsend- daisy","G3","S2","N",NA,FALSE,"TOFE","Townsendia fendleri",NA
+"432","Townsendia glabella","Townsendia glabella","Smooth Easter Daisy","G2","S2","Y",NA,FALSE,"TOGL4","Townsendia glabella",NA
+"433","Townsendia rothrockii","Townsendia rothrockii","Rothrock Townsend- daisy","G3","S3","Y",NA,FALSE,"TORO","Townsendia rothrockii",NA
+"434","Townsendia strigosa","Townsendia strigosa","Strigose Easter- daisy","G4","S1S2","N",NA,TRUE,"TOST","Townsendia strigosa",NA
+"435","Trautvetteria caroliniensis","Trautvetteria caroliniensis","Tasslerue","G5","S2","N",NA,FALSE,"TRCA","Trautvetteria caroliniensis",NA
+"436","Trichophorum pumilum","Trichophorum pumilum","Little Bulrush","G5","S2","N",NA,TRUE,"TRPU18","Trichophorum pumilum",NA
+"437","Trifolium dasyphyllum ssp. anemophilum","Trifolium dasyphyllum ssp. anemophilum","Laramie Hills Clover","G5T2?","S1","N",NA,FALSE,"TRDAA","Trifolium anemophilum",NA
+"438","Triodanis holzingeri","Triodanis holzingeri","Holzinger's Venus' Looking- glass","G4","S1?","N",NA,FALSE,"TRHO2","Triodanis holzingeri",NA
+"439","Triodanis leptocarpa","Triodanis leptocarpa","Slim- pod Venus' Looking- glass","G5?","S1","N",NA,FALSE,"TRLE3","Triodanis leptocarpa",NA
+"440","Utricularia intermedia","Utricularia intermedia","Flatleaf Bladderwort","G5","S1","N",NA,FALSE,"UTIN2","Utricularia intermedia",NA
+"441","Utricularia minor","Utricularia minor","Lesser Bladderwort","G5","S3","N",NA,FALSE,"UTMI","Utricularia minor",NA
+"442","Utricularia ochroleuca","Utricularia ochroleuca","Northern Bladderwort","G4G5","S1","N",NA,FALSE,"UTOC","Utricularia ochroleuca",NA
+"443","Verbena plicata","Verbena plicata","Fanleaf Vervain","G5","S1","N",NA,FALSE,"VEPL","Verbena plicata",NA
+"444","Vernonia baldwinii","Vernonia baldwinii","Baldwin's Ironweed","G5","S2","N",NA,FALSE,"VEBA","Vernonia baldwinii",NA
+"445","Vernonia fasciculata","Vernonia fasciculata","Fascicled Ironweed","G5","SH","N",NA,FALSE,"VEFA2","Vernonia fasciculata",NA
+"446","Vernonia marginata","Vernonia marginata","Plains Ironweed","G5?","S1","N",NA,FALSE,"VEMA2","Vernonia marginata",NA
+"447","Viola pedatifida","Viola pedatifida","Prairie Violet","G5","S2","N",NA,FALSE,"VIPE2","Viola pedatifida",NA
+"448","Viola selkirkii","Viola selkirkii","Selkirk Violet","G5","S2","N",NA,FALSE,"VISE2","Viola selkirkii",NA
+"449","Wolffia borealis","Wolffia borealis","Dotted Watermeal","G5","S1","N",NA,FALSE,"WOBO","Wolffia borealis",NA
+"450","Wolffia columbiana","Wolffia columbiana","Columbia Watermeal","G5","S1","N",NA,FALSE,"WOCO","Wolffia columbiana",NA
+"451","Woodsia neomexicana","Woodsia neomexicana","New Mexico Cliff Fern","G4?","S2","N",NA,FALSE,"WONE","Woodsia neomexicana",NA
+"452","Woodsia plummerae","Woodsia plummerae","Plummer's Cliff Fern","G5","S1","N",NA,FALSE,"WOPL","Woodsia plummerae",NA
+"453","Zeltnera exaltata","Centaurium exaltatum","Great Basin Centaury","G5","S1","N",NA,FALSE,"CEEX","Centaurium exaltatum",NA
+"454","Potentilla effusa var. rupincola","Potentilla rupincola","Rocky Mountain Cinquefoil","G5?T2","S2","Y",NA,FALSE,"PORU4","Potentilla rupincola",NA
+"455","Schoenoplectiella saximontana","Schoenoplectus saximontanus","Rocky Mountain Bulrush","G5","S1","N",NA,FALSE,"SCSA8","Schoenoplectus saximontanus",NA
+"456","Arabidopsis salsuginea","Thellungiella salsuginea","Salt- lick Mustard","G5?","S1","N",NA,FALSE,"THSA","Eutrema salsugineum",NA
+"457","Adiantum capillus-veneris","Adiantum capillus - veneris","Southern Maiden- hair","G5","S2","N",NA,FALSE,"ADCA","Adiantum capillus-veneris",NA
+"458","Lomatium latilobum","Aletes latilobus","Canyonlands Aletes","G1G2","S1","N",NA,TRUE,"LOLA4","Lomatium latilobum",NA
+"459","Neoparrya lithophila","Aletes lithophilus","Rock- loving Neoparrya","G3","S3","N",NA,TRUE,"NELI2","Neoparrya lithophila",NA
+"460","Lomatium nuttallii","Aletes nuttallii","Dog Parsley","G3","S1","N",NA,FALSE,"LONU3","Lomatium nuttallii",NA
+"461","Musineon tenuifolium","Aletes tenuifolius","Slender Parsley","G4","S2","N",NA,FALSE,"MUTE3","Musineon tenuifolium",NA
+"462","Minuartia macrantha","Alsinanthe macrantha","House's Sandwort","G3","S3","N",NA,FALSE,"MIMA3","Minuartia macrantha",NA
+"463","Minuartia stricta","Alsinanthe stricta","Rock Sandwort","G5","S2","N",NA,FALSE,"MIST5","Minuartia stricta",NA
+"464","Zigadenus vaginatus","Anticlea vaginatus","Alcove Death Camas","G2","S2","N",NA,FALSE,"ZIVA","Zigadenus vaginatus",NA
+"465","Festuca dasyclada","Argillochloa dasyclada","False Ricegrass","G3","S3","N",NA,FALSE,"FEDA","Festuca dasyclada",NA
+"466","Armeria maritima ssp. sibirica","Armeria scabra ssp. sibirica","Sea Pink","G5T5","S1","N",NA,FALSE,"ARMAS","Armeria maritima ssp. sibirica",NA
+"467","Arnica angustifolia ssp. tomentosa","Arnica alpina var. tomentosa","Alpine Arnica","G5T5","S1","N",NA,FALSE,"ARANT","Arnica angustifolia ssp. tomentosa",NA
+"468","Asplenium adiantum-nigrum","Asplenium adiantum - nigrum","Black Spleenwort","G5","S1","N",NA,FALSE,"ASAD","Asplenium adiantum-nigrum",NA
+"469","Symphyotrichum oblongifolium","Aster oblongifolius","Aromatic Aster","G5","S1","N",NA,FALSE,"SYOB","Symphyotrichum oblongifolium",NA
+"470","Astragalus allochrous var. playanus","Astragalus wootonii var. wootonii","Wooton Milkvetch","G4T4","S1","N",NA,FALSE,"ASALP","Astragalus allochrous var. playanus",NA
+"471","Arabis oxylobula","Boechera oxylobula","Glenwood Springs Rockcress","G3","S3","Y",NA,FALSE,"AROX","Boechera oxylobula",NA
+"472","Parthenium alpinum","Bolophyta alpina","Wyoming Feverfew","G3","S2","N",NA,FALSE,"PAAL6","Parthenium alpinum",NA
+"473","Parthenium alpinum","Bolophyta alpina","Wyoming Feverfew","G3","S2","N",NA,FALSE,"PAAL6","Parthenium alpinum var. alpinum",NA
+"474","Parthenium ligulatum","Bolophyta ligulata","Ligulate Feverfew","G3","S1","N",NA,TRUE,"PALI6","Parthenium ligulatum",NA
+"475","Parthenium tetraneuris","Bolophyta tetraneuris","Barneby's Feverfew","G3","S3","Y",NA,FALSE,"PATE12","Parthenium alpinum var. tetraneuris",NA
+"476","Botrychium virginianum","Botrypus virginianus","Rattlesnake Fern","G5","S1","N",NA,FALSE,"BOVI","Botrypus virginianus",NA
+"477","Bupleurum americanum","Bupleurum triradiatum ssp. arcticum","American Thoroughwax","G5","S1","N",NA,FALSE,"BUAM2","Bupleurum americanum",NA
+"478","Hoffmannseggia repens","Caesalpinia repens","Creeping Rush- pea","G3","S1","N",NA,FALSE,"HORE","Hoffmannseggia repens",NA
+"479","Notholaena standleyi","Cheilanthes standleyi","Standley's Cloak Fern","G4","S1","N",NA,FALSE,"NOST","Notholaena standleyi",NA
+"480","Chrysothamnus baileyi","Chrysothamnus pulchellus ssp. baileyi","Bailey's Rabbitbrush","G4G5","S1","N",NA,FALSE,"CHBA11","Chrysothamnus baileyi",NA
+"481","Helianthemum bicknellii","Crocanthemum bicknellii","Plains Frostweed","G5","S2","N",NA,FALSE,"HEBI2","Helianthemum bicknellii",NA
+"482","Rubus arcticus ssp. acaulis","Cylactis arctica ssp. acaulis","Nagoon Berry","G5T5","S1","N",NA,FALSE,"RUARA2","Rubus acaulis",NA
+"483","Delphinium alpestre","Delphinium ramosum var. alpestre","Colorado Larkspur","G3","S2","N",NA,FALSE,"DEAL","Delphinium alpestre",NA
+"484","Lewisia triphylla","Erocallis triphylla","Dwarf Spring Beauty","G4?","S2","N",NA,FALSE,"LETR2","Lewisia triphylla",NA
+"485","Eucephalus elegans","Eucephalus perelegans","Nuttall Aster","G5","S1","N",NA,FALSE,"EUEL2","Eucephalus elegans",NA
+"486","Eustoma exaltatum ssp. russellianum","Eustoma grandiflorum","Showy Prairie Gentian","G5T5","S3S4","N",NA,FALSE,"EUEXR","Eustoma grandiflorum",NA
+"487","Silene kingii","Gastrolychnis kingii","King's Campion","G3","S1","N",NA,FALSE,"SIKI","Silene kingii",NA
+"488","Aliciella haydenii","Gilia haydenii","San Juan Gilia","G3","S2","N",NA,FALSE,"ALHA6","Aliciella haydenii",NA
+"489","Cuscuta umbellata","Grammica umbellata","Flatglobe Dodder","G5","S2","N",NA,FALSE,"CUUM","Cuscuta umbellata",NA
+"490","Mirabilis alipes","Hermidium alipes var. pallidum","Winged Four- o'- Clock","G4","S1","N",NA,FALSE,"MIAL5","Mirabilis alipes",NA
+"491","Platanthera zothecina","Limnorchis zothecina","Alcove Bog- orchid","G2G3","S1","N",NA,FALSE,"PLZO","Platanthera zothecina",NA
+"492","Linum aristatum","Mesynium aristatum","Bristle Flax","G5","S1","N",NA,FALSE,"LIAR3","Linum aristatum",NA
+"493","Monolepis pusilla","Micromonolepis pusilla","Red Poverty- weed","G5","SH","N",NA,FALSE,"MOPU3","Micromonolepis pusilla",NA
+"494","Lysimachia thyrsiflora","Naumburgia thyrsiflora","Tufted Loosestrife","G5","S1","N",NA,FALSE,"LYTH2","Lysimachia thyrsiflora",NA
+"495","Mentzelia chrysantha","Nuttallia chrysantha","Golden Blazingstar","G2","S2","Y",NA,TRUE,"MECH","Mentzelia chrysantha",NA
+"496","Mentzelia cronquistii","Nuttallia cronquistii","Cronquist's Stickleaf","G3?Q","S2","N",NA,FALSE,"MECR4","Mentzelia cronquistii",NA
+"497","Mentzelia densa","Nuttallia densa","Royal Gorge blazingstar","G2","S2","Y",NA,TRUE,"MEDE3","Mentzelia densa",NA
+"498","Mentzelia pterosperma","Nuttallia pterosperma","Wingseed Blazingstar","G4","S2","N",NA,FALSE,"MEPT","Mentzelia pterosperma",NA
+"499","Cryptantha aperta","Oreocarya aperta","Grand Junction Cat's- eye","GH","SH","Y",NA,FALSE,"CRAP2","Oreocarya aperta",NA
+"500","Cryptantha breviflora","Oreocarya breviflora","Short- flower Cryptanth","G4","S1","N",NA,FALSE,"CRBR7","Oreocarya breviflora",NA
+"501","Cryptantha caespitosa","Oreocarya caespitosa","Caespitose Cat's- eye","G4","S2","N",NA,TRUE,"CRCA7","Oreocarya caespitosa",NA
+"502","Cryptantha cana","Oreocarya cana","Mountain Cat's- eye","G5","S2","N",NA,FALSE,"CRCA8","Oreocarya cana",NA
+"503","Cryptantha elata","Oreocarya elata","Cliff Dweller's Candlestick Cat's- eye","G3","S2","N",NA,FALSE,"CREL4","Oreocarya elata",NA
+"504","Cryptantha longiflora","Oreocarya longiflora","Long- flower Cat's- eye","G3","S3","N",NA,FALSE,"CRLO6","Oreocarya longiflora",NA
+"505","Cryptantha mensana","Oreocarya mensana","Southwestern Cat's- eye","G3","S1","N",NA,FALSE,"CRME5","Oreocarya mensana",NA
+"506","Cryptantha osterhoutii","Oreocarya osterhoutii","Osterhout Cat's- eye","G2G3","S2","N",NA,TRUE,"CROS","Oreocarya osterhoutii",NA
+"507","Cryptantha cinerea var. pustulosa","Oreocarya pustulosa","San Juan Cat's- eye","G5TNR","S1","N",NA,FALSE,"CRCIP","Oreocarya pustulosa",NA
+"508","Cryptantha rollinsii","Oreocarya rollinsii","Rollins' Cat's- eye","G3","S2","N",NA,TRUE,"CRRO6","Oreocarya rollinsii",NA
+"509","Cryptantha stricta","Oreocarya stricta","Erect Cryptanth","G3","S2","N",NA,FALSE,"CRST5","Oreocarya stricta",NA
+"510","Cryptantha weberi","Oreocarya weberi","Weber's Cat's- eye","G3","S3","Y",NA,FALSE,"CRWE2","Oreocarya weberi",NA
+"511","Astragalus aretioides","Orophaca aretioides","Cushion Orophaca","G4","S1","N",NA,FALSE,"ASAR3","Astragalus aretioides",NA
+"512","Astragalus hyalinus","Orophaca hyalina","Summer Orophaca","G4","S2","N",NA,FALSE,"ASHY2","Astragalus hyalinus",NA
+"513","Mirabilis rotundifolia","Oxybaphus rotundifolius","Round- leaf Four- o'clock","G2","S2","Y",NA,FALSE,"MIRO2","Mirabilis rotundifolia",NA
+"514","Papaver radicatum ssp. kluanense","Papaver kluanensis","Alpine Poppy","G5T4","S3S4","N",NA,FALSE,"PARAK","Papaver radicatum ssp. kluanense",NA
+"515","Cleome multicaulis","Peritoma multicaulis","Slender Spiderflower","G2G3","S2S3","N",NA,TRUE,"CLMU","Cleome multicaulis",NA
+"516","Phacelia gina-glenneae","Phacelia gina - glenneae","Troublesome Phacelia","G1","S1","Y",NA,FALSE,"PHGI3","Phacelia gina-glenneae",NA
+"517","Phacelia scopulina var. submutica","Phacelia submutica","DeBeque Phacelia","G4T2","S2","Y","LT",FALSE,"PHSCS3","Phacelia scopulina var. submutica",NA
+"518","Lesquerella arenosa","Physaria arenosa","Great Plains Bladderpod","G5","S1","N",NA,FALSE,"LEAR6","Physaria arenosa",NA
+"519","Lesquerella calcicola","Physaria calcicola","Rocky Mountain Bladderpod","G3","S3","N",NA,FALSE,"LECA9","Physaria calcicola",NA
+"520","Lesquerella congesta","Physaria congesta","Dudley Bluffs Bladderpod","G1","S1","Y","LT",FALSE,"LECO10","Physaria congesta",NA
+"521","Lesquerella parviflora","Physaria parviflora","Piceance Bladderpod","G2","S2","Y",NA,TRUE,"LEPA10","Physaria parviflora",NA
+"522","Lesquerella parvula","Physaria parvula","Pygmy Bladderpod","G3?","S2","N",NA,FALSE,"LEPA7","Physaria parvula",NA
+"523","Lesquerella pruinosa","Physaria pruinosa","Pagosa Bladderpod","G2","S2","N",NA,TRUE,"LEPR2","Physaria pruinosa",NA
+"524","Lesquerella subumbellata","Physaria subumbellata","Parasol Bladderpod","G3","S2","N",NA,FALSE,"LESU","Physaria subumbellata",NA
+"525","Lesquerella vicina","Physaria vicina","Montrose Bladderpod","G2","S2","Y",NA,TRUE,"LEVI22","Physaria vicina",NA
+"526","Portulaca halimoides","Portulaca parvula","Dwarf Purslane","G5","S1","N",NA,FALSE,"POHA5","Portulaca halimoides",NA
+"527","Sapindus saponaria var. drummondii","Sapindus drummondii","Soapberry","G5T5","S1","N",NA,FALSE,"SASAD","Sapindus saponaria var. drummondii",NA
+"528","Sclerocactus mesae-verdae","Sclerocactus mesae - verdae","Mesa Verde Cactus","G2","S2","N","LT",FALSE,"SCME4","Sclerocactus mesae-verdae",NA
+"529","Artemisia pygmaea","Seriphidium pygmaeum","Pygmy Sagebrush","G4","S1","N",NA,FALSE,"ARPY2","Artemisia pygmaea",NA
+"530","Achnatherum richardsonii","Stipa richardsonii","Richardson Needlegrass","G5","S1","N",NA,FALSE,"ACRI8","Achnatherum richardsonii",NA
+"531","Oligoneuron album","Unamia alba","Prairie Goldenrod","G5","S2","N",NA,FALSE,"OLAL2","Solidago ptarmicoides",NA
+"532","Symphyotrichum novae-angliae","Virgulus novae - angliae","New England Aster","G5","S2","N",NA,FALSE,"SYNO2","Symphyotrichum novae-angliae",NA
+"533","Heteranthera dubia","Zosterella dubia","Grassleaf Mud- plantain","G5","S1","N",NA,FALSE,"HEDU2","Heteranthera dubia",NA
+"534","Aquilegia chrysantha var. rydbergii","Aquilegia chrysantha var. rydbergii","Golden Columbine","G4T1Q","S1","Y",NA,TRUE,"AQCHR",NA,NA
+"535","Asclepias uncialis","Asclepias uncialis","Dwarf Milkweed","G2","S2","N",NA,TRUE,"ASUN4",NA,NA
+"536","Boechera crandallii","Boechera crandallii","Crandall's Rockcress","G3","S3S4","N",NA,TRUE," ARCR5",NA,"Arabis crandallii"
+"537","Gilia stenothyrsa","Gilia stenothyrsa","Uinta Basin Gilia","G3","S1","N",NA,TRUE,"ALST12",NA,NA
+"538","Mentzelia rhizomata","Nuttallia rhizomata","Roan Cliffs Blazingstar","G2","S2","Y",NA,TRUE,NA,NA,NA
+"539","Oreocarya revealii","Oreocarya revealii","Gypsum Valley Cat's- eye","G1G2","S1S2","Y",NA,TRUE,NA,NA,"Cryptantha gypsophila"
+"540","Physaria pulvinata","Physaria pulvinata","Cushion Bladderpod","G1","S1","Y",NA,TRUE,NA,NA,NA
