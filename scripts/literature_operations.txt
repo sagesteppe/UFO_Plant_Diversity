@@ -1,4 +1,5 @@
-ls | awk '{printf("\"%s\"\n", $0)}' | sed 'p; s/\ /_/g' | xargs -n2 mv # replace all spaces in filenames with underscores
+ls *.pdf | awk '{printf("\"%s\"\n", $0)}' | sed 'p; s/\ /_/g' | xargs -n2 mv 
+# replace all spaces in filenames with underscores
 
 
 for i in $(ls *.pdf | grep -v 150dpi); do
