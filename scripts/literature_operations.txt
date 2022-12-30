@@ -2,7 +2,7 @@ ls *.pdf | awk '{printf("\"%s\"\n", $0)}' | sed 'p; s/\ /_/g' | xargs -n2 mv
 # replace all spaces in filenames with underscores
 
 
-pdftk BIodiversity_and_Ecosystem_Functioning1.pdf cat 1-23 output Biodiversity_and_Ecosystem_Functioning.pdf ; rm Biodiversity_and_Ecosystem_Functioning.pdf
+pdftk Evolution_and_Measurement_of_Species_Diversity1.pdf cat 2-40 output Evolution_and_Measurement_of_Species_Diversity.pdf; rm Evolution_and_Measurement_of_Species_Diversity1.pdf
 # subset a pdf to a page range
 
 for i in $(ls *.pdf | grep -v 150dpi); do
