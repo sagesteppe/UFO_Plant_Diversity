@@ -13,41 +13,19 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
-While each plant functions differently in an ecosystem context, the degrees of dissimilarity which exist between all species are unequal allowing them to clump together into groups. This observation has given rise to the notion of *Plant Functional Types*, shared attributes which unite similar species, and which bind how they affect ecosystems. Oftentimes, function is dictated by form, and functions are hence referred to as forms (CITE). For example, Trees provide large amounts of shade, which in combination with their transpiration lower the temperature of areas. Plant functional types are quite often the easiest form of vegetation data to measure, and accordingly great amounts of work have been conducted on how they affect ecosystem function. 
+While each plant functions differently in an ecosystem context, the degrees of dissimilarity which exist between all species are unequal allowing them to clump together into groups. This observation has given rise to the notion of *Plant Functional Types*, shared attributes which unite similar species, and which bind how they affect ecosystems. Oftentimes, form follows function, and functions are hence referred to as forms. For example, Trees provide large amounts of shade, which in combination with their transpiration lower the temperature of areas. Plant functional types are quite often the easiest form of vegetation data to measure, and accordingly great amounts of work have been conducted on how they affect ecosystem function. 
 
-In Western Colorado, five major forms of plant functional types are often used to evaluate range conditions. These forms are: Trees, Shrubs, Grasses, and Forbs (or herbs), and each has been linked to affecting rangelands in multiple ways. Grasses ... . , While Shrubs for example ..  Accordingly, in nearly all instances a mix of each of these groups, less trees, is best to maintain ecosystem services on BLM Land. In our area which features massive extents of Pinon-Juniper Woodland, trees when present, are included in this mix on ecological sites which they are more capable of surviving on over long periods relative to shrubs. 
+In Western Colorado, five major forms of plant functional types are often used to evaluate range conditions. These forms are: Trees, Shrubs, Grasses, and Forbs (or herbs), and each has been linked to affecting rangelands in multiple ways. Accordingly, in nearly all instances a mix of each of these groups, less trees, is best to maintain ecosystem services on BLM Land. In our area which features massive extents of Pinon-Juniper Woodland, trees when present, are included in this mix on ecological sites which they are more capable of surviving on over long periods relative to shrubs. 
 
 Semi-arid lands which are utilized as rangelands across the world are experiencing several common issues relating to shifts in the composition of their plant functional types (@archer2014ecosystem, @eldridge2016ecosystem, @maestre2016structure) . Namely, decreases in grasses whilst increases in woody species are occurring. In certain areas, the increases - or encroachment  of - woody species may be split into encroachment of trees, and the transition to a shrub state in ecological sites which do not support trees. 
 
-These transitions are currently problematic because : 
+The current increases in shrub cover relative to the cover of the herbaceous strata, grasses and forbs, are problematic for a variety of reasons. The increase in Trees at mixed grass-shrublands sites may decrease water available to grasses and shrubs but not non-native annual grasses (@mciver2022pinon), as cattle depend on grasses and wildlife shrubs these decrease the ability of our lands to support either. Increases in shrubs at the expense of perennial grasses and forbs may increase the severity of site level drought (@wilson2018functional), further shrubs and trees may foster higher severity fires (CITE). Increases in shrubs decrease soil stability, allowing increased erosion, increasing DUST ON SNOW, and is an irritant to human breathing (@munson2011responses). Decreases in perennial grass may reduce competing non-native annuals from overtaking sites @sheley2010resistance, @corbin2004competition, although a diversity of species may be best (@belnap2008soil). A decreases in forbs adversely affect wildlife feeding (CITE). These issues we are currently facing may be compounded in the future by probelms which are only begin to become apparent. 
 
-- Increases in shrubs decrease soil stability, allowing increased erosion, increasing DUST ON SNOW, irritants to human breathing,  (@munson2011responses)
+Under the increasingly warmer and drier climates (SECTION XX) multiple concerns regarding the establishment, and persistence of perennial grasses, and their utility as forage are becoming apparent. C3 grasses are likely to become more difficult to establish and persist (@munson2011brink @gremer2015desert). The nutrional quality of C3 grasses are expected to decline via nutrional dilution, and C4 grasses generally do not have as high protein quality forage (@Barbehenn2004). The possibility of declines in the cover and diversity of forbs, especially those which may fix nitrogen, and declines in soil health may compound issues with nutrient dilution ( @GRASSHOPPERS PNAS, @soussana2007temperate). Accordingly, understanding the localities across the landscape which are not meeting the cover of functional groups may lead to an ability to preventing these, and reducing the above, issues. 
 
-- Increases in shrubs at the expense of perennial grasses and forbs may increase the severity of site level drought (@wilson2018functional). 
+While the major functional groups are capable of capturing considerable variation which predicts rangeland responses, they often maintain large amounts of variation with them ( LIDAR SPECTRAL PAPER). And we believe that additional functional groups warrant attention in our area. As mentioned above C3 and C4 grasses have different responses to many environmental cues. Sprouting and non-sprouting shrubs differ widely in their responses to wildfire, and sites require different post fire management strategies. Annual and perennial forbs (life cycles), differ in their responsiveness to precipitation, with annuals declining rapidly in times of low precipitation.  
 
-- Increases in trees and shrubs FIREEEEEEEEEEE
-
-- Increase in Trees at shrub sites may decrease water available to grasses and shrubs but not non-native annual grasses (@mciver2022pinon)
-
-- Decreases in grass reduce forage for wild animals and livestock
-
-- Decreases in forbs adversely affect wildlife feeding 
-
-- Decreases in perennial grass may reduce competing non-native annuals from overtaking sites @sheley2010resistance, @corbin2004competition, although a diversity of species may be best (@belnap2008soil). 
-
-
-These transitions may have compounding issues under warmer and drier climates (SECTION XX). 
-
-- C3 grasses likely to become harder to establish and persist @munson2011brink. C4 grasses are generally do not have as high protein quality forage (@Barbehenn2004). 
-
-- declines in forbs, which may fix nitrogen, and declines in soil health may compound issues with increases in C02, decreasing the protein in forage (nutrient dilution) ( @GRASSHOPPERS PNAS, @SOUSSANA2017 ) 
-
-
-
-
-While the major functional groups are capable of capturing considerable variation which predicts rangeland responses, they often maintain large amounts of variation with them. And we believe that additional functional groups warrant attention in our area. C3 and C4 grasses.... Sprouting and non-sprouting shrubs. Annual and perennial forbs (life cycles), and 
-
-Non-vascular plants mentioned ....
+# Methods
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
@@ -56,7 +34,11 @@ knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
 ```
 
-```{r Import AIM Data on Fractional Cover}
+```{r}
+library(tidyverse)
+```
+
+```{r Import AIM LPI Data}
 praw <- '../data/raw'
 f <- list.files(praw, pattern = 'csv')
 
@@ -64,3 +46,22 @@ richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>%
   filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
 ```
 
+```{r Lookup Grass and Shrub Status}
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
+  rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
+
+shrub_sprout <- read.csv(file.path(praw, f[grep('Shrub', f)]))
+
+# %>%  
+  #left_join(, photosynthetic, by = 'SYMBOL')
+
+rm(photosynthetic)
+```
+
+
+Non-vascular plants mentioned ....
+
+\newpage
+
+# References 

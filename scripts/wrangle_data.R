@@ -110,6 +110,62 @@ nativity <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) 
 write.csv(nativity, file.path(ppro, 'Native_Status.csv'), row.names = F)
 
 ################################################################################
+# Develop a template for Shrub Sprout not sprout lookup
+
+
+s <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>% 
+  filter(USDA_GrowthHabitSimple == 'Shrub') %>% 
+  select(SYMBOL = National_USDASymbol, BINOMIAL_NAT =  National_SciName_noAuthority, HABIT = USDA_GrowthHabitSimple,
+         BINOMIAL_ACKER = Ack_SciName_noAuthority, DURATION = USDA_Duration, NATIVITY = National_NativeStatus) %>% 
+  drop_na()
+  
+shrub_template
+
+
+c('AMAL2', 'AMUT',  # Amelanchier
+  'ARPA6', 'ARUV', # arcostaphylos
+  'ARAR8', 'ARARA', 'ARARL', 'ARCA13', 'ARFR4', 'ARNO4', 'PIDE4', 'ARTRT',
+  'ARTRV', 'ARTRW8', 'ARTRT2', # Artemisia,
+  'ATCA2', 'ATCO', 'ATGA', 'ATCO4', # Atriplex
+  'BEFE', 'MAFR3', 'MARE11', # Berberis
+  'BRCA3', 'BRLO', 'BRMIS',  # brickellia,
+  'CEFE', # ceanothus
+  'CELE3', 'CEMO2', # cercocarpus
+  'CHDE2', 'CHGR6', 'CHLI3', 'CHVA2', 'CHVI8', #chrysothamnus
+  'CORA', # coleagyne
+  'COSES', # cornus
+  'EPTO', 'EPVI', #EPHEDRA
+  'ERDID', 'ERNA10', 'ERPA30', # Ericameria
+  'ERCO14', 'ERMI4',   # eriogonum
+  'FERU', # fendlera
+  'FOPU2', # forestiera
+  'FRAN2', #fraxinus
+  'GRSP', # grayia
+  'GUMI', 'GUSA', # Guiterrhiza
+  'HEMUM', # heliomeris 
+  'HEVIN', # heterotheca
+  'HODU', # holodiscus
+  'BAAM4', # bassia 
+  'KRLA2', # kraschennikovia
+  'LOIN5', # lonicera involucrata
+  'MILI3', # mirabilis linearis
+  'DAFR6', # dasiphora
+  'PUST', 'PUTR2', # purshia
+  'QUGA', # Quercus, 
+  'RHTR', # rhus
+  'ROWO', # rosa
+  'SAVE4', # Sarcobatus
+  'SYLO', 'SYRO', # symphoricarpos
+  'TECA2', 'TENU2', 'TESP', # tetradymia
+  'TORY', # toxico
+  'MACO13' # macheranthera ... 
+  )
+
+colnames(s)
+
+
+write.csv(shrub_template, file.path(praw, 'Shrub_Sprout.csv'), row.names = F)
+
 
 
 rm(f, praw, ppro)
