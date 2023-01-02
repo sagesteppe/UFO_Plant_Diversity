@@ -5,8 +5,9 @@ date: NULL
 output:
   pdf_document: default
   word_document: default
-header-includes:
+header-includes: 
  - \usepackage[width=\textwidth]{caption}
+ - \usepackage{amsmath, booktabs, caption, longtable}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
@@ -28,21 +29,25 @@ Rare species tend to make of enormous amounts of diversity (WHY THEY BEST). Rare
 
 A conceptual framework to discuss these species may be considered which contains three dimensions, their restriction to particular habitats, their geographic extents, and the number of individuals per population (@rabinowitz1981seven). Collectively the interaction between these traits results in seven forms of rare species (@rabinowitz1981seven). The rare species which receive most of the attention, are those which are restricted to particular habitats across narrow geographical extents, *'narrow (local) endemics'* (@kruckeberg1985biological). In general narrow endemics tend to be the species which require special legal protection to ensure their habitats undergo minimal alterations.  However, the remaining types of rarity still call for consideration by land management agencies. 
 
-```{r}
+```{r Create Rabinowitz table, eval = F}
 library(gt)
 
-title = 'Seven Forms of Rarity'
-subtitle = 'From Rabinowitz 1981'
-stubhead = c('Geographic Range', 'Habitat Specificity')
-rowGroupLabel = 'Local Population Size'
-spannerColumnLabel = c('Large', 'Small')
-columnLabel = c('Wide', 'Narrow', 'Wide', 'Narrow')
-rowLabel = c('Large - dominant somewhere', 'Small - non-dominant')
-footnotes = c('A typology of rare species based on three characteristics: geographic range, habitat specificity, and local population size.')
+footnote = 'A typology of rare species based on three characteristics: geographic range, habitat specificity, and local population size.'
 
+# Include some examples:
+# (geographic, habitat, pop size)
+
+# Cypripedium calceolus ssp. parviflorum  (Large, narrow, small)
+# Camissonia eastwoodiae (large, narrow, large?)
+# Draba oligosperma (large, wide, sparse ? )
+
+# Penstemon retorsus (small, narrow, Large ?)
+#  (small, wide, small)
+# Eriogonum pelinophilum (small, narrow, small ?)
+# Sclerocactus glaucus (small, wide, large ?)
 
 rabinowitz <- data.frame(
-  rowname = c('Large', 'Small'),
+  rowname = c('Large, dominant somewhere', 'Small, non-dominant'),
   wide = c(
     'Locally abundant over large range in several habitats', 
     'Constantly sparse over large range in several habitats'), 
@@ -57,12 +62,12 @@ rabinowitz <- data.frame(
     'Constantly sparse and geographically restricted in a specific habitat')
   )
 
-
-rabinowitz %>% 
+rab_tab <- rabinowitz %>% 
   gt(rowname_col = "rowname") %>% 
+  fmt_markdown(columns = everything()) %>% 
   tab_header(
-      title = title,
-      subtitle = subtitle) %>% 
+      title = 'Seven Forms of Rarity',
+      subtitle = 'From Rabinowitz 1981') %>% 
   cols_align(align = "center" ) %>% 
   cols_label(
       wide = "Wide",
@@ -76,31 +81,45 @@ rabinowitz %>%
   tab_spanner(
     label = 'Small',
     columns = c(wide1, narrow1)) %>% 
-  tab_stubhead('Geographic Range:<br>Habitat Specificity:') %>% 
+  tab_stubhead('Geo. Range: Habitat:') %>% 
   tab_row_group(
     label = 'Population Size', 
-    rows  = 1:2)
+    rows  = 1:2) %>% 
+  tab_footnote(footnote) %>% 
+  
+  tab_options(heading.background.color = "#FFE6E9",
+              row_group.border.top.color = "white", #e6fffc # maybe for the remaining lines?
+              heading.border.lr.color='white', 
+              column_labels.border.top.color = "white",
+              table.border.top.color = "white",
+              table.border.bottom.color = "white",
+              table_body.hlines.color = "white",
+              heading.padding = 0,
+              row_group.padding = 0)
+
+gtsave(rab_tab, "../results/rab_tab.png")
+```
+
+```{r Display Rabinowitz table }
+knitr::include_graphics("../results/rab_tab.png")
 ```
 
 
-Approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index)...
+Recently approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index)...
 
 *now go through rare species increasing towards those requiring legal protection*
 
 
 > "Many species are abundant in portions of their range, but uncommon in others @brown1995spatial, @ter2016discovery"
-> r tufte::quote_footer('--- Enquist et al. 2021')`
+> `r tufte::quote_footer('--- Enquist et al. 2021')`
 
-Locally, different taxa may be considered rare. For example, many species at the leading or trailing edges of ranges... Species which have declined due to our land use plans.. These species have the possibility to be detected using a novel index (@Maciel2021).
+Using the conceptual model, we see that a number of species in the UFO field office may fall into this category if they are in the the left two columns. In particular, they may be species which are at the *edges* of their ranges. These species may be interesting as ones which are at the *trailing* edge  ... and ones which are at the *leading* edge ... Conserving leading edge taxa at the local level is important as they may contain many forms of genes which are pre-disposed to adapting to climate change associated variables. 
 
+Under the conceptual model species with Small geographic ranges, but wide habitat specificity, and quite often to be encountered at AIM plots. These taxa are generally noted as rare by the State, and oftentimes BLM... They
 
-- DIVERSITY AS IT RELATES TO FINE FUNCTIONS < FUNCTIONAL AND COMMUNITY CONTEXT - MANY SPECIES DO MANY IMPORTANT THINGS >
-- RARITY INDEX < LOCALLY RARE, BUT COMMON ELSEWHERE >
-- LEGAL PROTECTION < RARE EVERYWHERE >
+These three columns of species are seldom tracked at large ranges, as they fundamentally are more recalcitrant to extinction, and should ...  However, it is possible that land management has allowed for them to decline in our study area. We can identify these taxa using ... We can consider that their range of habitat specificity (@rabinowitz1981seven) may include a subordinate element, tolerance fo disturbance, which includes many human enacted actions. 
 
-
-
-Rarity is common, most species LOG (whittaker), but most species which exist are also rare (@enquist2019commonness, ). 
+Finally the column at right represents the species at the fundamental core of our notions of 'rarity'. These taxa are generally warranted legal protections as human modification of their habitats... 
 
 
 
@@ -119,4 +138,8 @@ read.csv(file.path(praw, f[grep('CNHP', f)]))  %>%
   filter(MAJORGROUP == 'Vascular Plants')
 
 ```
+
+
+
+# References
 
