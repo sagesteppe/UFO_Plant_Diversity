@@ -13,8 +13,6 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
-While the overall focus of the Assess, Inventory and Monitor Program is at a broad scale and seeks to be indicative of general trends of landscape status, the Inventory work has resulted in the fine resolution mapping and recording of many finer scale processes. In particular a number of rare plant occurrences have been noted over the life of the project in the UFO. 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
@@ -22,9 +20,91 @@ knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
 ```
 
+In general, a connotation where rare species are synonymous with legal protections exists in popular culture. However, rarity is the normal conditions under which a vast multitude of species exist. One of the only observations, which warrants consideration as a law of ecology is that few species constitute the majority of biomass in an area, and many species make up the remainder of the biomass. This rule commonly called, , is evident across most kingdoms of life and nearly all environments. Those taxa which make up the 'remainder', encompass a plurality of the species in many areas, and globally are enormous in terms of their numbers. 
+
+..In many areas there appear to be relatively few uncommon taxa, but the relatively high spatial overturn in them makes them numerous at a global scale..
+
+Rare species tend to make of enormous amounts of diversity (WHY THEY BEST). Rare species may be the first to go. Rare species encode enormous functional diversity and ability to respond to disturbance (@isbell2011high, @leitao2016rare, @mouillot2013rare, @oliver2015biodiversity). Rare species reduce the possibility and severity of biological invasions (@lyons2001rare, @oakley2013plant). 
+
+A conceptual framework to discuss these species may be considered which contains three dimensions, their restriction to particular habitats, their geographic extents, and the number of individuals per population (@rabinowitz1981seven). Collectively the interaction between these traits results in seven forms of rare species (@rabinowitz1981seven). The rare species which receive most of the attention, are those which are restricted to particular habitats across narrow geographical extents, *'narrow (local) endemics'* (@kruckeberg1985biological). In general narrow endemics tend to be the species which require special legal protection to ensure their habitats undergo minimal alterations.  However, the remaining types of rarity still call for consideration by land management agencies. 
+
+```{r}
+library(gt)
+
+title = 'Seven Forms of Rarity'
+subtitle = 'From Rabinowitz 1981'
+stubhead = c('Geographic Range', 'Habitat Specificity')
+rowGroupLabel = 'Local Population Size'
+spannerColumnLabel = c('Large', 'Small')
+columnLabel = c('Wide', 'Narrow', 'Wide', 'Narrow')
+rowLabel = c('Large - dominant somewhere', 'Small - non-dominant')
+footnotes = c('A typology of rare species based on three characteristics: geographic range, habitat specificity, and local population size.')
 
 
-```{r Import AIM species richness}
+rabinowitz <- data.frame(
+  rowname = c('Large', 'Small'),
+  wide = c(
+    'Locally abundant over large range in several habitats', 
+    'Constantly sparse over large range in several habitats'), 
+  narrow = c(
+    'Locally abundant over large range in a specific habitat',
+    'Consistently sparse in a specific habitat but over a large range'),
+  wide1 = c(
+    'Locally abundant in several habitats but restricted geographically',
+    'Constantly sparse and geographically restricted in several habitats'),
+  narrow1 = c(
+    'Locally abundant in a specific habitat but restricted geographically',
+    'Constantly sparse and geographically restricted in a specific habitat')
+  )
+
+
+rabinowitz %>% 
+  gt(rowname_col = "rowname") %>% 
+  tab_header(
+      title = title,
+      subtitle = subtitle) %>% 
+  cols_align(align = "center" ) %>% 
+  cols_label(
+      wide = "Wide",
+      narrow = "Narrow",
+      wide1 = "Wide",
+      narrow1 = "Narrow") %>% 
+  tab_spanner(
+    id = 'test',
+    label = 'Large',
+    columns = c(wide, narrow)) %>% 
+  tab_spanner(
+    label = 'Small',
+    columns = c(wide1, narrow1)) %>% 
+  tab_stubhead('Geographic Range:<br>Habitat Specificity:') %>% 
+  tab_row_group(
+    label = 'Population Size', 
+    rows  = 1:2)
+```
+
+
+Approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index)...
+
+*now go through rare species increasing towards those requiring legal protection*
+
+
+> "Many species are abundant in portions of their range, but uncommon in others @brown1995spatial, @ter2016discovery"
+> r tufte::quote_footer('--- Enquist et al. 2021')`
+
+Locally, different taxa may be considered rare. For example, many species at the leading or trailing edges of ranges... Species which have declined due to our land use plans.. These species have the possibility to be detected using a novel index (@Maciel2021).
+
+
+- DIVERSITY AS IT RELATES TO FINE FUNCTIONS < FUNCTIONAL AND COMMUNITY CONTEXT - MANY SPECIES DO MANY IMPORTANT THINGS >
+- RARITY INDEX < LOCALLY RARE, BUT COMMON ELSEWHERE >
+- LEGAL PROTECTION < RARE EVERYWHERE >
+
+
+
+Rarity is common, most species LOG (whittaker), but most species which exist are also rare (@enquist2019commonness, ). 
+
+
+
+```{r Import AIM species richness, eval = F}
 praw <- '../data/raw'
 f <- list.files(praw, pattern = 'csv')
 
@@ -33,7 +113,7 @@ richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>%
 ```
 
 
-```{r Import tracked Plants}
+```{r Import tracked Plants, eval = F}
 
 read.csv(file.path(praw, f[grep('CNHP', f)]))  %>% 
   filter(MAJORGROUP == 'Vascular Plants')
