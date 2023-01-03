@@ -113,16 +113,15 @@ write.csv(nativity, file.path(ppro, 'Native_Status.csv'), row.names = F)
 # Develop a template for Shrub Sprout not sprout lookup
 
 
-s <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>% 
+s <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
+  mutate(USDA_GrowthHabitSimple = if_else(National_USDASymbol == 'GUSA2', 'Shrub', USDA_GrowthHabitSimple)) %>% 
   filter(USDA_GrowthHabitSimple == 'Shrub') %>% 
-  select(SYMBOL = National_USDASymbol, BINOMIAL_NAT =  National_SciName_noAuthority, HABIT = USDA_GrowthHabitSimple,
-         BINOMIAL_ACKER = Ack_SciName_noAuthority, DURATION = USDA_Duration, NATIVITY = National_NativeStatus) %>% 
-  drop_na()
-  
-shrub_template
+  select(SYMBOL = National_USDASymbol, BINOMIAL_NAT =  National_SciName_noAuthority,
+         BINOMIAL_ACKER = Ack_SciName_noAuthority ) %>% 
+  drop_na() 
 
-
-c('AMAL2', 'AMUT',  # Amelanchier
+shrub_template <- data.frame(SYMBOL = c(
+  'AMAL2', 'AMUT',  # Amelanchier
   'ARPA6', 'ARUV', # arcostaphylos
   'ARAR8', 'ARARA', 'ARARL', 'ARCA13', 'ARFR4', 'ARNO4', 'PIDE4', 'ARTRT',
   'ARTRV', 'ARTRW8', 'ARTRT2', # Artemisia,
@@ -141,7 +140,7 @@ c('AMAL2', 'AMUT',  # Amelanchier
   'FOPU2', # forestiera
   'FRAN2', #fraxinus
   'GRSP', # grayia
-  'GUMI', 'GUSA', # Guiterrhiza
+  'GUMI', 'GUSA2', # Guiterrhiza
   'HEMUM', # heliomeris 
   'HEVIN', # heterotheca
   'HODU', # holodiscus
@@ -156,17 +155,17 @@ c('AMAL2', 'AMUT',  # Amelanchier
   'ROWO', # rosa
   'SAVE4', # Sarcobatus
   'SYLO', 'SYRO', # symphoricarpos
-  'TECA2', 'TENU2', 'TESP', # tetradymia
+  'TECA2', 'TENU2', 'TESP2', # tetradymia
   'TORY', # toxico
   'MACO13' # macheranthera ... 
-  )
+  ))
 
-colnames(s)
+shrub_template <- left_join(shrub_template, s) %>% 
+  mutate(RESPROUT = "", .after = 'SYMBOL')
 
+write.csv(shrub_template, file.path(praw, 'Shrub_Resprout.csv'), row.names = F)
 
-write.csv(shrub_template, file.path(praw, 'Shrub_Sprout.csv'), row.names = F)
-
-
+rm(s, shrub_template)
 
 rm(f, praw, ppro)
 
