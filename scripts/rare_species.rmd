@@ -207,7 +207,7 @@ occurrences <- BIEN::BIEN_occurrence_species(spp_v)
 write.csv( file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
 ```
 
-```{r Prune records to North America}
+```{r Prune records to North America, eval = F}
 
 l3eco <- vect(file.path(praw, 
                         list.files(praw, recursive = T, pattern = 'Level3.*shp$')
@@ -235,16 +235,93 @@ output_dir <- file.path(ppro, 'occurrences' )
 if (!dir.exists(output_dir)) {dir.create(output_dir)}
 st_write(occurrences, file.path(output_dir, 'occurrences_NA.shp'), quiet = T)
 
-rm(l3eco, l3eco_rast, e, occurrences, output_dir)
+rm(l3eco, e, occurrences, output_dir, occ_t)
 ```
 
 
 #### Geographic Range - 
 
-Convex hulls, the smallest area required to cover all locations on an attribute, were developed for each species to calculate the coarse range occupied by a taxon. From the convex hulls, 1km cells which contained over > 95% snow/ice, agricultural, and open water were removed from the hulls (@tuanmu2014global). In order to address *disjunct* distributions, these remaining convex hulls then had a grid created across them in the form of $\frac{No.Records}{16}$, each cell which had at least a single record located within it was kept, cells without species in them were disregarded. The total remaining cells in the this range constitude the total range of the species. After all species had these values calculated they were scaled within the range of 0-1, where larger values indicate larger ranges.
+Convex hulls, the smallest area required to cover all locations on an attribute, were developed for each species to calculate the coarse range occupied by a taxon. From the convex hulls, 1km cells which contained over > 95% snow/ice, agricultural, and open water were removed from the hulls (@tuanmu2014global). In order to address *disjunct* distributions, these remaining convex hulls then had a grid created across them in the form of $\frac{No.Records}{16}$, each cell which had at least a single record located within it was kept, cells without species in them were disregarded. The total remaining cells in the this range constitute the total range of the species. After all species had these values calculated they were scaled within the range of 0-1, where larger values indicate larger ranges.
 
-```{r Prepare exclusion surfaces for geographic range records}
- 
+```{r Prepare exclusion surfaces for geographic range records, eval = F}
+lc <- list.files(praw, pattern = 'tif', recursive = T)
+lseco_83 <- project(l3eco_rast,  "epsg:4326")
+lseco_83 <- trim(lseco_83)
+e <- ext(lseco_83)
+
+rm(lseco_83, l3eco_rast)
+
+agriculture <- crop(rast(file.path(praw, lc[grep('Agri', lc)])), e )
+water <- crop(rast(file.path(praw, lc[grep('Water', lc)])), e)
+snow <- crop(rast(file.path(praw, lc[grep('Snow', lc)])), e)
+urban <- crop(rast(file.path(praw, lc[grep('Urban', lc)])), e)
+
+agriculture <- subst(agriculture, 0:50, NA)
+water <- subst(water, 0:50, NA)
+snow <- subst(snow, 0:50, NA)
+urban <- subst(urban, 0:50, NA)
+
+impervious_multiple <- mosaic(agriculture, water, snow, urban, fun = "sum", 
+                              filename = file.path(ppro, 'impervious_surfaces.tif'),
+                              overwrite = T)
+
+rm(agriculture, water, snow,urban)
+
+m <- c(0, 75, 0,
+      75, 100, 1)
+rclmat <- matrix(m, ncol=3, byrow=TRUE)
+impervious_multiple <- classify(impervious_multiple, rclmat, include.lowest=TRUE)
+impervious_multiple <- focal(impervious_multiple, w=9, max)
+
+writeRaster(impervious_multiple, file.path(ppro, 'impervious_surfaces.tif'), overwrite = T)
+
+rm(m, rclmat)
+```
+
+
+```{r Create convex Hulls}
+
+occurrences <- st_read(file.path(ppro, 'occurrences' , 'occurrences_NA.shp'), quiet = T)
+
+occsplit <- split(occurrences, occurrences$scrbb__)
+ch <- lapply(occsplit, st_combine)
+ch <- lapply(ch, st_convex_hull)
+
+d <- ch[[1]]
+
+ggplot() +
+  geom_sf(data = d) +
+  geom_sf(data = occsplit[[1]]) +
+  theme_classic()
+
+areas <- lapply(ch, st_area)
+areas <- unlist(areas)
+areas <- data.frame(Species = names(areas), 
+                    km.Squared = round(as.numeric(areas)/1000000, 0) )
+
+
+cellSize(impervious_multiple)
+
+grid <- st_make_grid(
+  occsplit[[30]],
+  what = "polygons",
+  square = TRUE
+)
+
+
+ggplot() +
+  geom_sf(data = grid) +
+  geom_sf(data = occsplit[[30]])
+
+
+int <- grid[lengths(st_intersects(grid, occsplit[[30]])) >= 1 ]
+
+ggplot() +
+  geom_sf(data = int) +
+  geom_sf(data = occsplit[[30]])
+
+
+rm(occsplit)
 ```
 
 #### Habitat Range -
