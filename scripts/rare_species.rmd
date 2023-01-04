@@ -29,7 +29,7 @@ In general, a connotation where rare species are synonymous with legal protectio
 
 Rare species encode enormous amounts of functional diversity to an area and have been shown in multiple cases to imbue an ability to respond to disturbance (@isbell2011high, @leitao2016rare, @mouillot2013rare, @oliver2015biodiversity). While we focus on large functional groups in SECTION XX, each of these groups has enormous variation within them, and due to the sheet number of rare species, they comprise most of the variation within these groups (@kondratyeva2019reconciling,  @mouillot2013rare). Rare species are also capable of reducing the possibility and severity of biological invasions (@lyons2001rare, @oakley2013plant). 
 
-A popular conceptual framework to discuss these species may be considered which contains three dimensions, 1) the geographic expanse of the species, 2) their relative restriction to particular habitats, 3) and the number of individuals per population 'size' (@rabinowitz1981seven). Collectively the interaction between these traits can result in a matrix with eight cells along these axises (Table 1), seven of these cells being rare species, six of which occur more frequently (@rabinowitz1981seven). The rare species which receive most of the attention, are those which are restricted to particular habitats across narrow geographical extents, *'narrow (local) endemics'* (Table 1 & 2) (@kruckeberg1985biological). In general narrow endemics tend to be the species which require special legal protection to ensure their habitats undergo minimal alterations.  However, the remaining types of rarity still call for documentation by land management agencies. 
+A popular conceptual framework to discuss these species may be considered which contains three dimensions, 1) the geographic expanse of the species, 2) their relative restriction to particular habitats, 3) and the number of individuals per population 'size' (@rabinowitz1981seven). Collectively the interaction between these traits can result in a matrix with eight cells along these axises (Table 1), seven of these cells being rare species, six of which occur more frequently (@rabinowitz1981seven). The rare species which receive most of the attention, are those which are restricted to particular habitats across narrow geographical extents, *'narrow (local) endemics'* (Table 1 & 2) (@kruckeberg1985biological). In general narrow endemics tend to be the species which require special legal protection to ensure their habitats undergo minimal alterations (@harnik2012long, AND AND ).  However, the remaining types of rarity still call for documentation by land management agencies. 
 
 ```{r Create Rabinowitz table, eval = F}
 library(gt)
@@ -166,19 +166,16 @@ The other half of the table in Figure 1, the two right columns with 'Small' Geog
 # Methods 
 
 ```{r install libraries, eval = F}
-RareFinder
+install.packages('BIEN')
 ```
 
 ```{r Load libraries}
 library(tidyverse)
-library(Rare7)
 library(terra)
 ```
 
 
 ```{r Import AIM species richness}
-
-set.seed(123)
 
 praw <- '../data/raw'
 ppro <- '../data/processed'
@@ -187,6 +184,10 @@ files <- list.files(ppro, pattern = 'csv')
 
 #richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
 #  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+CO_plants <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
+  filter(NATIVITY == 'Native')
+
 ```
 
 
@@ -198,13 +199,31 @@ Nspp_blmCO_tracked <- filter(tracked, BLM_RANK == T) %>% nrow()
 
 To identify rare plants via the aggregated Rabinowitz method... the concepts of the Rare7 package were used. 
 
+
+```{r Gather Plant Records, eval = F}
+spp_v <- CO_plants$BINOMIAL_NAT
+occurrences <- BIEN::BIEN_occurrence_species(spp_v)
+write.csv( file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
+```
+
+```{r Prune records to North America}
+
+l3eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = 'Level3.*shp$')))
+
+
+occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
+  mutate(date_collected = as.Date(date_collected)) %>% 
+  filter(date_collected > '1900-01-01')
+```
+
+
 #### Geographic Range - 
 to produce a spectrum of geographic ranges 10% of the species present in the Flora of Colorado were selected. A minimum convex hull was produced of their localities, and these records were subset to New World Occurrences. Large expanses of agricultural land, denoted as areas in 10x10 km cells with > 85% agriculture were removed from hulls as well. Fishnets were then created across the remaining areas where they number of cells equalled # Records / 10 . these were then rescaled to maximize the variance between 0 1. The number of occupied cells within this were used as a spectrum along which to identify the geographic extent of a taxon.
 
+
 ```{r Prepare exclusion surfaces for geographic range records}
-
+ 
 ```
-
 
 
 #### Population Size -
@@ -213,26 +232,39 @@ To create a relatively consistent estimate of population size the % cover of LPI
 #### Habitat Range -
 to produce a spectrum of habitat ranges 10% of the species present in the Flora of Colorado were selected. They had Omernik level 4 regions extracted to the points, and the proportion of habitats were calculated. $1 -  NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0 1., so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
-```{r Rasterfy habitat Ranges and extract to point}
+```{r Rasterify habitat Ranges and extract to point, eval = F}
 
-l4eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = '.shp$')))
-e <- ext(l4eco)
+l4eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = 'l4.*shp$')))
+l3eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = 'Level3.*shp$')))
+l4eco <- project(l4eco, crs(l3eco))
 
+e <- ext(l3eco)
 l4eco_rast <- rast(
   resolution = 1000,
   ymin = e[3], ymax = e[4], xmin = e[1], xmax = e[2],
   crs = crs(l4eco))
+l4eco_rast <- rasterize(l4eco, l4eco_rast, field = 'US_L4CODE', background = NA)
 
-l4eco_rast <- rasterize(l4eco, l4eco_rast, field = 'US_L4CODE')
+l3eco_rast <- rast(
+  resolution = 1000,
+  ymin = e[3], ymax = e[4], xmin = e[1], xmax = e[2],
+  crs = crs(l3eco))
+l3eco_rast <- rasterize(l3eco, l3eco_rast, field = 'NA_L3CODE', background = NA)
 
-rm(e)
+l3eco_rast <- mask(l3eco_rast, l4eco_rast, inverse  = T, updatevalue = NA )
+eco <- mosaic(l3eco_rast, l4eco_rast)
+
+writeRaster(eco, file.path(ppro, 'EcoRegionsCombined.tif'))
+
+rm(l4eco, l3eco, e, eco, l3eco_rast, l4eco_rast)
 ```
-
 
 the correlation of geographic range to habitat range was checked with linear regression. These two values were then reconstituted to form a single variable via GR * HR. OR PCA...
 
 
 ```{r Gather Species Records from BIEN for Range Descriptions}
+
+
 
 ```
 

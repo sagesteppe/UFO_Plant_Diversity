@@ -40,5 +40,7 @@ vignettes/*.pdf
 
 /FQA_Calculator
 
-us_eco_14/
+us_eco_14/*
+NA_CEC_Eco_Level3/*
+us_eco_14/*
 
