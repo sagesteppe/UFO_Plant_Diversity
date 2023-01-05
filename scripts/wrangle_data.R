@@ -4,6 +4,7 @@ setwd('/media/sagesteppe/ExternalHD/UFO_Plant_Diversity/scripts')
 praw <- '../data/raw'
 ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
+files <- list.files(ppro, pattern = 'csv')
 
 ###############################################################################
 # USDA download
@@ -168,6 +169,25 @@ rm(s, shrub_template)
 
 rm(f, praw, ppro)
 
+#################################################################################
+# Look up additional resprout status of shrubs
+
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
+  select(SYMBOL, RESPROUT) %>% 
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 1, 0))
+
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+richness <- richness %>%  
+  left_join(., shrub_sprout, by = 'SYMBOL')
+
+shrubs_need_sprouts2 <- richness %>% 
+  filter(FUNCTIONAL == 'SHRUB', is.na(RESPROUT)) %>% 
+  distinct(SYMBOL) 
+
+# write.csv(shrubs_need_sprouts2, file.path(praw, 'shrubs_resprout2.csv'),
+#          row.names = F)
 
 ################################################################################
 # ADD Some grass infraspecies to the C3/C4 lookup, also fill out graminoids which
@@ -217,5 +237,6 @@ more_lifeforms <- read.csv( file.path(praw, 'forbsNeedLifeCycles.csv')) %>%
          across(.cols = LIFECYCLE:NATIVITY, ~ str_to_upper(.))) 
 
 write.csv(more_lifeforms, file.path(ppro, 'UtahForbsLifeCycles.csv'), row.names = F)
+
 
 

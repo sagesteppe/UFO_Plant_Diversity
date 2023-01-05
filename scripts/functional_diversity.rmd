@@ -46,7 +46,7 @@ richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>%
   filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
 ```
 
-```{r Lookup Grass and Shrub Status, eval = F}
+```{r Lookup Grass and Shrub Status}
 photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
   mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
 
@@ -66,14 +66,41 @@ richness <- richness %>%
 
 life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
   filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
-  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration)
+  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration) %>% 
+  mutate(LIFECYCLE = case_when(
+    LIFECYCLE == 'Biennial, Perennial' ~ 'Perennial', 
+    LIFECYCLE == 'Annual, Biennial' ~ 'Annual', 
+    LIFECYCLE == 'Annual, Biennial, Perennial' ~ 'Any',
+    TRUE ~ as.character(LIFECYCLE)
+  ))
+
+utah_life_cycles <- read.csv(file.path(ppro, 'UtahForbsLifeCycles.csv')) %>% 
+  select(-BINOMIAL_NAT)
+
+richnessF <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'FORB', !is.na(LIFECYCLE)) 
+
+richnessF <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'FORB', is.na(LIFECYCLE)) %>% 
+  select(-NATIVITY, -LIFECYCLE) %>% 
+  left_join(., utah_life_cycles, by = 'SYMBOL')  %>% 
+  bind_rows(., richnessF)
 
 richness <- richness %>% 
-  left_join(., life_cycle, by = 'SYMBOL')      %>% 
-  filter(FUNCTIONAL == 'FORB', is.na(LIFECYCLE))
+  left_join(., life_cycle, by = 'SYMBOL') %>% 
+  filter(FUNCTIONAL != 'FORB') %>% 
+  bind_rows(., richnessF)  %>% 
+  mutate(NATIVITY = ifelse(FUNCTIONAL == 'SHRUB', NA, NATIVITY),
+         LIFECYCLE = ifelse(FUNCTIONAL == 'SHRUB', NA, LIFECYCLE),
+         across(.cols = NATIVITY:LIFECYCLE, ~ str_to_upper(.x)))
 
-file.path(ppro, 'UtahForbsLifeCycles.csv')
+richness %>% 
+  filter(FUNCTIONAL == 'SHRUB', is.na(RESPROUT)) %>% 
+  distinct(SYMBOL)
 
+rm(richnessF, utah_life_cycles)
 ```
 
 
