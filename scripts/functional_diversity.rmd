@@ -47,22 +47,32 @@ richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>%
 ```
 
 ```{r Lookup Grass and Shrub Status, eval = F}
-photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
-  rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
-  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
 
-shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)]))
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
+  select(SYMBOL, RESPROUT) %>% 
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 1, 0))
 
-t <- richness %>%  
-  left_join(., photosynthetic, by = 'SYMBOL')  %>% 
-  filter(FUNCTIONAL == 'GRASS' & is.na(PHOTOSYNTHETIC)) %>% 
-  distinct(SYMBOL)
-
-rm(photosynthetic)
+richness <- richness %>%  
+  left_join(., photosynthetic, by = 'SYMBOL') %>% 
+  left_join(., shrub_sprout, by = 'SYMBOL')
+  
+# rm(photosynthetic, shrub_sprout)
 ```
 
 
-```{r Lookup Forb Status}
+```{r Lookup Forb Life Cycle}
+
+life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
+  filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
+  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration)
+
+richness <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL')      %>% 
+  filter(FUNCTIONAL == 'FORB', is.na(LIFECYCLE))
+
+file.path(ppro, 'UtahForbsLifeCycles.csv')
 
 ```
 

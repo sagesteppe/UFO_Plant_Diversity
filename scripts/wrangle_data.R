@@ -5,7 +5,6 @@ praw <- '../data/raw'
 ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 
-
 ###############################################################################
 # USDA download
 
@@ -177,7 +176,7 @@ rm(f, praw, ppro)
 richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
   filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
 
-photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*2022[.]csv', f)])) %>% 
   rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
   mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
 
@@ -192,4 +191,31 @@ write.csv(photo2write, row.names = F,
           file.path(praw, 'PhotoSyntheticPathway-Naumanetal2022-RCB.csv'))
 
 rm(richness, photosynthetic, t, photo2write)
+
+
+###############################################################################
+# Many of the forbs are missing life cycles, fix it
+
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
+  filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
+  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration,
+         BINOMIAL_ACK = Ack_SciName_noAuthority, BINOMIAL_NAT = FQA_SciName_noAuthority)
+
+richness <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'FORB', is.na(LIFECYCLE)) %>% 
+  select(SYMBOL, LIFECYCLE, NATIVITY, BINOMIAL_NAT) %>% 
+  distinct(.keep_all = T)
+
+#write.csv(richness, row.names = F, file.path(praw, 'forbsNeedLifeCycles.csv'))
+
+more_lifeforms <- read.csv( file.path(praw, 'forbsNeedLifeCycles.csv')) %>% 
+  mutate(across(.cols = everything(), ~ na_if(., '')),
+         across(.cols = LIFECYCLE:NATIVITY, ~ str_to_upper(.))) 
+
+write.csv(more_lifeforms, file.path(ppro, 'UtahForbsLifeCycles.csv'), row.names = F)
+
 
