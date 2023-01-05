@@ -1,56 +1,53 @@
 SYMBOL,RESPROUT,BINOMIAL_NAT
-EPCU,,
-OPPO,,
-CHVI4,,
-PERA4,,
-RICE,,
-SYOR2,,
-YUGL,,
-GUSA,,
-ECTR,,
-ERPAP10,,
-CHVIS5,,
-TEGL,,
-ATCU,,
-EPHED,,
-SANIC5,,
-YUAN2,,
-ERWR,,
-PUME,,
-EPNE,,
-ARFI2,,
-ERCOA,,
-ERNAN5,,
-QUHAT,,
-SAAM2,,
-DAFRF,,
-RHTRT,,
-SAEX,,
-SUMO,,
-ARBI3,,
-GLSPM,,
-MAGR2,,
-PEPU7,,
-STAC,,
-ERUM,,
-BRMI,,
-ERBI,,
-YUHA,,
-CHVI,,
-YUBA,,
-SCWH,,
-ALOC2,,
-ATRIP,,
-KOSP,,
-BACCH,,
-RHUS,,
-CEMA2,,
-PHMI4,,
-BRICK,,
-CEIN7,,
-SHRO,,
-CHFE3,,
-QUHA3,,
-ATTR3,,
-LEFR2,,
-PSFR,,
+EPCU,YES,Ephedra cutleri
+OPPO,YES,Opuntia polyacantha
+PERA4,,Peraphyllum ramosissimum
+RICE,NO,Ribes cereum
+SYOR2,YES,Symphoricarpos oreophilus
+YUGL,YES,Yucca glauca
+ECTR,NO,Echinocereus triglochidiatus
+ERPAP10,YES,Ericameria parryi
+CHVIS5,YES,Chrysothamnus viscidiflorus ssp. Viscidiflorus
+TEGL,YES,Tetradymia glabrata
+ATCU,NO,Atriplex cuneata
+EPHED,YES,Ephedra
+SANIC5,YES,Sambucus nigra ssp. Cerulea
+YUAN2,YES,Yucca angustissima
+ERWR,YES,Eriogonum wrightii
+PUME,NO,Purshia mexicana
+EPNE,YES,Ephedra nevadensis
+ARFI2,YES,Artemisia filifolia
+ERCOA,YES,Eriogonum corymbosum var. aureum
+ERNAN5,YES,Ericameria nauseosa var. nauseosa
+QUHAT,YES,Quercus harvardii var. tuckeri
+SAAM2,YES,Salix amygdaloides
+DAFRF,YES,Dasiphora fruticosa ssp. Floribunda
+RHTRT,YES,Rhus trilobata var. trilobata
+SAEX,YES,Salix exigua
+SUMO,,Suaeda moquinii
+ARBI3,,Artemisia bigelovii
+GLSPM,,Glossopetalon spinescens var. meionandrum
+MAGR2,YES,Machaeranthera grindelioides
+PEPU7,,Petradoria pumila
+STAC,,Stenotus acaulis
+ERUM,YES,Eriogonum umbellatum
+BRMI,YES,Brickiella microphylla
+ERBI,,Eriogonum bicolor
+YUHA,YES,Yucca harrimaniae
+YUBA,YES,Yuuca baccata
+SCWH,NO,Sclerocactus whipplei
+ALOC2,,Allenrolfea occidentalis
+ATRIP,,Atriplex
+KOSP,,Koeberlinia spinosa
+BACCH,YES,Baccharis
+RHUS,YES,Rhus
+CEMA2,,Ceanothus martinii
+PHMI4,,Philadelphus microphyllus
+BRICK,YES,Brickiella
+CEIN7,,Cercocarpus intricatus
+SHRO,,Shepherdia rotundifolia
+CHFE3,YES,Chamaesyce fendleri
+QUHA3,YES,Quercus harvardii
+ATTR3,NO,Artemisia tridentata
+LEFR2,,Lepidium fremontii
+PSFR,,Psorothamnus fremontii

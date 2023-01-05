@@ -46,13 +46,16 @@ richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>%
   filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
 ```
 
+
+### Append Functional group information 
+
 ```{r Lookup Grass and Shrub Status}
 photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
   mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
 
 shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
   select(SYMBOL, RESPROUT) %>% 
-  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 1, 0))
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
 
 richness <- richness %>%  
   left_join(., photosynthetic, by = 'SYMBOL') %>% 
@@ -60,7 +63,6 @@ richness <- richness %>%
   
 # rm(photosynthetic, shrub_sprout)
 ```
-
 
 ```{r Lookup Forb Life Cycle}
 
@@ -96,18 +98,25 @@ richness <- richness %>%
          LIFECYCLE = ifelse(FUNCTIONAL == 'SHRUB', NA, LIFECYCLE),
          across(.cols = NATIVITY:LIFECYCLE, ~ str_to_upper(.x)))
 
-richness %>% 
-  filter(FUNCTIONAL == 'SHRUB', is.na(RESPROUT)) %>% 
-  distinct(SYMBOL)
-
 rm(richnessF, utah_life_cycles)
 ```
 
+```{r Create Finer Functional Groups}
 
-```{r Add }
+richness %>% 
+  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
+           .after = last_col()) %>% 
+  unite(col = FUNCTIONAL_2, PHOTOSYNTHETIC:FUNCTIONAL, 
+        sep = "-", na.rm = T, remove = F) %>% 
+  select(-PHOTOSYNTHETIC, -RESPROUT, -LIFECYCLE)
 
 ```
 
+### append nativity information 
+
+```{r}
+
+```
 
 
 Non-vascular plants mentioned ....
