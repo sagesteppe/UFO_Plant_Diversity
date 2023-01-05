@@ -38,7 +38,9 @@ library(tidyverse)
 
 ```{r Import AIM LPI Data}
 praw <- '../data/raw'
+ppro <-  '../data/processed'
 f <- list.files(praw, pattern = 'csv')
+files <- list.files(ppro, pattern = 'csv')
 
 richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
   filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
@@ -49,13 +51,26 @@ photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>%
   rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
   mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
 
-shrub_sprout <- read.csv(file.path(praw, f[grep('Shrub', f)]))
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)]))
 
-# %>%  
-  #left_join(, photosynthetic, by = 'SYMBOL')
+t <- richness %>%  
+  left_join(., photosynthetic, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'GRASS' & is.na(PHOTOSYNTHETIC)) %>% 
+  distinct(SYMBOL)
 
 rm(photosynthetic)
 ```
+
+
+```{r Lookup Forb Status}
+
+```
+
+
+```{r Add }
+
+```
+
 
 
 Non-vascular plants mentioned ....

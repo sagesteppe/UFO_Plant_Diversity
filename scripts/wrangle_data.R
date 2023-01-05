@@ -170,5 +170,26 @@ rm(s, shrub_template)
 rm(f, praw, ppro)
 
 
+################################################################################
+# ADD Some grass infraspecies to the C3/C4 lookup, also fill out graminoids which
+# are not Poaceae
 
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
+  rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
+
+t <- richness %>%  
+  left_join(., photosynthetic, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'GRASS' & is.na(PHOTOSYNTHETIC)) %>% 
+  distinct(SYMBOL, PHOTOSYNTHETIC) # these taxa missing designations
+
+photo2write <- bind_rows(photosynthetic, t)
+
+write.csv(photo2write, row.names = F,
+          file.path(praw, 'PhotoSyntheticPathway-Naumanetal2022-RCB.csv'))
+
+rm(richness, photosynthetic, t, photo2write)
 

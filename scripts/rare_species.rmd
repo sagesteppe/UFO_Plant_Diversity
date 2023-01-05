@@ -172,7 +172,6 @@ install.packages('BIEN')
 ```{r Load libraries}
 library(tidyverse)
 library(terra)
-library(sf)
 ```
 
 
@@ -207,171 +206,71 @@ occurrences <- BIEN::BIEN_occurrence_species(spp_v)
 write.csv( file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
 ```
 
-```{r Prune records to North America, eval = F}
-
-l3eco <- vect(file.path(praw, 
-                        list.files(praw, recursive = T, pattern = 'Level3.*shp$')
-                        )) |> aggregate() |> simplifyGeom()  
-
-e <- ext(l3eco)
-l3eco_rast <- rast(
-  resolution = 1000,
-  ymin = e[3], ymax = e[4], xmin = e[1], xmax = e[2],
-  crs = crs(l3eco))
-l3eco_rast <- rasterize(l3eco, l3eco_rast, background = NA)
-
+```{r}
 occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
   mutate(date_collected = as.Date(date_collected)) %>% 
-  filter(date_collected > '1900-01-01') %>% 
-  vect(geom=c("longitude", "latitude"), crs = "epsg:4269") 
-
-l3eco_rast <- project(l3eco_rast, crs(occurrences))
-occ_t <- extract(l3eco_rast, occurrences)
-
-occurrences <- occurrences[!is.na(occ_t$layer),]
-occurrences <- st_as_sf(occurrences)
-
-output_dir <- file.path(ppro, 'occurrences' )
-if (!dir.exists(output_dir)) {dir.create(output_dir)}
-st_write(occurrences, file.path(output_dir, 'occurrences_NA.shp'), quiet = T)
-
-rm(l3eco, e, occurrences, output_dir, occ_t)
+  filter(date_collected > '1900-01-01')
 ```
 
 
 #### Geographic Range - 
+to produce a spectrum of geographic ranges 10% of the species present in the Flora of Colorado were selected. A minimum convex hull was produced of their localities, and these records were subset to New World Occurrences. Large expanses of agricultural land, denoted as areas in 10x10 km cells with > 85% agriculture were removed from hulls as well. Fishnets were then created across the remaining areas where they number of cells equalled # Records / 10 . these were then rescaled to maximize the variance between 0 1. The number of occupied cells within this were used as a spectrum along which to identify the geographic extent of a taxon.
 
-Convex hulls, the smallest area required to cover all locations on an attribute, were developed for each species to calculate the coarse range occupied by a taxon. From the convex hulls, 1km cells which contained over > 95% snow/ice, agricultural, and open water were removed from the hulls (@tuanmu2014global). In order to address *disjunct* distributions, these remaining convex hulls then had a grid created across them in the form of $\frac{No.Records}{16}$, each cell which had at least a single record located within it was kept, cells without species in them were disregarded. The total remaining cells in the this range constitute the total range of the species. After all species had these values calculated they were scaled within the range of 0-1, where larger values indicate larger ranges.
 
-```{r Prepare exclusion surfaces for geographic range records, eval = F}
-lc <- list.files(praw, pattern = 'tif', recursive = T)
-lseco_83 <- project(l3eco_rast,  "epsg:4326")
-lseco_83 <- trim(lseco_83)
-e <- ext(lseco_83)
-
-rm(lseco_83, l3eco_rast)
-
-agriculture <- crop(rast(file.path(praw, lc[grep('Agri', lc)])), e )
-water <- crop(rast(file.path(praw, lc[grep('Water', lc)])), e)
-snow <- crop(rast(file.path(praw, lc[grep('Snow', lc)])), e)
-urban <- crop(rast(file.path(praw, lc[grep('Urban', lc)])), e)
-
-agriculture <- subst(agriculture, 0:50, NA)
-water <- subst(water, 0:50, NA)
-snow <- subst(snow, 0:50, NA)
-urban <- subst(urban, 0:50, NA)
-
-impervious_multiple <- mosaic(agriculture, water, snow, urban, fun = "sum", 
-                              filename = file.path(ppro, 'impervious_surfaces.tif'),
-                              overwrite = T)
-
-rm(agriculture, water, snow,urban)
-
-m <- c(0, 75, 0,
-      75, 100, 1)
-rclmat <- matrix(m, ncol=3, byrow=TRUE)
-impervious_multiple <- classify(impervious_multiple, rclmat, include.lowest=TRUE)
-impervious_multiple <- focal(impervious_multiple, w=9, max)
-
-writeRaster(impervious_multiple, file.path(ppro, 'impervious_surfaces.tif'), overwrite = T)
-
-rm(m, rclmat)
+```{r Prepare exclusion surfaces for geographic range records}
+ 
 ```
 
 
-```{r Create convex Hulls}
 
-occurrences <- st_read(file.path(ppro, 'occurrences' , 'occurrences_NA.shp'), quiet = T)
-
-occsplit <- split(occurrences, occurrences$scrbb__)
-ch <- lapply(occsplit, st_combine)
-ch <- lapply(ch, st_convex_hull)
-
-d <- ch[[1]]
-
-ggplot() +
-  geom_sf(data = d) +
-  geom_sf(data = occsplit[[1]]) +
-  theme_classic()
-
-areas <- lapply(ch, st_area)
-areas <- unlist(areas)
-areas <- data.frame(Species = names(areas), 
-                    km.Squared = round(as.numeric(areas)/1000000, 0) )
-
-
-cellSize(impervious_multiple)
-
-grid <- st_make_grid(
-  occsplit[[30]],
-  what = "polygons",
-  square = TRUE
-)
-
-
-ggplot() +
-  geom_sf(data = grid) +
-  geom_sf(data = occsplit[[30]])
-
-
-int <- grid[lengths(st_intersects(grid, occsplit[[30]])) >= 1 ]
-
-ggplot() +
-  geom_sf(data = int) +
-  geom_sf(data = occsplit[[30]])
-
-
-rm(occsplit)
-```
+#### Population Size -
+To create a relatively consistent estimate of population size the % cover of LPI points for forbs were regressed against estimates of the # of individuals from species richness. The slopes of these regressions were then used to calculate a percent cover estimate for the taxon. Given the relatively low density placement of aim points along transects these were considered indepdenent (i.e. each point drop represents a distinct plant) for all life forms except for trees, which had this value recorded. 
 
 #### Habitat Range -
+to produce a spectrum of habitat ranges 10% of the species present in the Flora of Colorado were selected. They had Omernik level 4 regions extracted to the points, and the proportion of habitats were calculated. $1 -  NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0 1., so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
-To produce a proxy for the variations of habitats which a species may be found in Omernik level IV and III ecoregions were used. Spatial products for the level IV ecoregions 'subdistricts', the finest resolution product, exists for the entirety of the conterminous United States. Spatial products for the level III ecoregions exist for Canada, Mexico, and the United States, these products were mosaiced together, with the higher resolution subdistricts overwriting the level 3 data where available. 
-
-They had Omernik regions extracted to the points, and the proportion of habitats were calculated,  $1 -  NumberHabitats/NumberPoints  $, these were then rescaled to maximize the variance between 0 and 1, species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
-
-```{r Rasterify habitat Ranges and extract to point, eval = F}
+```{r Rasterfy habitat Ranges and extract to point}
 
 l4eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = 'l4.*shp$')))
 l3eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = 'Level3.*shp$')))
 l4eco <- project(l4eco, crs(l3eco))
 
-e <- ext(l3eco)
+e <- ext(l4eco)
 l4eco_rast <- rast(
   resolution = 1000,
   ymin = e[3], ymax = e[4], xmin = e[1], xmax = e[2],
   crs = crs(l4eco))
-l4eco_rast <- rasterize(l4eco, l4eco_rast, field = 'US_L4CODE', background = NA)
+l4eco_rast <- rasterize(l4eco, l4eco_rast, field = 'US_L4CODE')
 
+
+e <- ext(l3eco)
 l3eco_rast <- rast(
-  resolution = 1000,
+  resolution = 2000,
   ymin = e[3], ymax = e[4], xmin = e[1], xmax = e[2],
-  crs = crs(l3eco))
-l3eco_rast <- rasterize(l3eco, l3eco_rast, field = 'NA_L3CODE', background = NA)
+  crs = crs(l4eco))
+l3eco_rast <- rasterize(l3eco, l3eco_rast, field = 'NA_L3CODE')
 
-l3eco_rast <- mask(l3eco_rast, l4eco_rast, inverse  = T, updatevalue = NA )
-eco <- mosaic(l3eco_rast, l4eco_rast)
+r <- rast(nrows=3, ncols=3, xmin=0, xmax=10, ymin=0, ymax=10)
+values(r) <- 1:ncell(r)
+s <- rast(nrows=25, ncols=30, xmin=1, xmax=11, ymin=-1, ymax=11)
+x <- resample(r, s, method="bilinear")
 
-writeRaster(eco, file.path(ppro, 'EcoRegionsCombined.tif'))
 
-rm(l4eco, l3eco, e, eco, l3eco_rast, l4eco_rast)
+
+
+eco_rast <- rasterize(eco, eco_rast, field = 'Code', filename = file.path(ppro, 'Ecoregion_raster.tif'))
+
+plot(l3eco_rast)
+
+rm(e)
+
 ```
 
-#### Population Size -
-
-To create a relatively consistent estimate of population size the % cover of LPI points for forbs were regressed against estimates of the # of individuals from species richness. The slopes of these regressions were then used to calculate a percent cover estimate for the taxon. Given the relatively low density placement of aim points along transects these were considered indepdenent (i.e. each point drop represents a distinct plant) for all life forms except for trees, which had this value recorded. 
-
-
-#### Correlations 
-
-Due to the range in habitats, as proxied by the Ecoregions, being inherently correlated with the geographic range of a species we sought to combine them into a single predictor. 
 
 the correlation of geographic range to habitat range was checked with linear regression. These two values were then reconstituted to form a single variable via GR * HR. OR PCA...
 
 
 ```{r Gather Species Records from BIEN for Range Descriptions}
-
-
 
 ```
 
