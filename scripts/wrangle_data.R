@@ -238,5 +238,116 @@ more_lifeforms <- read.csv( file.path(praw, 'forbsNeedLifeCycles.csv')) %>%
 
 write.csv(more_lifeforms, file.path(ppro, 'UtahForbsLifeCycles.csv'), row.names = F)
 
+################################################################################
+# Append functional group and nativity information to the expected species lists
 
 
+richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
+
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
+  bind_rows(., read.csv(file.path(praw, f[grep('shrubs_resprout', f)]))) %>% 
+  select(SYMBOL, RESPROUT) %>% 
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
+
+richness <- richness %>%  
+  left_join(., photosynthetic, by = 'SYMBOL') %>% 
+  left_join(., shrub_sprout, by = 'SYMBOL')
+
+
+rm(photosynthetic, shrub_sprout)
+
+
+life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
+  filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
+  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration) %>% 
+  mutate(LIFECYCLE = case_when(
+    LIFECYCLE == 'Biennial, Perennial' ~ 'Perennial', 
+    LIFECYCLE == 'Annual, Biennial' ~ 'Annual', 
+    LIFECYCLE == 'Annual, Biennial, Perennial' ~ 'Any',
+    TRUE ~ as.character(LIFECYCLE)
+  ))
+
+utah_life_cycles <- read.csv(file.path(ppro, 'UtahForbsLifeCycles.csv')) %>% 
+  select(-BINOMIAL_NAT)
+
+richnessF <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'FORB', !is.na(LIFECYCLE)) 
+
+richnessF <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL')  %>% 
+  filter(FUNCTIONAL == 'FORB', is.na(LIFECYCLE)) %>% 
+  select(-NATIVITY, -LIFECYCLE) %>% 
+  left_join(., utah_life_cycles, by = 'SYMBOL')  %>% 
+  bind_rows(., richnessF)
+
+richness <- richness %>% 
+  left_join(., life_cycle, by = 'SYMBOL') %>% 
+  filter(FUNCTIONAL != 'FORB') %>% 
+  bind_rows(., richnessF)  %>% 
+  mutate(NATIVITY = ifelse(FUNCTIONAL == 'SHRUB', NA, NATIVITY),
+         LIFECYCLE = ifelse(FUNCTIONAL == 'SHRUB', NA, LIFECYCLE),
+         across(.cols = NATIVITY:LIFECYCLE, ~ str_to_upper(.x)))
+
+rm(richnessF, utah_life_cycles)
+
+
+richness <- richness %>% 
+  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
+           .after = last_col()) %>% 
+  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:FUNCTIONAL, 
+        sep = "-", na.rm = T, remove = F) %>% 
+  select(-PHOTOSYNTHETIC, -RESPROUT)
+
+
+
+nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
+  select(SYMBOL, LIFECYCLE = DURATION, NATIVITY) %>% 
+  mutate(across(.cols = everything(), ~ str_to_upper(.))) %>% 
+  mutate(LIFECYCLE = case_when(
+    LIFECYCLE == 'BIENNIAL, PERENNIAL' ~ 'PERENNIAL', 
+    LIFECYCLE == 'ANNUAL, BIENNIAL' ~ 'ANNUAL', 
+    LIFECYCLE == 'ANNUAL, PERENNIAL' ~ 'ANY',
+    LIFECYCLE == 'ANNUAL, BIENNIAL, PERENNIAL' ~ 'ANY',
+    TRUE ~ as.character(LIFECYCLE)
+  )) 
+
+richness <- left_join(richness, nativity, by = 'SYMBOL') %>% 
+  unite(LIFECYCLE, c(LIFECYCLE.x, LIFECYCLE.y), na.rm = T) %>% 
+  unite(NATIVITY, c(NATIVITY.x, NATIVITY.y), na.rm = T) %>% 
+  mutate(across(.cols = c(LIFECYCLE, NATIVITY), ~ str_remove_all(.x, '_.*')))
+
+richness <- richness %>% # THESE ALL FROM USDA PLANTS
+  mutate(LIFECYCLE = if_else(FUNCTIONAL == 'SHRUB', 'PERENNIAL', LIFECYCLE)) %>% 
+  mutate(LIFECYCLE = if_else(SYMBOL %in% c('ELELE', 'HECOC8', 'LESA4', 
+                                           'PUCCI', 'SPWR2', 'ARIST', 'PLMU3', 
+                                           'SEVU2', 'PSSPI', 'EQUIS', 'SCIRP',
+                                           'CAREX',
+                                           # the next two both contain ANNUALS in 
+                                           # the clades, but the amonut of production
+                                           # should make them referrable to as
+                                           # PERENNIALS,
+                                           'JUNCU', 'GRAM'
+  ), 'PERENNIAL', LIFECYCLE))  %>% 
+  
+  mutate(NATIVITY = if_else(SYMBOL %in% c('ELELE', 'HECOC8', 'LESA4', 'SYOR2', 'TEGL',
+                                          'ATCU', 'EPHED', 'YUAN2', 'PUME', 'EPNE',
+                                          'ERNAN5', 'QUHAT', 'ERWR', 'DAFRF', 
+                                          'CHVIS5', 'PEPU7', 'MAGR2', 'BRMI', 'SEVU2',
+                                          'SCWH', 'PSSPI', 'PLMU3', 'BACCH', 'KOSP', 
+                                          'BACCH', 'RHUS', 'BRICK', 'SHRO', 'ATRIP', 
+                                          'QUHA3', 'ATTR3', 'LEFR2', 'ERCOA', 
+                                          'ALOC2', 'SPWR2', 'PSFR', 'ARIST', 'PUCCI',
+                                          # THESE MUCH MORE VARIOUS BUT NOT REALIZING
+                                          # SINCE IN REFERENCE (ALL OF THESE) NATIVE. OOOF
+                                          'CAREX', 'SCIRP', 'JUNCU', 'GRAM'
+  ), 
+  'NATIVE', NATIVITY)) 
+
+write.csv(richness,  row.names = F,
+          file.path(ppro,
+                    'ESD_Vegetation_Associations_StateTransition_Production-FUNCTIONAL_NATIVE.csv'))

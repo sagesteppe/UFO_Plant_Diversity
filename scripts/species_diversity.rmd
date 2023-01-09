@@ -29,9 +29,6 @@ Given the generally high % abundance of the taxa listed in the species tables ES
 @hooper2005effects
 
 
-
-citations: 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
@@ -58,7 +55,6 @@ fp <- list.files(ppro, pattern = 'csv')
 ```{r Import Data for both Species Richness and LPI, eval = F}
 
 aim_rich <- read.csv(file.path(ppro, fp[grep('AIM_Rich', fp)]))
-
 aim_lpi <- read.csv(file.path(ppro, fp[grep('AIM_LPI', fp)]))
 
 esds <- read.csv(file.path(praw, f[grep('Plot.*ESD', f)])) %>% drop_na()
@@ -67,29 +63,67 @@ esds <- read.csv(file.path(praw, f[grep('Plot.*ESD', f)])) %>% drop_na()
 
 ```
 
-```{r Lookup Grass and Shrub Status, eval = F}
 
-photosynthetic <- read.csv(file.path(praw, f[grep('Photo', f)])) %>% 
-  rename(SYMBOL = USDA.Species.Code, PHOTOSYNTHETIC = Photosynthetic.Group) %>% 
-  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'PG-C3', 'PG-C4' )) 
+```{r Lookup Grass and Shrub Status}
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
 
-shrub_sprout <- read.csv(file.path(praw, f[grep('Shrub', f)]))
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
+  bind_rows(., read.csv(file.path(praw, f[grep('shrubs_resprout', f)]))) %>% 
+  select(SYMBOL, RESPROUT) %>% 
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
 
-
-# %>%  
-  #left_join(, photosynthetic, by = 'SYMBOL')
-
-rm(photosynthetic)
+richness <- richness %>%  
+  left_join(., photosynthetic, by = 'SYMBOL') %>% 
+  left_join(., shrub_sprout, by = 'SYMBOL')
+  
+rm(photosynthetic, shrub_sprout)
 ```
 
-```{r Lookup Nativity status, eval = F}
+```{r Lookup Forb Life Cycle}
 
-nativity <- read.csv(file.path(ppro, fp[grep('Native', fp)]))
+life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
+  filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
+  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration) %>% 
+  mutate(LIFECYCLE = case_when(
+    LIFECYCLE == 'Biennial, Perennial' ~ 'Perennial', 
+    LIFECYCLE == 'Annual, Biennial' ~ 'Annual', 
+    LIFECYCLE == 'Annual, Biennial, Perennial' ~ 'Any',
+    TRUE ~ as.character(LIFECYCLE)
+  ))
 
-# %>%  
-  #left_join(, photosynthetic, by = 'SYMBOL')
+```
 
-rm(nativity)
+```{r Create Finer Functional Groups}
+
+richness <- richness %>% 
+  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
+           .after = last_col()) %>% 
+  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:FUNCTIONAL, 
+        sep = "-", na.rm = T, remove = F) %>% 
+  select(-PHOTOSYNTHETIC, -RESPROUT)
+
+```
+
+
+```{r append nativity information}
+
+nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
+  select(SYMBOL, LIFECYCLE = DURATION, NATIVITY) %>% 
+  mutate(across(.cols = everything(), ~ str_to_upper(.))) %>% 
+  mutate(LIFECYCLE = case_when(
+    LIFECYCLE == 'BIENNIAL, PERENNIAL' ~ 'PERENNIAL', 
+    LIFECYCLE == 'ANNUAL, BIENNIAL' ~ 'ANNUAL', 
+    LIFECYCLE == 'ANNUAL, PERENNIAL' ~ 'ANY',
+    LIFECYCLE == 'ANNUAL, BIENNIAL, PERENNIAL' ~ 'ANY',
+    TRUE ~ as.character(LIFECYCLE)
+  )) 
+
+richness <- left_join(richness, nativity, by = 'SYMBOL') %>% 
+  unite(LIFECYCLE, c(LIFECYCLE.x, LIFECYCLE.y), na.rm = T) %>% 
+  unite(NATIVITY, c(NATIVITY.x, NATIVITY.y), na.rm = T) %>% 
+  mutate(across(.cols = c(LIFECYCLE, NATIVITY), ~ str_remove_all(.x, '_.*')))
+
 ```
 
 
@@ -112,8 +146,10 @@ production <- richness %>% # this with 0 production -
 
 # How many plots meet A for each standard ? And where do they sit relative to B ?
 
+richness <- 
+
 # Let us split out Grass, into C3, C4, and annual - three categories
-# perhaps also split out Shrub into (resprout) and (non-resprout) / or narrow leaf / broadleaf
+# perhaps also split out Shrub into (resprout) and (non-resprout) 
 
 
 # let us split out forbs into native and non-native
