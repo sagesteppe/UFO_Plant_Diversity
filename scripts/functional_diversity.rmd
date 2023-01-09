@@ -44,7 +44,6 @@ files <- list.files(ppro, pattern = 'csv')
 
 ```
 
-
 ### Append Functional group information 
 
 ```{r Lookup Grass and Shrub Status}
@@ -109,7 +108,6 @@ richness <- left_join(richness, nativity, by = 'SYMBOL') %>%
   mutate(across(.cols = c(LIFECYCLE, NATIVITY), ~ str_remove_all(.x, '_.*')))
 
 ```
-
 
 
 # Results 

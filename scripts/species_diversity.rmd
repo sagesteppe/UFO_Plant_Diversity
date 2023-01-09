@@ -52,6 +52,7 @@ f <- list.files(praw, pattern = 'csv')
 fp <- list.files(ppro, pattern = 'csv')
 ```
 
+
 ```{r Import Data for both Species Richness and LPI, eval = F}
 
 aim_rich <- read.csv(file.path(ppro, fp[grep('AIM_Rich', fp)]))
@@ -105,7 +106,6 @@ richness <- richness %>%
 
 ```
 
-
 ```{r append nativity information}
 
 nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
@@ -125,7 +125,6 @@ richness <- left_join(richness, nativity, by = 'SYMBOL') %>%
   mutate(across(.cols = c(LIFECYCLE, NATIVITY), ~ str_remove_all(.x, '_.*')))
 
 ```
-
 
 ```{r Filter Reference Datasets, eval = F}
 
@@ -160,6 +159,35 @@ richness <-
 
 ```
 
+
+
+
+```{r gather estimate of number of species in functional groups}
+
+dominant_plants <- read.csv(file.path(ppro, fp[grep('Associations', fp)])) %>% 
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+
+# this where production > 0 - represents expected richness for a site
+production_zero_func_1 <- richness %>% 
+  filter(LOWER > 0) %>% 
+  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
+  count()   
+
+production_potential_func_1 <- richness %>% # this with 0 production - 
+  # represents all core gamma richness by ESD ??
+  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
+  count()
+
+production_zero_func_2 <- richness %>% 
+  filter(LOWER > 0) %>% 
+  group_by(ECO.SITE, STATE, FUNCTIONAL_FINE) %>% 
+  count()   
+
+production_potential_func_2 <- richness %>% # this with 0 production - 
+  # represents all core gamma richness by ESD ??
+  group_by(ECO.SITE, STATE, FUNCTIONAL_FINE) %>% 
+  count()
+```
 
 ```{r Join Homebrewed ESD groups to Ecological Site Descriptions}
 

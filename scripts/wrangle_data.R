@@ -257,9 +257,7 @@ richness <- richness %>%
   left_join(., photosynthetic, by = 'SYMBOL') %>% 
   left_join(., shrub_sprout, by = 'SYMBOL')
 
-
 rm(photosynthetic, shrub_sprout)
-
 
 life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
   filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
@@ -267,7 +265,10 @@ life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F
   mutate(LIFECYCLE = case_when(
     LIFECYCLE == 'Biennial, Perennial' ~ 'Perennial', 
     LIFECYCLE == 'Annual, Biennial' ~ 'Annual', 
+    LIFECYCLE == 'Biennial' ~ 'Annual', 
+    LIFECYCLE == 'Annual, Perennial' ~ 'Any',
     LIFECYCLE == 'Annual, Biennial, Perennial' ~ 'Any',
+    LIFECYCLE == 'Annual-Perennial' ~ 'ANY',
     TRUE ~ as.character(LIFECYCLE)
   ))
 
@@ -295,7 +296,6 @@ richness <- richness %>%
 
 rm(richnessF, utah_life_cycles)
 
-
 richness <- richness %>% 
   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
            .after = last_col()) %>% 
@@ -303,15 +303,15 @@ richness <- richness %>%
         sep = "-", na.rm = T, remove = F) %>% 
   select(-PHOTOSYNTHETIC, -RESPROUT)
 
-
-
 nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
   select(SYMBOL, LIFECYCLE = DURATION, NATIVITY) %>% 
   mutate(across(.cols = everything(), ~ str_to_upper(.))) %>% 
   mutate(LIFECYCLE = case_when(
     LIFECYCLE == 'BIENNIAL, PERENNIAL' ~ 'PERENNIAL', 
-    LIFECYCLE == 'ANNUAL, BIENNIAL' ~ 'ANNUAL', 
+    LIFECYCLE == 'ANNUAL, BIENNIAL' ~ 'ANNUAL',
+    LIFECYCLE == 'BIENNIAL' ~ 'ANNUAL', 
     LIFECYCLE == 'ANNUAL, PERENNIAL' ~ 'ANY',
+    LIFECYCLE == 'ANNUAL-PERENNIAL' ~ 'ANY',
     LIFECYCLE == 'ANNUAL, BIENNIAL, PERENNIAL' ~ 'ANY',
     TRUE ~ as.character(LIFECYCLE)
   )) 
@@ -348,6 +348,18 @@ richness <- richness %>% # THESE ALL FROM USDA PLANTS
   ), 
   'NATIVE', NATIVITY)) 
 
+richness <- richness %>%
+  mutate(FUNCTIONAL_FINE = case_when(
+    FUNCTIONAL_FINE == 'C3-PERENNIAL-GRASS' ~ 'C3-GRASS',
+    FUNCTIONAL_FINE == 'ANNUAL-PERENNIAL-FORB' ~'ANY-FORB',
+    FUNCTIONAL_FINE == 'NON-RESPROUT-PERENNIAL-FORB' ~'PERENNIAL-FORB',
+    TRUE ~ as.character(FUNCTIONAL_FINE)
+    )) %>% 
+  mutate(LIFECYCLE = if_else(LIFECYCLE =='ANNUAL-PERENNIAL', 'ANY', LIFECYCLE))
+
 write.csv(richness,  row.names = F,
           file.path(ppro,
                     'ESD_Vegetation_Associations_StateTransition_Production-FUNCTIONAL_NATIVE.csv'))
+
+################################################################################
+#
