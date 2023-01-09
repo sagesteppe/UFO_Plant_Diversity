@@ -198,6 +198,7 @@ esdM <- read.csv(file.path(praw, f[grep('modules', f)]))
 
 ```{r Boxplots of different ESG with ESDs and reference standards}
 
+# ! colour the Facet panel backgrounds by this!!!!!!!!
 cols <- colorspace::qualitative_hcl(9, palette = "Dark 3") # these for matching with the species diversity. 
 
 ```

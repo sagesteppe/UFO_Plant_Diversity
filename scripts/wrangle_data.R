@@ -361,5 +361,6 @@ write.csv(richness,  row.names = F,
           file.path(ppro,
                     'ESD_Vegetation_Associations_StateTransition_Production-FUNCTIONAL_NATIVE.csv'))
 
+rm(richness, nativity, life_cycle)
 ################################################################################
 #

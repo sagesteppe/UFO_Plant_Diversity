@@ -30,6 +30,8 @@ knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
 knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(fig.width = 3.5, fig.height=8) 
+knitr::opts_chunk$set(fig.align="left") 
 ```
 
 ```{r}
@@ -41,12 +43,11 @@ praw <- '../data/raw'
 ppro <-  '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 files <- list.files(ppro, pattern = 'csv')
-
 ```
 
 ### Append Functional group information 
 
-```{r Lookup Grass and Shrub Status}
+```{r Lookup Grass and Shrub Status, eval = F}
 photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
   mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
 
@@ -62,7 +63,7 @@ richness <- richness %>%
 rm(photosynthetic, shrub_sprout)
 ```
 
-```{r Lookup Forb Life Cycle}
+```{r Lookup Forb Life Cycle, eval = F}
 
 life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
   filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
@@ -76,7 +77,7 @@ life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F
 
 ```
 
-```{r Create Finer Functional Groups}
+```{r Create Finer Functional Groups, eval = F}
 
 richness <- richness %>% 
   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
@@ -87,9 +88,8 @@ richness <- richness %>%
 
 ```
 
-### append nativity information 
 
-```{r}
+```{r append nativity information, eval = F}
 
 nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
   select(SYMBOL, LIFECYCLE = DURATION, NATIVITY) %>% 
@@ -110,10 +110,121 @@ richness <- left_join(richness, nativity, by = 'SYMBOL') %>%
 ```
 
 
+```{r import benchmarks and join homebrewed ESD groups to Ecological Site Descriptions}
+
+benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)]))
+esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
+  rbind(., data.frame(ESD = 'R036XY315UT',  # we will throw 315 in with PJ 
+                      module_name = 'PinyonJuniper', 
+                      module_number = 1))
+
+benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
+```
+
 # Results 
 
 
-Non-vascular plants mentioned ....
+```{r Benchmarks to Realized Forbs,  fig.cap= 'Forb Cover Benchmarks'}
+
+cols <- colorspace::qualitative_hcl(9, palette = "Dark 3") # these for matching with the species diversity. 
+# ! colour the Facet panel backgrounds by this!!!!!!!!
+
+v <- runif(n = 250, min = 0, max = 20)
+v <- data.frame(mean = v,
+                lower = v - runif(n = 250, min = 0, max = 5), 
+                upper =  v + runif(n = 250, min = 0, max = 5),
+                ECO.SITE = sample(benchmarks$ECO.SITE, size = 250, replace = T))
+v$lower <- ifelse(v$lower < 0, 0, v$lower)
+
+
+dodge <- position_dodge2(width=0.5, reverse = T)
+
+benchmarks %>% 
+  filter(COVER_TYPE == 'Forb') %>% 
+  group_by(ECO.SITE) %>% 
+  arrange(-MEAN) %>% 
+  ggplot() +
+  geom_point( aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
+              shape = 23, fill = '#860FAE', alpha = 0.8, size = 2) +
+  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  theme_bw() + 
+  
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.major.y =  element_blank(),
+        axis.text.y = element_text( size = 8), 
+        legend.position = 'bottom') +
+  labs(title = 'Forb Cover',
+       y = NULL, x = 'Percent') +
+  scale_x_continuous(NULL, breaks = seq(from = 0, to = 25, by = 5), 
+                     labels = paste0(seq(from = 0, to = 25, by = 5), '%'), 
+                     limits = c(0,25))
+
+```
+
+```{r Benchmarks to Realized Shrubs, fig.cap= 'Shrub Cover Benchmarks'}
+
+benchmarks %>% 
+  filter(COVER_TYPE == 'Shrub') %>% 
+  group_by(ECO.SITE) %>% 
+  arrange(-MEAN) %>% 
+  ggplot() +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey50') +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.major.y =  element_blank(),
+        axis.text.y = element_text(color = "grey20", size = 8), 
+     #   aspect.ratio=16/9,
+        legend.position = 'bottom') +
+  labs(title = 'Shrub Cover',
+       y = NULL, x = '% Cover') 
+
+```
+
+
+```{r Benchmarks to Realized Trees, fig.cap= 'Tree Cover Benchmarks'}
+
+benchmarks %>% 
+  filter(COVER_TYPE == 'Tree') %>% 
+  group_by(ECO.SITE) %>% 
+  arrange(-MEAN) %>% 
+  ggplot() +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey50') +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.major.y =  element_blank(),
+        axis.text.y = element_text(color = "grey20", size = 8), 
+     #   aspect.ratio=16/9,
+        legend.position = 'bottom') +
+  labs(title = 'Tree Cover',
+       y = NULL, x = '% Cover') 
+
+```
+
+```{r Benchmarks to Realized Grass, fig.cap= 'Grass Cover Benchmarks'}
+
+benchmarks %>% 
+  filter(COVER_TYPE == 'Grass') %>% 
+  group_by(ECO.SITE) %>% 
+  arrange(-MEAN) %>% 
+  ggplot() +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey50') +
+  theme_bw() + 
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.margin = unit(c(0.5,0.5,0,0.5), "cm"),
+        panel.grid.major.y =  element_blank(),
+        axis.text.y = element_text(color = "grey20", size = 8), 
+     #   aspect.ratio=16/9,
+        legend.position = 'bottom') +
+  labs(title = 'Grass Cover',
+       y = NULL, x = '% Cover') 
+
+```
+
+
+
+Non-vascular plants mentioned .... -> -> enhance other veg which restores at shorter time periods, allow crust to come back
+in slowly, as restoration approaches still nascent? 
 
 
 
