@@ -17,7 +17,7 @@ While each plant functions differently in an ecosystem context, the degrees of d
 
 In Western Colorado, five major forms of plant functional types are often used to evaluate range conditions. These forms are: Trees, Shrubs, Grasses, and Forbs (or herbs), and each has been linked to affecting rangelands in multiple ways; theoretically their distributions and abundances are driven by variations in soil moisture throughout horizons (@sala199711). Accordingly, in nearly all instances a mix of each of these groups, less trees, is best to maintain ecosystem services on BLM Land. In our area which features massive extents of Pinon-Juniper Woodland, trees when present, are included in this mix on ecological sites which they are more capable of surviving on over long periods relative to shrubs. 
 
-Semi-arid lands which are utilized as rangelands across the world are experiencing several common issues relating to shifts in the composition of their plant functional types (@archer2014ecosystem, @eldridge2016ecosystem, @maestre2016structure, @diaz2007plant). Namely, decreases in grasses whilst increases in woody species are occurring. In certain areas, the increases - or encroachment  of - woody species may be split into encroachment of trees, and the transition to a shrub state in ecological sites which do not support trees. In nearly all lands utilized as rangelands around the world the cover of and species richness of perennial forbs decreases, while the cover of annual forbs increases (@diaz2007plant). 
+Semi-arid lands which are utilized as rangelands across the world are experiencing several common issues relating to shifts in the composition of their plant functional types (@archer2014ecosystem, @eldridge2016ecosystem, @maestre2016structure, @diaz2007plant, @dalgleish2010can). Namely, decreases in grasses whilst increases in woody species are occurring. In certain areas, the increases - or encroachment  of - woody species may be split into encroachment of trees, and the transition to a shrub state in ecological sites which do not support trees. In nearly all lands utilized as rangelands around the world the cover of and species richness of perennial forbs decreases, while the cover of annual forbs increases (@diaz2007plant, @west2006long). 
 
 The current increases in shrub cover relative to the cover of the herbaceous strata, grasses and forbs, are problematic for a variety of reasons. The increase in Trees at mixed grass-shrublands sites may decrease water available to grasses and shrubs but not non-native annual grasses (@mciver2022pinon), as cattle depend on grasses and wildlife shrubs these decrease the ability of our lands to support either. Increases in shrubs at the expense of perennial grasses and forbs may increase the severity of site level drought (@wilson2018functional), further shrubs and trees may foster higher severity fires (CITE). Increases in shrubs decrease soil stability, allowing increased erosion, increasing DUST ON SNOW, and is an irritant to human breathing (@munson2011responses). Decreases in perennial grass may reduce competing non-native annuals from overtaking sites @sheley2010resistance, @corbin2004competition, although a diversity of species may be best (@belnap2008soil). A decreases in forbs adversely affect wildlife feeding both directly and indirectly, and by decreasing the quality of habitats, the lack of perennial forbs are widely evident for species such as the Gunnison Sage-Grouse (@pennington2016sagebrush). These issues we are currently facing may be compounded in the future by problems which are only begin to become apparent. 
 
@@ -129,13 +129,15 @@ benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD'))
 cols <- colorspace::qualitative_hcl(9, palette = "Dark 3") # these for matching with the species diversity. 
 # ! colour the Facet panel backgrounds by this!!!!!!!!
 
+
+# dummy data here
 v <- runif(n = 250, min = 0, max = 20)
 v <- data.frame(mean = v,
                 lower = v - runif(n = 250, min = 0, max = 5), 
                 upper =  v + runif(n = 250, min = 0, max = 5),
                 ECO.SITE = sample(benchmarks$ECO.SITE, size = 250, replace = T))
 v$lower <- ifelse(v$lower < 0, 0, v$lower)
-
+# end dummy data here
 
 dodge <- position_dodge2(width=0.5, reverse = T)
 
@@ -143,12 +145,14 @@ benchmarks %>%
   filter(COVER_TYPE == 'Forb') %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
+  
   ggplot() +
-  geom_point( aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
-              shape = 23, fill = '#860FAE', alpha = 0.8, size = 2) +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
+              shape = 23, fill = '#860FAE', alpha = 0.8, size = 2) + #benchmarks here
+  
   geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
     position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
-  theme_bw() + 
+  theme_bw() + # AIM data are here
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
@@ -162,25 +166,42 @@ benchmarks %>%
 
 ```
 
+Benchmark forb cover is generally low across all Ecological Sites in the study area, with a maximum expected cover at any site of `r max(benchmarks[benchmarks$COVER_TYPE == 'Forb' & benchmarks$ESTIMATE == 'UPPER','COVER'])`% and the median mean value across all sites being `r median(benchmarks[benchmarks$COVER_TYPE == 'Forb','MEAN'])`%. In general these estimates focus on perennial species, as after they germinate nearly all of these species will retain some above ground biomass across each active growing season of their lives, whereas annual forbs may not germinate in drier years and hence have more across year variation in their abundance. As these values are intended to capture the variation of these Ecological Sites, and these estimates were presumably created within the last 20 years (see SECTION XX on ESD development), we would expect that the covers observed on AIM plots were close to the lower estimates of variability. 
+
+While nearly all plants produce less above-ground biomass during drought, additional complications with natural and climate induced mortality and the subsequent lakc of recruitment of perennial forbs from the soil seed bank may contribute to sites not meeting benchmarks (@eziz2017drought, @casper1996demographic). The establishment of both long and short lived forbs seems hampered during drought periods, and it may take several years after the cessation of a drought for the cover of perennial forbs to return to pre-drought conditions (@anderson2001landscape). 
+
+In particular it is probable that short lived perennial forbs, which generally only live a total of 2-4 years past their germination (@dalgleish2010can) have widely decreased in areas during the drought (@torang2010linking, @anderson2001landscape). While their appear to be few scientifically conducted observations on perennial forb longevity, many perennial forbs seem to generally persist for one to two decades (but up to four are noted), and once established (i.e. they reach reproductive maturity) are able to survive a couple types of disturbances, such as drought (@treshow1974longevity, @lauenroth2008demography, @morris2008longevity). However, given the duration of the current drought, and the merely episodic periods of normal moisture balances (SECTION XX), required to recruit new individuals, it is possible many of the long lived perennials have suffered non-drought induced mortality, and have not recruited individuals from the seed bank. Recovery of the above ground cover of both forms of perennial forbs may require periods of from 2-5 years in more mesic sage-steppe areas (@anderson2001landscape).
+
+Particular areas across the field office which may be the most affected by forb declines may be those inherently lower water storing capaity; such as those with skeletal soils and short depths to bedrock, e.g. Salt Desert and considerable portions of Pinyon-Juniper Woodland. It has been observed that the soil depth of sites can be a highly, or the most, influential factor on survival of perennial forbs during times of drought (@davison2010demographic, @nicole2011interdependent).
+
 ```{r Benchmarks to Realized Shrubs, fig.cap= 'Shrub Cover Benchmarks'}
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Shrub') %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
+  
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey50') +
-  theme_bw() + 
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
+              shape = 23, fill = '#D4D7DE', alpha = 0.8, size = 2) + #benchmarks here
+  
+  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  theme_bw() + # AIM data are here
+  
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
-        axis.text.y = element_text(color = "grey20", size = 8), 
-     #   aspect.ratio=16/9,
+        axis.text.y = element_text( size = 8), 
         legend.position = 'bottom') +
   labs(title = 'Shrub Cover',
-       y = NULL, x = '% Cover') 
+       y = NULL, x = 'Percent') +
+  scale_x_continuous(NULL, breaks = seq(from = 0, to = 60, by = 10), 
+                     labels = paste0(seq(from = 0, to = 60, by = 10), '%'), 
+                     limits = c(0,60))
 
 ```
 
+The increase
 
 ```{r Benchmarks to Realized Trees, fig.cap= 'Tree Cover Benchmarks'}
 
@@ -188,16 +209,24 @@ benchmarks %>%
   filter(COVER_TYPE == 'Tree') %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
+  
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey50') +
-  theme_bw() + 
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
+              shape = 23, fill = '#DD4513', alpha = 0.8, size = 2) + #benchmarks here
+  
+  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  theme_bw() + # AIM data are here
+  
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
-        axis.text.y = element_text(color = "grey20", size = 8), 
-     #   aspect.ratio=16/9,
+        axis.text.y = element_text( size = 8), 
         legend.position = 'bottom') +
   labs(title = 'Tree Cover',
-       y = NULL, x = '% Cover') 
+       y = NULL, x = 'Percent') +
+  scale_x_continuous(NULL, breaks = seq(from = 0, to = 40, by = 10), 
+                     labels = paste0(seq(from = 0, to = 40, by = 10), '%'), 
+                     limits = c(0,40))
 
 ```
 
@@ -207,17 +236,24 @@ benchmarks %>%
   filter(COVER_TYPE == 'Grass') %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
+  
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey50') +
-  theme_bw() + 
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
+              shape = 23, fill = '#30A934', alpha = 0.8, size = 2) + #benchmarks here
+  
+  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  theme_bw() + # AIM data are here
+  
   theme(plot.title = element_text(hjust = 0.5),
-        plot.margin = unit(c(0.5,0.5,0,0.5), "cm"),
         panel.grid.major.y =  element_blank(),
-        axis.text.y = element_text(color = "grey20", size = 8), 
-     #   aspect.ratio=16/9,
+        axis.text.y = element_text( size = 8), 
         legend.position = 'bottom') +
   labs(title = 'Grass Cover',
-       y = NULL, x = '% Cover') 
+       y = NULL, x = 'Percent') +
+  scale_x_continuous(NULL, breaks = seq(from = 0, to = 60, by = 10), 
+                     labels = paste0(seq(from = 0, to = 60, by = 10), '%'), 
+                     limits = c(0,60))
 
 ```
 
