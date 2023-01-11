@@ -7,6 +7,7 @@ output:
   word_document: default
 header-includes:
  - \usepackage[width=\textwidth]{caption}
+ - \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
@@ -165,7 +166,6 @@ benchmarks %>%
 
 ```
 
-
 ### Forb Cover
 
 Benchmark forb cover is generally low across all Ecological Sites in the study area, with a maximum expected cover at any site of `r max(benchmarks[benchmarks$COVER_TYPE == 'Forb' & benchmarks$ESTIMATE == 'UPPER','COVER'])`% and the median mean value across all sites being `r median(benchmarks[benchmarks$COVER_TYPE == 'Forb','MEAN'])`%. In general these estimates focus on perennial species, as after they germinate nearly all of these species will retain some above ground biomass across each active growing season of their lives, whereas annual forbs may not germinate in drier years and hence have more across year variation in their abundance. As these values are intended to capture the variation of these Ecological Sites, and these estimates were presumably created within the last 20 years (see SECTION XX on ESD development), we would expect that the covers observed on AIM plots were close to the lower estimates of variability. 
@@ -241,7 +241,7 @@ benchmarks %>%
 ```
 
 
-# Tree Cover
+### Tree Cover
 
 As a component of woody cover, the same general trends, expectations, and reasoning behind an increase in tree cover is shared as discussed in the shrub section.  Mortality of portions of trees is expected less on trees than shrubs. 
 
@@ -274,13 +274,13 @@ benchmarks %>%
 
 ### Perennial Grass Cover
 
-It is difficult to determine the extent to which grasses of the Colorado Plateau will reduce their growth in response to drought. Various studies have found that grass production decreases during drought, and during periods of highly variable precipitation (@gherardi2015enhanced, @staver2019grazer, @munson2022primary). Whereas other studies show that the amount of biomass produced by grasses is quite resilient to drought (@byrne2017contrasting), and that moisture limitation reductions in grass growth are largely buffered by legacy effects (in this case, a single normal year of precipitation can offset the next few years of dryness and *vice versa*; a year like 2018 SECTION XX) (@sala2012legacies, @reichmann2013precipitation).  From the complications in drawing a clear line across the effects, we expect that drought would have had moderate effects on reducing the cover of perennial grasses, and that cover would be expected beneath the midpoint of variation for this benchmark.
+It is difficult to determine the extent to which grasses of the Colorado Plateau will reduce their above ground growth in response to drought. Various studies have found that grass production decreases during drought, and during periods of highly variable precipitation, however the extent of reductions are variable (@gherardi2015enhanced, @staver2019grazer, @munson2022primary). While other studies show that the amount of biomass produced by grasses is quite resilient to drought (@byrne2017contrasting), and that moisture limitation reductions in grass growth are largely buffered by legacy effects (in this case, a single normal year of precipitation, e.g. 2018, can offset the next few years of dryness and *vice versa*; SECTION XX) (@sala2012legacies, @reichmann2013precipitation).  More recent studies limited to the Colorado Plateau have shown reduced growth of C4 grasses, partially due to variability in Monsoons, and C3 grasses via reduced cool season precipitation (@munson2022primary, @hoover2021drought). However, given the distinctive growth forms of grasses (i.e. generally columnar), it is unlikely that their cover would be found to be much lower via the methods employed by AIM, unless high levels of mortality occurred. 
 
-Recent studies limited to the Colorado Plateau have shown reduced growth of C4 grasses, partially due to variability in Monsoons (?), and C3 grasses via reduced cool season precipitation (@munson2022primary, @hoover2021drought) ... However, given the distinctive growth forms of grasses (i.e. generally columnar), it is unlikely that their cover would be found to be lower via the methods employed by AIM, unless high levels of mortality occurred. 
+Compared to perennial forb duration perennial grasses in general appear to live for considerable longer, many from 4-7 decades (@lauenroth2008demography, @treshow1974longevity) but purportedly many of the local grasses only persist 1-1.5 decades (WHERE WAS THIS?!?!?! - USGS local). Many clonal grass species, such as some species of *Bouteloua* appear much less likely to undergo mortality of the whole plant or many clones (@de2010longevity) relative to bunch-grasses (but see @winkler2019shrub).  Mortality due to drought is expected to reduce cover measurements of grasses more than reductions in above ground biomass. While grasses tend to have deeper roots than forbs, soil textures and depths (@chamrad1965drought, @griffin2012mortality) still mediate drought effects. A manipulative experiment which sought to determine the effect of drought on five grass species in the Colorado Plateau observed mortality of roughly 25% of all individuals under the ambient treatment (similar conditions to what the UFO experienced), largely attributed to Indian Rice Grass (*Achnatherum hymenoides*), tracked in ambient conditions over the time period 2011-2018 (@winkler2019shrub). 
 
-Compared to perennial forb duration, perennial grasses appear to live for considerable longer, form 4 - 7 decades (@lauenroth2008demography, @treshow1974longevity), and while the recruitment of new grass individuals is likely moisture limited, it is unlikely that as considerably high a proportion of the members of this functional group would have died off over this period, independent of drought induced mortality (@morris2008longevity). 
+Similar to forbs, we expect little to none recruitment of new grass individuals from the soil seed bank. However suspect it is unlikely that has considerably high a proportion of the members of this functional group would have died off over this period, independent of drought induced mortality (@morris2008longevity, @winkler2019shrub) as perennial forbs, and given their average rooting depths relative to forbs should be more drought tolerant (@sala199711). Accordingly we expect estimates of grass cover to be at the lowest end of the benchmarks. 
 
-Mortality of grasses due to drought is now expected ... Similar to forbs, soil textures and depths (@chamrad1965drought, @griffin2012mortality) are able to mediate drought effects. Highest mortality are to be expected on Ecological Sits with coarse grained (sandy) and shallow soils. 
+
 
 \newpage
 
