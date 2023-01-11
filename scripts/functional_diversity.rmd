@@ -31,7 +31,6 @@ knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
 knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
-knitr::opts_chunk$set(fig.width = 3.5, fig.height=8) 
 knitr::opts_chunk$set(fig.align="left") 
 ```
 
@@ -124,11 +123,11 @@ benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD'))
 
 # Results 
 
-```{r Benchmarks to Realized Forbs,  fig.cap= 'Forb Cover Benchmarks'}
+\begin{center}
+{\section{Forb Cover}}
+\end{center}
 
-cols <- colorspace::qualitative_hcl(9, palette = "Dark 3") # these for matching with the species diversity. 
-# ! colour the Facet panel backgrounds by this!!!!!!!!
-
+```{r Benchmarks to Realized Forbs, eval = F}
 
 # dummy data here
 v <- runif(n = 250, min = 0, max = 20)
@@ -139,9 +138,7 @@ v <- data.frame(mean = v,
 v$lower <- ifelse(v$lower < 0, 0, v$lower)
 # end dummy data here
 
-dodge <- position_dodge2(width=0.5, reverse = T)
-
-benchmarks %>% 
+forb_bench <- benchmarks %>% 
   filter(COVER_TYPE == 'Forb') %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
@@ -157,6 +154,7 @@ benchmarks %>%
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
         axis.text.y = element_text( size = 8), 
+        aspect.ratio = 16/9,
         legend.position = 'bottom') +
   labs(title = 'Forb Cover',
        y = NULL, x = 'Percent') +
@@ -164,9 +162,16 @@ benchmarks %>%
                      labels = paste0(seq(from = 0, to = 25, by = 5), '%'), 
                      limits = c(0,25))
 
+ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
+       path = '../results/benchmarks', filename = 'forb_benchmark.png')
+
 ```
 
-### Forb Cover
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../results/benchmarks/forb_benchmark.png}
+  \caption{Benchmarks and Observed Values}
+\end{wrapfigure}
 
 Benchmark forb cover is generally low across all Ecological Sites in the study area, with a maximum expected cover at any site of `r max(benchmarks[benchmarks$COVER_TYPE == 'Forb' & benchmarks$ESTIMATE == 'UPPER','COVER'])`% and the median mean value across all sites being `r median(benchmarks[benchmarks$COVER_TYPE == 'Forb','MEAN'])`%. In general these estimates focus on perennial species, as after they germinate nearly all of these species will retain some above ground biomass across each active growing season of their lives, whereas annual forbs may not germinate in drier years and hence have more across year variation in their abundance. As these values are intended to capture the variation of these Ecological Sites, and these estimates were presumably created within the last 20 years (see SECTION XX on ESD development), we would expect that the covers observed on AIM plots were close to the lower estimates of variability. 
 
@@ -176,7 +181,14 @@ In particular it is probable that short lived perennial forbs, which generally o
 
 Particular areas across the field office which may be the most affected by forb declines may be those inherently lower water storing capacity; such as those with skeletal soils and short depths to bedrock, e.g. Salt Desert and considerable portions of Pinyon-Juniper Woodland. It has been observed that the soil depth of sites can be a highly, or the most, influential factor on survival of perennial forbs during times of drought (@davison2010demographic, @nicole2011interdependent). Accordingly, sites supporting Wyoming Big-Sage, some of which constitute our Gunnison Sage-Grouse habitat should be less affected. 
 
-```{r Benchmarks to Realized Shrubs, fig.cap= 'Shrub Cover Benchmarks'}
+
+\newpage
+
+\begin{center}
+{\section{Shrub Cover}}
+\end{center}
+
+```{r Benchmarks to Realized Shrubs, eval = F}
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Shrub') %>% 
@@ -194,6 +206,7 @@ benchmarks %>%
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
         axis.text.y = element_text( size = 8), 
+        aspect.ratio = 16/9,
         legend.position = 'bottom') +
   labs(title = 'Shrub Cover',
        y = NULL, x = 'Percent') +
@@ -201,19 +214,29 @@ benchmarks %>%
                      labels = paste0(seq(from = 0, to = 60, by = 10), '%'), 
                      limits = c(0,60))
 
+ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
+       path = '../results/benchmarks', filename = 'shrub_benchmark.png')
 ```
 
-
-### Shrub Cover
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../results/benchmarks/shrub_benchmark.png}
+  \caption{Benchmarks and Observed Values}
+\end{wrapfigure}
 
 The cover of woody plants is expected to be at the upper end and beyond the reference benchmark values (Figure XX). We anticipate that the cover of woody plants is elevated relative to the reference state, a common occurrence in all semi-arid lands utilized as range (@bestelmeyer2018grassland, AND...) . While some disagreement over the mechanistic causes of increases in woody plant cover exist in the literature, from a management context the drivers may largely be attributed to: 1) An altered fire-cycle 2) increasing atmosphere CO~2~ 3) improper grazing by livestock (@bestelmeyer2018grassland). All of these initial drivers may lead to feedback loops enforced by changes to soil fertility which cause the shrub-encroached status of these sites to continue (@bestelmeyer2018grassland).
 
 We do not expect that the drought had a noticeably negative effect on total woody plant cover, although varying levels of mortality are likely across the study area. Shrubs are considered less responsive to droughts due to depths which many of their roots are able to reach to draw soil moisture (@winkler2019shrub, CITE). Further, given the much slower time it takes woody plant parts to break off and decompose, individuals are still likely to be recorded via the AIM methods (CITE)...
 
 Reductions in woody plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and varies considerably by ecological site (CITE). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return...
- 
 
-```{r Benchmarks to Realized Trees, fig.cap= 'Tree Cover Benchmarks'}
+\newpage
+
+\begin{center}
+{\section{Tree Cover}}
+\end{center}
+
+```{r Benchmarks to Realized Trees, eval = F}
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Tree') %>% 
@@ -231,6 +254,7 @@ benchmarks %>%
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
         axis.text.y = element_text( size = 8), 
+        aspect.ratio = 16/9,
         legend.position = 'bottom') +
   labs(title = 'Tree Cover',
        y = NULL, x = 'Percent') +
@@ -238,14 +262,25 @@ benchmarks %>%
                      labels = paste0(seq(from = 0, to = 40, by = 10), '%'), 
                      limits = c(0,40))
 
+ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
+       path = '../results/benchmarks', filename = 'tree_benchmark.png')
 ```
 
-
-### Tree Cover
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../results/benchmarks/tree_benchmark.png}
+  \caption{Benchmarks and Observed Values}
+\end{wrapfigure}
 
 As a component of woody cover, the same general trends, expectations, and reasoning behind an increase in tree cover is shared as discussed in the shrub section.  Mortality of portions of trees is expected less on trees than shrubs. 
 
-```{r Benchmarks to Realized Grass, fig.cap= 'Grass Cover Benchmarks'}
+\newpage
+
+\begin{center}
+{\section{Perennial Grass Cover}} 
+\end{center}
+
+```{r Benchmarks to Realized Grass, eval = F}
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Grass') %>% 
@@ -262,6 +297,7 @@ benchmarks %>%
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
+        aspect.ratio = 16/9,
         axis.text.y = element_text( size = 8), 
         legend.position = 'bottom') +
   labs(title = 'Grass Cover',
@@ -270,9 +306,16 @@ benchmarks %>%
                      labels = paste0(seq(from = 0, to = 60, by = 10), '%'), 
                      limits = c(0,60))
 
+ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
+       path = '../results/benchmarks', filename = 'grass_benchmark.png')
+
 ```
 
-### Perennial Grass Cover
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../results/benchmarks/grass_benchmark.png}
+  \caption{Benchmarks and Observed Values}
+\end{wrapfigure}
 
 It is difficult to determine the extent to which grasses of the Colorado Plateau will reduce their above ground growth in response to drought. Various studies have found that grass production decreases during drought, and during periods of highly variable precipitation, however the extent of reductions are variable (@gherardi2015enhanced, @staver2019grazer, @munson2022primary). While other studies show that the amount of biomass produced by grasses is quite resilient to drought (@byrne2017contrasting), and that moisture limitation reductions in grass growth are largely buffered by legacy effects (in this case, a single normal year of precipitation, e.g. 2018, can offset the next few years of dryness and *vice versa*; SECTION XX) (@sala2012legacies, @reichmann2013precipitation).  More recent studies limited to the Colorado Plateau have shown reduced growth of C4 grasses, partially due to variability in Monsoons, and C3 grasses via reduced cool season precipitation (@munson2022primary, @hoover2021drought). However, given the distinctive growth forms of grasses (i.e. generally columnar), it is unlikely that their cover would be found to be much lower via the methods employed by AIM, unless high levels of mortality occurred. 
 
@@ -280,6 +323,11 @@ Compared to perennial forb duration perennial grasses in general appear to live 
 
 Similar to forbs, we expect little to none recruitment of new grass individuals from the soil seed bank. However suspect it is unlikely that has considerably high a proportion of the members of this functional group would have died off over this period, independent of drought induced mortality (@morris2008longevity, @winkler2019shrub) as perennial forbs, and given their average rooting depths relative to forbs should be more drought tolerant (@sala199711). Accordingly we expect estimates of grass cover to be at the lowest end of the benchmarks. 
 
+
+```{sh, crop the images, eval = F}
+cd ../results/benchmarks
+mogrify -trim *.png
+```
 
 
 \newpage
