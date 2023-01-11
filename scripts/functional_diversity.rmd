@@ -188,6 +188,11 @@ Particular areas across the field office which may be the most affected by forb 
 {\section{Woody Plant Encroachment}}
 \end{center}
 
+The cover of woody plants, both shrubs and trees, is expected to be at the upper end and beyond the reference benchmark values at nearly all Ecological Sites (Figure XX).The cover of woody plants being elevated relative to the reference conditions is a common occurrence in nearly all arid and semi-arid lands utilized as rangelands globally (@bestelmeyer2018grassland, @archer2017woody). While some disagreement over the exact mechanistic causes of increases in woody plant cover exist in the literature the major opinions largely reflect the opinions of land managers, whom feel that this trend may mostly be attributed to: 1) An altered fire-cycle 2) increasing atmosphere CO~2~ 3) improper grazing by livestock (@bestelmeyer2018grassland). All of these initial drivers may lead to feedback loops enforced by changes to soil fertility which cause the shrub-encroached status of these sites to perpetuate (@bestelmeyer2018grassland).
+
+Unfortunately in most scenarios, we do not expect that drought is going to have significant effects on reducing shrub and tree cover, and where mortality has occurred it threatens to create conditions which allow for potential of server wildfire. The species of shrubs and trees which grow in semi-arid lands are considered less responsive to droughts due to depths which many of their roots are able to reach to draw soil moisture (@winkler2019shrub, CITE). The longevity of shrubs and trees is considerably greater than either forbs and grasses, and while it is expected the recruitment of these species are limited during dry periods, the effects of background mortality on them should have marginal effects at the time scales over which the current drought is occurring. However, a lack of self thinning processes and the competition between densely colonizing trees for limited water at their soils depths is likely to result in considerable mortality in areas with very dense stands of similarly aged trees. These areas are often times the result of an historic vegetation treatments, or other severe disturbances which led to a very large cohort of shrub and trees species germinating and attempting to develop synchronously. Given the high density of these individuals and the long time which it takes for them to decompose, if a source of ignition occurs these areas are likely to allow fires to spread rapidly and burn hot. 
+
+
 \newpage
 
 \begin{center}
@@ -230,11 +235,11 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
   \caption{Benchmarks and Observed Values}
 \end{wrapfigure}
 
-The cover of woody plants is expected to be at the upper end and beyond the reference benchmark values (Figure XX). We anticipate that the cover of woody plants is elevated relative to the reference state, a common occurrence in all semi-arid lands utilized as range (@bestelmeyer2018grassland, AND...) . While some disagreement over the mechanistic causes of increases in woody plant cover exist in the literature, from a management context the drivers may largely be attributed to: 1) An altered fire-cycle 2) increasing atmosphere CO~2~ 3) improper grazing by livestock (@bestelmeyer2018grassland). All of these initial drivers may lead to feedback loops enforced by changes to soil fertility which cause the shrub-encroached status of these sites to continue (@bestelmeyer2018grassland).
+We expect that except for the Salt Desert areas, nearly all Ecological Sites will have shrub covers exceeding the reference benchmarks. Further the extent of Ecological Sites which have elevated shrub cover is expected to be greater than for trees for multiple reasons. Chief among them are that in the study area shrubs have faster growth rates than trees, and a greater number of shrub species than trees species allow them to grow in more numerous habitat types. Further we expect that a great number of re-sprouting shrubs compose considerable amounts of this cover, in lieu of non-resprouting shrubs such as most of our species of sagebrush. 
 
-We do not expect that the drought had a noticeably negative effect on total woody plant cover, although varying levels of mortality are likely across the study area. Shrubs are considered less responsive to droughts due to depths which many of their roots are able to reach to draw soil moisture (@winkler2019shrub, CITE). Further, given the much slower time it takes woody plant parts to break off and decompose, individuals are still likely to be recorded via the AIM methods (CITE)...
+Reductions in shrubby plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and varies considerably by ecological site (CITE). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return...
 
-Reductions in woody plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and varies considerably by ecological site (CITE). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return...
+Whereas shrubs are expected to be greatly reduced in the Salt Desert, especially areas which have historically been composed primarily of shadscale (*Atriplex* spp.). 
 
 \newpage
 
@@ -278,14 +283,13 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
   \caption{Benchmarks and Observed Values}
 \end{wrapfigure}
 
-As a component of woody cover, the same general trends, expectations, and reasoning behind an increase in tree cover is shared as discussed in the shrub section.  Mortality of portions of trees is expected less on trees than shrubs. 
+As a component of woody cover, the same general trends, expectations, and reasoning behind an increase in tree cover is shared as discussed in the shrub section. Mortality of portions of trees is expected less on trees than shrubs. 
 
 Many historical vegetation treatments, especially for Pinyon-Juniper forests, were conducted throughout the study area (). However, akin to a great proportion of other such treatments globally, most of these were marginally effective (@). This is likely due to the potential of those ecological sites not including a mixed grass and shrubland more desirable for livestock use ().  Many portions of the study area ARE Pj sites.., 
 
 Currently three trajectories for Pinyon-Juniper cover exists in the study area. The **first** is the regrowth of Pinyon-Juniper on sites which were historically treated, and cannot support mixed grass-shrublands, and which are being allowed to naturally re-vegetate. The **second** is that a lack of certain disturbances, e.g. fire, at certain Ecological Sites is resulting in increases in Pinyon-Juniper as natural process of *succession*, i.e. these are parts of the landscape where the final vegetation community is PJ, but which via certain disturbances may be kept in a grass-shrub condition. The **third** trajectory is that Pinon-Juniper are encroaching upon lands which been largely devoid of naturally occurring processes, and are starting to promote their own expansions via feedback loops (@CITE). In areas such as this multiple functionalities of the land are reduced, and are sites where vegetation treatments are highly desirable from a variety of ecosystem services perspectives (@), and which are capable of regaining ground for livestock usage (@anadon2014effect, @archer2017woody, @morford2022herbaceous).
 
 The higher cover of trees than expected throughout the study area identifies ecological sites which vegetation treatments which involve tree removal can be implemented. Due to the effects of woody encroachment on the production of species which are used as forage by livestock, removals of low percentages
-
 
 Prioritization of sites where treatments will offer the most ecosystem services, such as the most productive sites in terms of forage production, and areas with species of wildlife which are susceptible to higher predation via tree encroachment. 
 
