@@ -185,6 +185,12 @@ Particular areas across the field office which may be the most affected by forb 
 \newpage
 
 \begin{center}
+{\section{Woody Plant Encroachment}}
+\end{center}
+
+\newpage
+
+\begin{center}
 {\section{Shrub Cover}}
 \end{center}
 
@@ -273,6 +279,16 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
 \end{wrapfigure}
 
 As a component of woody cover, the same general trends, expectations, and reasoning behind an increase in tree cover is shared as discussed in the shrub section.  Mortality of portions of trees is expected less on trees than shrubs. 
+
+Many historical vegetation treatments, especially for Pinyon-Juniper forests, were conducted throughout the study area (). However, akin to a great proportion of other such treatments globally, most of these were marginally effective (@). This is likely due to the potential of those ecological sites not including a mixed grass and shrubland more desirable for livestock use ().  Many portions of the study area ARE Pj sites.., 
+
+Currently three trajectories for Pinyon-Juniper cover exists in the study area. The **first** is the regrowth of Pinyon-Juniper on sites which were historically treated, and cannot support mixed grass-shrublands, and which are being allowed to naturally re-vegetate. The **second** is that a lack of certain disturbances, e.g. fire, at certain Ecological Sites is resulting in increases in Pinyon-Juniper as natural process of *succession*, i.e. these are parts of the landscape where the final vegetation community is PJ, but which via certain disturbances may be kept in a grass-shrub condition. The **third** trajectory is that Pinon-Juniper are encroaching upon lands which been largely devoid of naturally occurring processes, and are starting to promote their own expansions via feedback loops (@CITE). In areas such as this multiple functionalities of the land are reduced, and are sites where vegetation treatments are highly desirable from a variety of ecosystem services perspectives (@), and which are capable of regaining ground for livestock usage (@anadon2014effect, @archer2017woody, @morford2022herbaceous).
+
+The higher cover of trees than expected throughout the study area identifies ecological sites which vegetation treatments which involve tree removal can be implemented. Due to the effects of woody encroachment on the production of species which are used as forage by livestock, removals of low percentages
+
+
+Prioritization of sites where treatments will offer the most ecosystem services, such as the most productive sites in terms of forage production, and areas with species of wildlife which are susceptible to higher predation via tree encroachment. 
+
 
 \newpage
 

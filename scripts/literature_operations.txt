@@ -2,7 +2,7 @@ ls *.pdf | awk '{printf("\"%s\"\n", $0)}' | sed 'p; s/\ /_/g' | xargs -n2 mv
 # replace all spaces in filenames with underscores
 
 
-pdftk Effects_of_Biodiversity_on_Ecosystem_Functioning_-_a_Concensus_of_Current_Knowledge_150dpi1.pdf cat 2-34 output Effects_of_Biodiversity_on_Ecosystem_Functioning_-_a_Concensus_of_Current_Knowledge_150dpi.pdf; rm Effects_of_Biodiversity_on_Ecosystem_Functioning_-_a_Concensus_of_Current_Knowledge_150dpi1.pdf
+pdftk enc1.pdf cat 38-97 output enc.pdf; rm enc1.pdf
 # subset a pdf to a page range
 
 for i in $(ls *.pdf | grep -v 150dpi); do
