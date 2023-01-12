@@ -1,13 +1,15 @@
 ---
 title: "Functional Diversity and Benchmarks"
-author: NULL
-date: NULL
+author: "null"
+date: "null"
 output:
   pdf_document: default
   word_document: default
+  html_document:
+    df_print: paged
 header-includes:
- - \usepackage[width=\textwidth]{caption}
- - \usepackage{wrapfig}
+- \usepackage[width=\textwidth]{caption}
+- \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
@@ -38,6 +40,7 @@ knitr::opts_chunk$set(fig.align="left")
 
 ```{r}
 library(tidyverse)
+library(cowplot)
 ```
 
 ```{r Import AIM LPI Data}
@@ -356,7 +359,7 @@ mogrify -trim *.png
 
 ### Metrics Combined
 
-```{r, fig.height = 6}
+```{r, fig.height = 8}
 
 yn <- data.frame(
   'ECO.SITE' = sample(esdM$ESD, size = 250, replace = T),
@@ -369,38 +372,71 @@ yn <- data.frame(
   add_count(name = 'SAMPLE') %>% 
   pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING')
 
+new_labels <- c('FORB' = 'Forb', 'GRASS' =  'Grass', 'SHRUB' =  'Shrub', 'TREE' =  'Tree')
 
 p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
-  facet_wrap(~LIFEFORM, nrow = 1) +
+  facet_wrap(~LIFEFORM, nrow = 1, 
+             labeller = as_labeller(new_labels)) +
   geom_bar(position = "fill", width = 1) +
-  scale_fill_manual('Achieving', values = c('Y' = '#283B1F', 'N' = '#C9341C')) +
+  scale_fill_manual('Achieving', labels = c( "No", "Yes"),
+                    values = c('N' = '#E0321F', 'Y' = '#1FE032')) +
   theme_bw() + 
-  theme(legend.position= 'bottom', 
+  theme(legend.position= 'none', 
+        axis.text.y = element_text(color = "grey20", size = 6),
         panel.spacing = unit(0, "lines"), 
         plot.margin=grid::unit(c(0,0,0,0), "lines"),
         panel.border = element_rect(fill = NA, colour = NA)) +
   labs(x = NULL, y = NULL) +
   scale_x_continuous(labels = c(0, 0.50, 1), breaks = c(0, 0.5, 1))
 
-yn$title <- 'SAMPLE SIZE'
+l1 <- cowplot::get_legend( ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
+  geom_bar(position = "fill", width = 1) +
+  scale_fill_manual('Achieving', labels = c( "No", "Yes"),
+                    values = c('N' = '#E0321F', 'Y' = '#1FE032')) +
+  theme(
+    legend.position= 'bottom', 
+    axis.text.y = element_text(color = "grey20", size = 4),
+    legend.text=element_text(size = 10), 
+    panel.spacing = unit(0, "lines"), 
+    plot.margin=grid::unit(c(0,0,0,0), "lines"),
+    panel.border = element_rect(fill = NA, colour = NA)) 
+)
+
+yn$title <- 'Number Plots'
 p2 <- ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) +
   facet_grid(. ~ title) +
   geom_tile() +
-  scale_x_continuous(breaks = 5, guide = guide_axis(n.dodge = 2), ) +
-  scale_fill_continuous('n', low="#8ecae6", high="#023047") +
+  scale_fill_continuous('n', low="#8ecae6", high="#321FE0") +
+  scale_x_continuous(labels = 0.5, breaks = 0.5) +
   labs(x = NULL, y = NULL) +
   theme_bw() + 
   theme(
-    legend.position="bottom", 
+    legend.position="none", 
     plot.title = element_text(hjust = 0.5),
-    plot.margin=grid::unit(c(0,0,0,-0.2), "lines"),
-    axis.text.x=element_blank(), #remove x axis labels
-    axis.ticks.x=element_blank(), #remove x axis ticks
-    axis.text.y=element_blank(),  #remove y axis labels
-    axis.ticks.y=element_blank(),  #remove y axis ticks
-    panel.border = element_rect(fill = NA, colour = NA))
+    legend.text = element_text(size = 10), 
+    plot.margin = grid::unit(c(0,0,0,-0.2), "lines"),
+    axis.text.x = element_text(color = 'white'), #remove x axis labels
+    axis.text.y = element_blank(),  #remove y axis labels
+    axis.ticks.y = element_blank(),  #remove y axis ticks
+    panel.border = element_rect(fill = NA, colour = NA)) 
 
-cowplot::plot_grid(p1, p2, rel_widths = c(0.81, 0.19))
+l2 <- cowplot::get_legend ( ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) +
+  facet_grid(. ~ title) +
+  geom_tile() +
+  scale_fill_continuous('n', low="#8ecae6", high="#321FE0") +
+  theme(legend.position="bottom") )
+
+combineLegend <- plot_grid(l1, l2, nrow = 1, rel_widths = c(0.5, 0.5),
+                                    rel_heights = c(0.6, 0.4))
+plots <- plot_grid(p1, p2, rel_widths = c(0.81, 0.19))
+plotLeg <- plot_grid(plots, combineLegend, rel_heights = c(0.9, 0.1), nrow = 2)
+
+title <- ggdraw() + 
+  draw_label("Proportion of Plots by ESD Meeting Benchmarks", size = 14)
+
+cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
+
+rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn)
 ```
 
 
