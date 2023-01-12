@@ -38,9 +38,10 @@ knitr::opts_chunk$set(warning = F)
 knitr::opts_chunk$set(fig.align="left") 
 ```
 
-```{r}
+```{r import libraries}
 library(tidyverse)
 library(cowplot)
+library(ggthemes)
 ```
 
 ```{r Import AIM LPI Data}
@@ -375,10 +376,7 @@ yn <- data.frame(
 
 ```
 
-
-
-```{r, fig.height=8}
-
+```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=8, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
 
 yn <- yn %>% 
   add_count(ACHIEVING, name = 'dummy')  %>% 
@@ -391,6 +389,7 @@ yn <- yn %>%
   mutate(ECO.SITE = factor(ECO.SITE, levels = yn_levls))
 
 sfm <- c('Y' = 'Yes', 'N' = 'No')
+sfm_values = c('Y' = '#1FE032', 'N' = '#E0321F')
 new_labels <- c('FORB' = 'Forb', 'GRASS' =  'Grass', 'SHRUB' =  'Shrub', 'TREE' =  'Tree')
 
 p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
@@ -398,7 +397,7 @@ p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) +
              labeller = as_labeller(new_labels)) +
   geom_bar(position = "fill", width = 1) +
   scale_fill_manual('Achieving', labels = sfm,
-                    values = c('Y' = '#1FE032', 'N' = '#E0321F')) +
+                    values = sfm_values) +
   theme_bw() + 
   theme(legend.position= 'none', 
         axis.text.y = element_text(color = "grey20", size = 6),
@@ -412,7 +411,7 @@ p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) +
 l1 <- cowplot::get_legend( ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
   geom_bar(position = "fill", width = 1) +
   scale_fill_manual('Achieving', labels = sfm,
-                    values = c('Y' = '#1FE032', 'N' = '#E0321F')) +
+                    values = sfm_values) +
   theme(
     legend.position= 'bottom', 
     axis.text.y = element_text(color = "grey20", size = 4),
@@ -461,8 +460,52 @@ rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, new_labels, yn_levl
 ```
 
 
+\newpage
 
 
+
+total_acres * % classification
+
+we will recover the total area of each stratum
+
+```{r Overall Vegetation Becnhmarks By Major Stratum, fig.height = 3, fig.cap = 'The Proportion of Land in Each Stratum Within Benchmark Conditions'}
+
+waff_dat <- data.frame(
+  Stratum = c('SS', 'SD', 'MMS', 'PJ'),
+  Prop_area = c(12, 20, 13, 55),
+  Meeting = c(43, 53, 73, 82),
+  Estimate = c(5, 6, 4, 3),
+  Failing = c(52, 42, 23, 14)
+) %>% 
+  pivot_longer(cols = Meeting:Failing, names_to = 'Estimate', values_to = 'Percent') %>% 
+  mutate(n = (Percent * Prop_area) / 10) # NEED ACRES REDUCED TO FAKE SMALL NUMBERS ...
+
+waf_values = c('Meeting' = '#1FE032', 'Failing' = '#E0321F', 'Estimate' = '#808929')
+
+ggplot(waff_dat, aes(fill = Estimate, values = n)) +
+  geom_waffle(color = "#2f4858", size = .25, 
+              flip = TRUE ) +
+  facet_wrap(~ Stratum, nrow = 1, strip.position = "bottom") +
+  
+  scale_fill_manual(values = c('#808929', '#E0321F', '#1FE032')) +
+  scale_x_discrete()  +
+  scale_y_continuous(labels = function(x) x * 10, # make this multiplyer the same as n_rows
+                     expand = c(0,0))  +
+  
+  theme(
+    legend.position="bottom",
+    plot.title = element_text(hjust = 0.5),
+    strip.background =element_rect(fill="white"), 
+    panel.background = element_blank())  +
+  
+   labs(title = "Area Within Stratum Meeting Benchmark", 
+        y = 'Acres')
+
+
+```
+
+
+\newpage
 
 
 # References 
