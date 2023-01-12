@@ -26,6 +26,8 @@ While the major functional groups are capable of capturing considerable variatio
 
 # Methods
 
+Due to certain inconsistencies in the assignment of plant species to functional groups in historic AIM analyses by the National Operations Center, these vegetation indicators were re-run locally using the cleaned field data. 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
@@ -45,7 +47,6 @@ f <- list.files(praw, pattern = 'csv')
 files <- list.files(ppro, pattern = 'csv')
 ```
 
-### Append Functional group information 
 
 ```{r Lookup Grass and Shrub Status, eval = F}
 photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
@@ -235,11 +236,13 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
   \caption{Benchmarks and Observed Values}
 \end{wrapfigure}
 
-We expect that except for the Salt Desert areas, nearly all Ecological Sites will have shrub covers exceeding the reference benchmarks. Further the extent of Ecological Sites which have elevated shrub cover is expected to be greater than for trees for multiple reasons. Chief among them are that in the study area shrubs have faster growth rates than trees, and a greater number of shrub species than trees species allow them to grow in more numerous habitat types. Further we expect that a great number of re-sprouting shrubs compose considerable amounts of this cover, in lieu of non-resprouting shrubs such as most of our species of sagebrush. 
+We expect that except for Salt Desert areas, nearly all plots across all Ecological Sites will have shrub covers exceeding the reference benchmarks. Further the extent of Ecological Sites which have elevated shrub cover is expected to be greater than for trees for multiple reasons. Chief among them are that in the study area shrubs have faster growth rates than trees, and a greater number of shrub species than trees species allow them to grow in more numerous habitat types. Further we expect that a great number of re-sprouting shrubs compose considerable amounts of this cover, in lieu of non-resprouting shrubs such as most of our species of sagebrush. 
 
 Reductions in shrubby plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and varies considerably by ecological site (CITE). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return...
 
-Whereas shrubs are expected to be greatly reduced in the Salt Desert, especially areas which have historically been composed primarily of shadscale (*Atriplex* spp.). 
+Whereas shrubs are expected to be greatly reduced in the Salt Desert, especially areas which have historically been composed primarily of shadscale (saltbush) (*Atriplex* spp.). Cover of most palatable species of shrubs, especially winterfat (*Krascheninnikovia*) & sages (*Artemisia*), in these areas was greatly reduced by improper livestock utilization upwards of a century ago (CITE).
+While passive efforts have been made to facilitate the establishment of shrubs at these sites, the very slow re-generative process, combined with climate and seasonal effects on usage, have not always shown the desired results (@, @, @).
+
 
 \newpage
 
@@ -285,16 +288,16 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
 
 As a component of woody cover, the same general trends, expectations, and reasoning behind an increase in tree cover is shared as discussed in the shrub section. Mortality of portions of trees is expected less on trees than shrubs. 
 
-Many historical vegetation treatments, especially for Pinyon-Juniper forests, were conducted throughout the study area (). However, akin to a great proportion of other such treatments globally, most of these were marginally effective (@). This is likely due to the potential of those ecological sites not including a mixed grass and shrubland more desirable for livestock use ().  Many portions of the study area ARE Pj sites.., 
+Many historical vegetation treatments, especially for Pinyon-Juniper forests, were conducted throughout the study area (@pilliod2017seventy). However, akin to a great proportion of other such treatments globally, most of these were marginally effective (@ding2022success). This is likely due to the potential of those ecological sites not including a mixed grass and shrub land more desirable for livestock use. 
 
-Currently three trajectories for Pinyon-Juniper cover exists in the study area. The **first** is the regrowth of Pinyon-Juniper on sites which were historically treated, and cannot support mixed grass-shrublands, and which are being allowed to naturally re-vegetate. The **second** is that a lack of certain disturbances, e.g. fire, at certain Ecological Sites is resulting in increases in Pinyon-Juniper as natural process of *succession*, i.e. these are parts of the landscape where the final vegetation community is PJ, but which via certain disturbances may be kept in a grass-shrub condition. The **third** trajectory is that Pinon-Juniper are encroaching upon lands which been largely devoid of naturally occurring processes, and are starting to promote their own expansions via feedback loops (@CITE). In areas such as this multiple functionalities of the land are reduced, and are sites where vegetation treatments are highly desirable from a variety of ecosystem services perspectives (@), and which are capable of regaining ground for livestock usage (@anadon2014effect, @archer2017woody, @morford2022herbaceous).
+Currently three trajectories for Pinyon-Juniper cover exists in the study area. The **first** is the regrowth of Pinyon-Juniper on sites which were historically treated, and cannot support mixed grass-shrublands, and which are being allowed to naturally re-vegetate. The **second** is that a lack of certain disturbances, e.g. fire, at certain Ecological Sites is resulting in increases in Pinyon-Juniper as natural process of *succession*, i.e. these are parts of the landscape where the final vegetation community is PJ, but which via certain disturbances may be kept in a grass-shrub condition. The **third** trajectory is that Pinon-Juniper are encroaching upon lands which been largely devoid of naturally occurring processes, and are starting to promote their own expansions via feedback loops (CITE). In areas such as this multiple functionalities of the land are reduced, and are sites where vegetation treatments are highly desirable from a variety of ecosystem services perspectives (@), and which are capable of regaining ground for livestock usage (@anadon2014effect, @archer2017woody, @morford2022herbaceous).
 
 The higher cover of trees than expected throughout the study area identifies ecological sites which vegetation treatments which involve tree removal can be implemented. Due to the effects of woody encroachment on the production of species which are used as forage by livestock, removals of low percentages
 
 Prioritization of sites where treatments will offer the most ecosystem services, such as the most productive sites in terms of forage production, and areas with species of wildlife which are susceptible to higher predation via tree encroachment. 
 
-
 \newpage
+
 
 \begin{center}
 {\section{Perennial Grass Cover}} 
@@ -349,7 +352,60 @@ cd ../results/benchmarks
 mogrify -trim *.png
 ```
 
-
 \newpage
+
+### Metrics Combined
+
+```{r, fig.height = 6}
+
+yn <- data.frame(
+  'ECO.SITE' = sample(esdM$ESD, size = 250, replace = T),
+  'FORB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.45, 0.55)),
+  'GRASS' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.2, 0.8)),
+  'SHRUB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.4, 0.6)),
+  'TREE' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.5, 0.5))
+) %>% 
+  group_by(ECO.SITE) %>% 
+  add_count(name = 'SAMPLE') %>% 
+  pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING')
+
+
+p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
+  facet_wrap(~LIFEFORM, nrow = 1) +
+  geom_bar(position = "fill", width = 1) +
+  scale_fill_manual('Achieving', values = c('Y' = '#283B1F', 'N' = '#C9341C')) +
+  theme_bw() + 
+  theme(legend.position= 'bottom', 
+        panel.spacing = unit(0, "lines"), 
+        plot.margin=grid::unit(c(0,0,0,0), "lines"),
+        panel.border = element_rect(fill = NA, colour = NA)) +
+  labs(x = NULL, y = NULL) +
+  scale_x_continuous(labels = c(0, 0.50, 1), breaks = c(0, 0.5, 1))
+
+yn$title <- 'SAMPLE SIZE'
+p2 <- ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) +
+  facet_grid(. ~ title) +
+  geom_tile() +
+  scale_x_continuous(breaks = 5, guide = guide_axis(n.dodge = 2), ) +
+  scale_fill_continuous('n', low="#8ecae6", high="#023047") +
+  labs(x = NULL, y = NULL) +
+  theme_bw() + 
+  theme(
+    legend.position="bottom", 
+    plot.title = element_text(hjust = 0.5),
+    plot.margin=grid::unit(c(0,0,0,-0.2), "lines"),
+    axis.text.x=element_blank(), #remove x axis labels
+    axis.ticks.x=element_blank(), #remove x axis ticks
+    axis.text.y=element_blank(),  #remove y axis labels
+    axis.ticks.y=element_blank(),  #remove y axis ticks
+    panel.border = element_rect(fill = NA, colour = NA))
+
+cowplot::plot_grid(p1, p2, rel_widths = c(0.81, 0.19))
+```
+
+
+
+
+
 
 # References 
