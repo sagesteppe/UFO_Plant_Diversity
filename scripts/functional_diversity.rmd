@@ -363,23 +363,42 @@ mogrify -trim *.png
 
 yn <- data.frame(
   'ECO.SITE' = sample(esdM$ESD, size = 250, replace = T),
-  'FORB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.45, 0.55)),
+  'FORB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.65, 0.35)),
   'GRASS' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.2, 0.8)),
-  'SHRUB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.4, 0.6)),
-  'TREE' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.5, 0.5))
+  'SHRUB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.45, 0.55)),
+  'TREE' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.8, 0.2))
 ) %>% 
   group_by(ECO.SITE) %>% 
   add_count(name = 'SAMPLE') %>% 
-  pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING')
+  pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING') 
 
+
+```
+
+
+
+```{r, fig.height=8}
+
+
+yn <- yn %>% 
+  add_count(ACHIEVING, name = 'dummy')  %>% 
+  mutate(dummy = jitter( (dummy/4) / SAMPLE )) %>% 
+  arrange(-dummy) 
+yn_levls <- yn %>% 
+  distinct(ECO.SITE) %>% 
+  pull(ECO.SITE)
+yn <- yn %>% 
+  mutate(ECO.SITE = factor(ECO.SITE, levels = yn_levls))
+
+sfm <- c('Y' = 'Yes', 'N' = 'No')
 new_labels <- c('FORB' = 'Forb', 'GRASS' =  'Grass', 'SHRUB' =  'Shrub', 'TREE' =  'Tree')
 
 p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
   facet_wrap(~LIFEFORM, nrow = 1, 
              labeller = as_labeller(new_labels)) +
   geom_bar(position = "fill", width = 1) +
-  scale_fill_manual('Achieving', labels = c( "No", "Yes"),
-                    values = c('N' = '#E0321F', 'Y' = '#1FE032')) +
+  scale_fill_manual('Achieving', labels = sfm,
+                    values = c('Y' = '#1FE032', 'N' = '#E0321F')) +
   theme_bw() + 
   theme(legend.position= 'none', 
         axis.text.y = element_text(color = "grey20", size = 6),
@@ -387,19 +406,21 @@ p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) +
         plot.margin=grid::unit(c(0,0,0,0), "lines"),
         panel.border = element_rect(fill = NA, colour = NA)) +
   labs(x = NULL, y = NULL) +
-  scale_x_continuous(labels = c(0, 0.50, 1), breaks = c(0, 0.5, 1))
+  scale_x_continuous(labels = c(0, 0.50, 1), breaks = c(0, 0.5, 1)) +
+  guides(fill = guide_legend(reverse = TRUE))
 
 l1 <- cowplot::get_legend( ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
   geom_bar(position = "fill", width = 1) +
-  scale_fill_manual('Achieving', labels = c( "No", "Yes"),
-                    values = c('N' = '#E0321F', 'Y' = '#1FE032')) +
+  scale_fill_manual('Achieving', labels = sfm,
+                    values = c('Y' = '#1FE032', 'N' = '#E0321F')) +
   theme(
     legend.position= 'bottom', 
     axis.text.y = element_text(color = "grey20", size = 4),
     legend.text=element_text(size = 10), 
     panel.spacing = unit(0, "lines"), 
     plot.margin=grid::unit(c(0,0,0,0), "lines"),
-    panel.border = element_rect(fill = NA, colour = NA)) 
+    panel.border = element_rect(fill = NA, colour = NA)) +
+  guides(fill = guide_legend(reverse = TRUE))
 )
 
 yn$title <- 'Number Plots'
@@ -432,11 +453,11 @@ plots <- plot_grid(p1, p2, rel_widths = c(0.81, 0.19))
 plotLeg <- plot_grid(plots, combineLegend, rel_heights = c(0.9, 0.1), nrow = 2)
 
 title <- ggdraw() + 
-  draw_label("Proportion of Plots by ESD Meeting Benchmarks", size = 14)
+  draw_label("Proportion of Plots Meeting Benchmarks", size = 14)
 
 cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
 
-rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn)
+rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, new_labels, yn_levls)
 ```
 
 
