@@ -1,20 +1,20 @@
 ---
 title: "Functional Diversity and Benchmarks"
-author: "null"
-date: "null"
 output:
   pdf_document: default
   word_document: default
   html_document:
     df_print: paged
 header-includes:
-- \usepackage[width=\textwidth]{caption}
-- \usepackage{wrapfig}
+ - \usepackage[width=\textwidth]{caption}
+ - \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
+
+\vspace{-1cm}
 
 While each plant functions differently in an ecosystem context, the degrees of dissimilarity which exist between all species are unequal allowing them to clump together into groups. This observation has given rise to the notion of *Plant Functional Types*, shared attributes which unite similar species, and which bind how they affect ecosystems. Oftentimes, form follows function, and functions are hence referred to as forms. For example, Trees provide large amounts of shade, which in combination with their transpiration lower the temperature of areas. Plant functional types are quite often the easiest form of vegetation data to measure, and accordingly great amounts of work have been conducted on how they affect ecosystem function. 
 
@@ -42,6 +42,8 @@ knitr::opts_chunk$set(fig.align="left")
 library(tidyverse)
 library(cowplot)
 library(ggthemes)
+library(hrbrthemes)
+library(waffle)
 ```
 
 ```{r Import AIM LPI Data}
@@ -360,7 +362,9 @@ mogrify -trim *.png
 
 ### Metrics Combined
 
-```{r, fig.height = 8}
+The condition of many Ecological Sites varied, and which benchmarks were being achieved, and at how many plots differed. Certain benchmarks were achieved more often than others (Figure 5)... Clearly the cover of tree was meet at many sites, given the aforementioned inability of them to grow in many habitats. 
+
+```{r prep data for overall ESD conditions}
 
 yn <- data.frame(
   'ECO.SITE' = sample(esdM$ESD, size = 250, replace = T),
@@ -459,53 +463,63 @@ cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
 rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, new_labels, yn_levls)
 ```
 
-
 \newpage
 
+We can combine the number of plots, and their weight acres, within each stratum which had all four major functional groups within reference to develop a sense of how well the RMP objectives are being meet (Figure 6). 
 
+```{r Overall Vegetation Benchmarks By Major Stratum, fig.height = 3.5, fig.width = 4, fig.cap = 'Total area of each stratum and the overall status of benchmarks'}
 
-total_acres * % classification
-
-we will recover the total area of each stratum
-
-```{r Overall Vegetation Becnhmarks By Major Stratum, fig.height = 3, fig.cap = 'The Proportion of Land in Each Stratum Within Benchmark Conditions'}
+options(scipen = 999)
 
 waff_dat <- data.frame(
-  Stratum = c('SS', 'SD', 'MMS', 'PJ'),
+  Stratum = c('Sagebrush', 'Salt Desert', 'Mtn. Shrub', 'Pinon-Juniper'),
   Prop_area = c(12, 20, 13, 55),
   Meeting = c(43, 53, 73, 82),
   Estimate = c(5, 6, 4, 3),
   Failing = c(52, 42, 23, 14)
 ) %>% 
   pivot_longer(cols = Meeting:Failing, names_to = 'Estimate', values_to = 'Percent') %>% 
-  mutate(n = (Percent * Prop_area) / 10) # NEED ACRES REDUCED TO FAKE SMALL NUMBERS ...
+  mutate(n = (Percent * Prop_area) / 10, 
+         Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
+                                               'Salt Desert', 'Pinon-Juniper')))  # NEED ACRES REDUCED TO FAKE SMALL NUMBERS ...
 
 waf_values = c('Meeting' = '#1FE032', 'Failing' = '#E0321F', 'Estimate' = '#808929')
 
 ggplot(waff_dat, aes(fill = Estimate, values = n)) +
-  geom_waffle(color = "#2f4858", size = .25, 
+  geom_waffle(color = "white", size = .25, 
               flip = TRUE ) +
   facet_wrap(~ Stratum, nrow = 1, strip.position = "bottom") +
   
-  scale_fill_manual(values = c('#808929', '#E0321F', '#1FE032')) +
+  scale_fill_manual('Condition', values = c('#808929', '#E0321F', '#1FE032')) +
   scale_x_discrete()  +
-  scale_y_continuous(labels = function(x) x * 10, # make this multiplyer the same as n_rows
+  scale_y_continuous(labels = function(x) x * 10000, # make this multiplyer the same as n_rows
                      expand = c(0,0))  +
   
   theme(
     legend.position="bottom",
-    plot.title = element_text(hjust = 0.5),
+    
+    plot.title = element_text(hjust = 0.5, size = 11, face = 'bold'),
+    panel.spacing = unit(0.01, "lines"), 
     strip.background =element_rect(fill="white"), 
     panel.background = element_blank())  +
   
-   labs(title = "Area Within Stratum Meeting Benchmark", 
+   labs(title = "Areas meeting Functional Cover Benchmarks", 
         y = 'Acres')
-
 
 ```
 
+\newpage
+
+### Geographic Trends in Conditions
+
+Certain areas throughout the Field Office differ in regards to meeting their benchmarks. Areas which...
+
 
 \newpage
+
+
+
+
 
 
 # References 
