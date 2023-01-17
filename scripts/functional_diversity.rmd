@@ -3,8 +3,6 @@ title: "Functional Diversity and Benchmarks"
 output:
   pdf_document: default
   word_document: default
-  html_document:
-    df_print: paged
 header-includes:
  - \usepackage[width=\textwidth]{caption}
  - \usepackage{wrapfig}
@@ -474,14 +472,23 @@ options(scipen = 999)
 waff_dat <- data.frame(
   Stratum = c('Sagebrush', 'Salt Desert', 'Mtn. Shrub', 'Pinon-Juniper'),
   Prop_area = c(12, 20, 13, 55),
-  Meeting = c(43, 53, 73, 82),
-  Estimate = c(5, 6, 4, 3),
-  Failing = c(52, 42, 23, 14)
+  None = c(12, 15, 17, 20),
+  One = c(8, 9, 12, 18),
+  Two = c(30, 28, 27, 22),
+  Three = c(30, 26, 33, 10),
+  Four = c(20, 22, 10, 30)
 ) %>% 
-  pivot_longer(cols = Meeting:Failing, names_to = 'Estimate', values_to = 'Percent') %>% 
+  pivot_longer(cols = None:Four, names_to = 'Estimate', values_to = 'Percent') %>% 
   mutate(n = (Percent * Prop_area) / 10, 
          Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
-                                               'Salt Desert', 'Pinon-Juniper')))  # NEED ACRES REDUCED TO FAKE SMALL NUMBERS ...
+                                               'Salt Desert', 'Pinon-Juniper')),
+         Estimate = factor(Estimate, levels = c('Four', 'Three', 'Two', 'One', 'None')))
+
+waff_dat <- data.table::setorder(waff_dat, Estimate)
+
+
+zerofourPal <- c('None' = '#d7191c', 'One +' = '#fdae61', 'Two +' = '#ffffbf', 
+                'Three +' = '#a6d96a', 'Four' = '#1a9641')
 
 waf_values = c('Meeting' = '#1FE032', 'Failing' = '#E0321F', 'Estimate' = '#808929')
 
@@ -490,14 +497,15 @@ ggplot(waff_dat, aes(fill = Estimate, values = n)) +
               flip = TRUE ) +
   facet_wrap(~ Stratum, nrow = 1, strip.position = "bottom") +
   
-  scale_fill_manual('Condition', values = c('#808929', '#E0321F', '#1FE032')) +
+  scale_fill_manual('Condition:', values = c('None' = '#d7191c', 'One' = '#fdae61', 'Two' = '#ffffbf', 
+                'Three' = '#a6d96a', 'Four' = '#1a9641'),
+                labels = c('Four', 'Three +', "Two +", 'One +', 'None')) +
   scale_x_discrete()  +
   scale_y_continuous(labels = function(x) x * 10000, # make this multiplyer the same as n_rows
                      expand = c(0,0))  +
   
   theme(
     legend.position="bottom",
-    
     plot.title = element_text(hjust = 0.5, size = 11, face = 'bold'),
     panel.spacing = unit(0.01, "lines"), 
     strip.background =element_rect(fill="white"), 
@@ -507,6 +515,12 @@ ggplot(waff_dat, aes(fill = Estimate, values = n)) +
         y = 'Acres')
 
 ```
+
+
+```{r Total Area Meeting Benchmarks}
+
+```
+
 
 \newpage
 
