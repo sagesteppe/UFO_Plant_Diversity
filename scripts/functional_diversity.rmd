@@ -42,6 +42,7 @@ library(cowplot)
 library(ggthemes)
 library(hrbrthemes)
 library(waffle)
+library(sf)
 ```
 
 ```{r Import AIM LPI Data}
@@ -49,10 +50,46 @@ praw <- '../data/raw'
 ppro <-  '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 files <- list.files(ppro, pattern = 'csv')
+
+#summary <- read.csv(file.path(praw, 'TerraDatVersionSummary.csv')) %>% 
+#  select(PrimaryKey, AH_NonNoxPerenForbCover:FH_NoxTreeCover, Latitude_NAD83:Longitude_NAD83)
+
+lpi <- read.csv( file.path(praw, 'LPIRAW.csv') )
+```
+
+```{r Extract the Main Species Attributes from AIM database}
+
+plot_char <- read.csv( file.path(praw, f[grep('Characterization', f)]) ) %>% 
+  select(PrimaryKey, Easting, Northing) %>% 
+  drop_na()  %>% 
+  st_as_sf(coords = c('Easting', 'Northing'), crs = 4269) %>% 
+  st_transform(26913)
+
+pts <- st_read(
+  '/media/sagesteppe/ExternalHD/aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+                quiet = T) %>% 
+  st_transform(26913) %>% 
+  st_buffer(55) %>% 
+  select(PLOTID, STRATUM) 
+
+plot_char <- plot_char %>% 
+  st_transform(26913)
+
+spp_attri <- read.csv( file.path(praw, 'TerrestrialSpeciesAttributes.csv')) %>% 
+  distinct(Species, .keep_all = T) %>% 
+  select(SYMBOL = Species,  PrimaryKey, GrowthHabit:Duration) %>% 
+  mutate(across(.cols = everything(), ~ na_if(.x, ""))) %>% # there are a number
+  drop_na() # of records without attributes, but these codes appear in error
+
+plots <- st_intersection(pts, plot_char) 
+spp_attri <- filter(spp_attri, PrimaryKey %in% plots$PrimaryKey) %>% 
+  select(-PrimaryKey)
+
+rm(area, plot_char, pts, plots)
 ```
 
 
-```{r Lookup Grass and Shrub Status, eval = F}
+```{r Lookup Grass and Shrub Status}
 photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
   mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
 
@@ -61,30 +98,28 @@ shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>%
   select(SYMBOL, RESPROUT) %>% 
   mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
 
-richness <- richness %>%  
+spp_attri <- spp_attri %>% 
+  mutate(SYMBOL = case_when(
+    SYMBOL == 'KOMY' ~ 'KOMA',
+    SYMBOL == 'PHPRN' ~ 'PHPR3',
+    SYMBOL == 'CHER4' ~ 'BOER4',
+    SYMBOL == 'BRPO5' ~ 'BRPO2',
+    SYMBOL == 'STCO4' ~ 'HECO26',
+    SYMBOL == 'AGSM' ~ 'PASM',
+    SYMBOL == 'AGIN2' ~ 'THIN6',
+    SYMBOL == 'ERRA' ~ 'SARA3',
+    TRUE ~ as.character(SYMBOL)
+  )) %>% 
   left_join(., photosynthetic, by = 'SYMBOL') %>% 
   left_join(., shrub_sprout, by = 'SYMBOL')
   
 rm(photosynthetic, shrub_sprout)
 ```
 
-```{r Lookup Forb Life Cycle, eval = F}
-
-life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
-  filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
-  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration) %>% 
-  mutate(LIFECYCLE = case_when(
-    LIFECYCLE == 'Biennial, Perennial' ~ 'Perennial', 
-    LIFECYCLE == 'Annual, Biennial' ~ 'Annual', 
-    LIFECYCLE == 'Annual, Biennial, Perennial' ~ 'Any',
-    TRUE ~ as.character(LIFECYCLE)
-  ))
-
-```
 
 ```{r Create Finer Functional Groups, eval = F}
 
-richness <- richness %>% 
+spp_attri <- spp_attri %>% 
   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
            .after = last_col()) %>% 
   unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:FUNCTIONAL, 
@@ -97,20 +132,113 @@ richness <- richness %>%
 ```{r append nativity information, eval = F}
 
 nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
-  select(SYMBOL, LIFECYCLE = DURATION, NATIVITY) %>% 
-  mutate(across(.cols = everything(), ~ str_to_upper(.))) %>% 
-  mutate(LIFECYCLE = case_when(
-    LIFECYCLE == 'BIENNIAL, PERENNIAL' ~ 'PERENNIAL', 
-    LIFECYCLE == 'ANNUAL, BIENNIAL' ~ 'ANNUAL', 
-    LIFECYCLE == 'ANNUAL, PERENNIAL' ~ 'ANY',
-    LIFECYCLE == 'ANNUAL, BIENNIAL, PERENNIAL' ~ 'ANY',
-    TRUE ~ as.character(LIFECYCLE)
-  )) 
+  select(SYMBOL, NATIVITY) 
 
-richness <- left_join(richness, nativity, by = 'SYMBOL') %>% 
-  unite(LIFECYCLE, c(LIFECYCLE.x, LIFECYCLE.y), na.rm = T) %>% 
-  unite(NATIVITY, c(NATIVITY.x, NATIVITY.y), na.rm = T) %>% 
-  mutate(across(.cols = c(LIFECYCLE, NATIVITY), ~ str_remove_all(.x, '_.*')))
+spp_attri <- spp_attri %>% 
+  mutate(SYMBOL = case_when(
+    SYMBOL == 'KOAM' ~ 'BAAM4',
+    SYMBOL == 'EREA' ~ 'EREAE',
+    SYMBOL == 'COUM' ~ 'COUMP',
+    SYMBOL == 'COMAN' ~ 'COUMP',
+    SYMBOL == 'PUPA5' ~ 'PUPAM', # GATR2
+    SYMBOL == 'ERMIL5' ~ 'ERMIL2',
+    SYMBOL == 'GATR2' ~ 'GATRS2',
+    SYMBOL == 'OPFRF' ~ 'OPFR', 
+    SYMBOL == 'AMDI5' ~ 'BADI',
+    SYMBOL == 'GLSP' ~ 'GLSPM',
+    SYMBOL == 'TACH2' ~ 'TACH',
+    SYMBOL == 'ERFL4' ~ 'ERFLF',
+    SYMBOL == 'ERDI13' ~ 'ERCO14',
+    SYMBOL == 'PHRE3' ~ 'ILRI',
+    SYMBOL == 'COSE16' ~ 'COSES',
+    SYMBOL == 'SAMI15' ~ 'SARAR3',
+    SYMBOL == 'CHER' ~ 'CHERN',
+    SYMBOL == 'ASMO10' ~ 'ASMOC2',
+    SYMBOL == 'SILI7' ~ 'SCLI12',
+    SYMBOL == 'PERA' ~ 'PERAA',
+    SYMBOL == 'SEBI2' ~ 'SEBIH',
+    SYMBOL == 'ORLO' ~ 'CRLO6',
+    SYMBOL == 'SONE' ~ 'SONEL',
+    SYMBOL == 'ERGR9' ~ 'ERGRG3',
+    SYMBOL == 'LUSE4' ~ 'LUSES2',
+    SYMBOL == 'SIAL11' ~ 'ALPE4',
+    SYMBOL == 'ERAR25' ~ 'ERJAF',
+    SYMBOL == 'MOFI' ~ 'MOFIM2',
+    SYMBOL == 'LUPOP5' ~ 'LUPR2',
+    SYMBOL == 'RULA3' ~ 'RULAA',
+    SYMBOL == 'LUARR2' ~ 'LUARR',
+    SYMBOL == 'ERVI22' ~ 'CHVIV2', 
+    SYMBOL == 'LIIN' ~ 'LIIN2', 
+    SYMBOL == 'RATE' ~ 'CETE5', 
+    SYMBOL == 'ORBA4' ~ 'CRBA4',
+    SYMBOL == 'PHCR' ~ 'PHCRC',
+    SYMBOL == 'EROVC2' ~ 'EROVP2',
+    SYMBOL == 'LATA' ~ 'LATAP', 
+    SYMBOL == 'GEMA4' ~ 'GEMAP',
+    SYMBOL == 'SOSI' ~ 'SOSIS',
+    SYMBOL == 'GAMUC' ~ 'GACO2',
+    SYMBOL == 'FOME' ~ 'GLSPM',
+    SYMBOL == 'ASCH4' ~ 'ASCHC2', 
+    SYMBOL == 'ASAM5' ~ 'ASAMV',
+    SYMBOL == 'CRCR3' ~ 'CRCRE',
+    SYMBOL == 'METH' ~ 'MEHUH',
+    SYMBOL == 'ELGL' ~ 'ELGLG', 
+    SYMBOL == 'ABBI3' ~ 'ABLA',
+    SYMBOL == 'ERINI4' ~ 'ERIN4',
+    SYMBOL == 'BRTEG' ~ 'BRTE',
+    SYMBOL == 'LODI' ~ 'LODIM',
+    SYMBOL == 'ERCOC13' ~ 'ARCOC4',
+    SYMBOL == 'ERCO24' ~ 'ARCOC4',
+    SYMBOL == 'HEFO9' ~ 'HEVIF',
+    SYMBOL == 'YUBA2' ~ 'YUBAB', 
+    SYMBOL == 'COVI9' ~ 'ESVIV',
+    SYMBOL == 'ARHI' ~ 'ARHIP',
+    SYMBOL == 'BOFE' ~ 'ARFEF',
+    SYMBOL == 'DRCUC' ~ 'DRCU',
+    SYMBOL == 'ALAC' ~ 'ALAC4',
+    SYMBOL == 'ZIVE' ~ 'ZIVEG',
+    SYMBOL == 'AMUTU' ~ 'AMUT',
+    SYMBOL == 'MARAR' ~ 'MARAA',
+    SYMBOL == 'ORFL5' ~ 'CRFL5',
+    SYMBOL == 'ORFL2' ~ 'CRFL5',
+    SYMBOL == 'DICA18' ~ 'MACA2',
+    SYMBOL ==  'GAPIP2' ~'GAPI',
+    SYMBOL == 'CYFE' ~ 'CYACF', 
+    SYMBOL == 'DIBI8' ~ 'MABIB',
+    SYMBOL == 'ASTH2' ~ 'ASMOT',
+    SYMBOL == 'THSA2' ~ 'THSAS',
+    SYMBOL == 'CRACA' ~ 'CRAC2',
+    SYMBOL == 'CHNA2' ~ 'ERNA10',
+    SYMBOL == 'ECCOC' ~ 'ECTR',
+    SYMBOL == 'SUNI' ~ 'SUMO',
+    SYMBOL == 'ASNU4' ~ 'ASNUM2',
+    SYMBOL == 'BAHI2' ~ 'BAHOH2', 
+    SYMBOL == 'XASP' ~ 'XASP2', 
+    SYMBOL == 'ARSP5' ~ 'PIDE4',
+    SYMBOL == 'CASC3' ~ 'CASC18', 
+    SYMBOL == 'AGHE2' ~ 'AGHEH'
+    SYMBOL == 'LEAL' ~ 'LEALE', # Speculative
+    SYMBOL == 'BRJA' ~ 'BRAR5', # slightly speculative
+    TRUE ~ as.character(SYMBOL)
+  ))
+
+# MAYBE ADD TO CNHP ???
+# ERCOC13,  # THPU3, #ERIN4, #LALA3, # ERJAJ, #DRCU, 
+# SPCO. LODI # BOST4 - this is stricta...
+nativity <- nativity %>% 
+  mutate(SYMBOL = case_when(
+    SYMBOL == 'CALEL4' ~ 'CALE4',
+    SYMBOL == 'YUBA' ~ 'YUBAB',
+    TRUE ~ as.character(SYMBOL)
+  ))
+  
+out <- left_join(spp_attri, nativity)
+
+# not known from CO yet, 
+# BRAN , SIIR , ERAB3
+
+
+# Identity cannot be ascertained # ARPU2
 
 ```
 
@@ -375,7 +503,6 @@ yn <- data.frame(
   add_count(name = 'SAMPLE') %>% 
   pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING') 
 
-
 ```
 
 ```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=8, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
@@ -483,15 +610,11 @@ waff_dat <- data.frame(
          Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
                                                'Salt Desert', 'Pinon-Juniper')),
          Estimate = factor(Estimate, levels = c('Four', 'Three', 'Two', 'One', 'None')))
-
 waff_dat <- data.table::setorder(waff_dat, Estimate)
 
 
 zerofourPal <- c('None' = '#d7191c', 'One +' = '#fdae61', 'Two +' = '#ffffbf', 
                 'Three +' = '#a6d96a', 'Four' = '#1a9641')
-
-waf_values = c('Meeting' = '#1FE032', 'Failing' = '#E0321F', 'Estimate' = '#808929')
-
 ggplot(waff_dat, aes(fill = Estimate, values = n)) +
   geom_waffle(color = "white", size = .25, 
               flip = TRUE ) +
