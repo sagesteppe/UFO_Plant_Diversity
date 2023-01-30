@@ -178,11 +178,11 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'SOSI' ~ 'SOSIS',
     SYMBOL == 'GAMUC' ~ 'GACO2',
     SYMBOL == 'FOME' ~ 'GLSPM',
-    SYMBOL == 'ASCH4' ~ 'ASCHC2', 
+    SYMBOL == 'ASCH4' ~ 'ASCHC2',
     SYMBOL == 'ASAM5' ~ 'ASAMV',
     SYMBOL == 'CRCR3' ~ 'CRCRE',
     SYMBOL == 'METH' ~ 'MEHUH',
-    SYMBOL == 'ELGL' ~ 'ELGLG', 
+    SYMBOL == 'ELGL' ~ 'ELGLG',
     SYMBOL == 'ABBI3' ~ 'ABLA',
     SYMBOL == 'ERINI4' ~ 'ERIN4',
     SYMBOL == 'BRTEG' ~ 'BRTE',
@@ -190,7 +190,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'ERCOC13' ~ 'ARCOC4',
     SYMBOL == 'ERCO24' ~ 'ARCOC4',
     SYMBOL == 'HEFO9' ~ 'HEVIF',
-    SYMBOL == 'YUBA2' ~ 'YUBAB', 
+    SYMBOL == 'YUBA2' ~ 'YUBAB',
     SYMBOL == 'COVI9' ~ 'ESVIV',
     SYMBOL == 'ARHI' ~ 'ARHIP',
     SYMBOL == 'BOFE' ~ 'ARFEF',
@@ -202,8 +202,8 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'ORFL5' ~ 'CRFL5',
     SYMBOL == 'ORFL2' ~ 'CRFL5',
     SYMBOL == 'DICA18' ~ 'MACA2',
-    SYMBOL ==  'GAPIP2' ~'GAPI',
-    SYMBOL == 'CYFE' ~ 'CYACF', 
+    SYMBOL == 'GAPIP2' ~ 'GAPI',
+    SYMBOL == 'CYFE' ~ 'CYACF',
     SYMBOL == 'DIBI8' ~ 'MABIB',
     SYMBOL == 'ASTH2' ~ 'ASMOT',
     SYMBOL == 'THSA2' ~ 'THSAS',
@@ -212,30 +212,47 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'ECCOC' ~ 'ECTR',
     SYMBOL == 'SUNI' ~ 'SUMO',
     SYMBOL == 'ASNU4' ~ 'ASNUM2',
-    SYMBOL == 'BAHI2' ~ 'BAHOH2', 
-    SYMBOL == 'XASP' ~ 'XASP2', 
+    SYMBOL == 'BAHI2' ~ 'BAHOH2',
+    SYMBOL == 'XASP' ~ 'XASP2',
     SYMBOL == 'ARSP5' ~ 'PIDE4',
-    SYMBOL == 'CASC3' ~ 'CASC18', 
-    SYMBOL == 'AGHE2' ~ 'AGHEH'
+    SYMBOL == 'CASCS3' ~ 'CASC18',
+    SYMBOL == 'AGHE2' ~ 'AGHEH',
+    SYMBOL == 'FEOC3' ~ 'VUOC',
+    SYMBOL == 'AGPA14' ~ 'AGGLL',
+    SYMBOL == 'YUHAH' ~ 'YUHA',
+    SYMBOL == 'ZIEL2' ~ 'ZIELE',
+    SYMBOL == 'SOSI3' ~ 'SOSIS',
+    SYMBOL == 'QUGAG' ~ 'QUGA',
+    SYMBOL == 'BRMI' ~ 'BRMI',
+    SYMBOL == 'TARA' ~ 'TACH',
+    SYMBOL == 'ERJA' ~ 'ERJAJ',
+    SYMBOL == 'ORHU2' ~ 'CRHU2', 
+    SYMBOL == 'BERE' ~ 'MARE11', 
+    SYMBOL == 'CYLE6' ~ 'PSMO',
+    SYMBOL == 'SALA5' ~ 'SALUL',
     SYMBOL == 'LEAL' ~ 'LEALE', # Speculative
     SYMBOL == 'BRJA' ~ 'BRAR5', # slightly speculative
     TRUE ~ as.character(SYMBOL)
   ))
 
 # MAYBE ADD TO CNHP ???
-# ERCOC13,  # THPU3, #ERIN4, #LALA3, # ERJAJ, #DRCU, 
-# SPCO. LODI # BOST4 - this is stricta...
+ # THPU3, 
+# SPCO. # BOST4 - this is stricta...
 nativity <- nativity %>% 
   mutate(SYMBOL = case_when(
     SYMBOL == 'CALEL4' ~ 'CALE4',
     SYMBOL == 'YUBA' ~ 'YUBAB',
+    SYMBOL == 'ZIEL2' ~ 'ZIELE', 
+    SYMBOL == 'LALAA' ~ 'LALA3',
     TRUE ~ as.character(SYMBOL)
   ))
   
-out <- left_join(spp_attri, nativity)
+out <- left_join(spp_attri, nativity, by = 'SYMBOL') %>% 
+  distinct(SYMBOL, .keep_all = T)
 
 # not known from CO yet, 
-# BRAN , SIIR , ERAB3
+# BRAN , SIIR , ERAB3, ERRO2 - LIKELY E. STRICTUM
+# ASASC - MISTYPED ASTRAGALUS ASCLEPI..?
 
 
 # Identity cannot be ascertained # ARPU2
