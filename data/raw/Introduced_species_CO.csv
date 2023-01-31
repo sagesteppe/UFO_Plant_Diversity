@@ -1,0 +1,456 @@
+"National_USDASymbol","National_SciName_noAuthority","Ack_SciName_noAuthority","National_NativeStatus","Invasive","CONox_Status","Invasiveness","IRank","IRank_Score"
+"TACA8","Taeniatherum caput-medusae","Taeniatherum caput-medusae","Introduced",TRUE,NA,NA,NA,NA
+"CEST","Centaurea stoebe","Centaurea stoebe spp. Micranthos","Introduced",TRUE,NA,NA,NA,NA
+"TARA","Tamarix ramosissima","Tamarix chinensis","Introduced",TRUE,NA,NA,NA,NA
+"BRHO2","Bromus hordeaceus","Bromus hordaceus ssp. Hordaceus","Introduced",TRUE,NA,NA,NA,NA
+"BRTEG","Bromus tectorum var. glabratus","Bromus tectorum","Introduced",TRUE,NA,NA,NA,NA
+"ABTH","Abutilon theophrasti","Abutilon theophrasti","Introduced",TRUE,"List C",4,"Medium/Low",4
+"ACFI","Achillea filipendulina","Achillea filipendulina","Introduced",FALSE,NA,NA,NA,NA
+"ACMI2","Achillea millefolium","Achillea millefolium","Both",FALSE,NA,NA,NA,NA
+"ACPT","Achillea ptarmica","Achillea ptarmica","Introduced",FALSE,NA,NA,NA,NA
+"ACCA4","Acorus calamus","Acorus calamus","Introduced",FALSE,NA,NA,NA,NA
+"ACRE3","Acroptilon repens","Acroptilon repens","Introduced",TRUE,"List B",4,"High/Medium",8
+"AECY","Aegilops cylindrica","Aegilops cylindrica","Introduced",TRUE,"List B",4,"Medium/Insignificant",5
+"AGCR","Agropyron cristatum","Agropyron cristatum","Introduced",FALSE,NA,NA,NA,NA
+"AGFR","Agropyron fragile","Agropyron fragile","Introduced",TRUE,NA,3,"Medium/Insignificant",5
+"AGGI","Agrostemma githago","Agrostemma githago","Introduced",FALSE,NA,NA,NA,NA
+"AGGI2","Agrostis gigantea","Agrostis gigantea","Introduced",TRUE,NA,3,"Medium/Low",4
+"AGST2","Agrostis stolonifera","Agrostis stolonifera","Introduced",TRUE,NA,3,"Medium/Low",4
+"AIAL","Ailanthus altissima","Ailanthus altissima","Introduced",TRUE,"Watch List",2,"Medium",6
+"ALRO3","Alcea rosea","Alcea rosea","Introduced",FALSE,NA,NA,NA,NA
+"ALMA12","Alhagi maurorum","Alhagi maurorum","Introduced",TRUE,"List A",4,"Medium/Low",4
+"ALPE4","Alliaria petiolata","Alliaria petiolata","Introduced",TRUE,"Watch List",NA,"High/Medium",8
+"ALSA2","Allium sativum","Allium sativum","Introduced",FALSE,NA,NA,NA,NA
+"ALSCS","Allium schoenoprasum","Allium schoenoprasum","Both",FALSE,NA,NA,NA,NA
+"ALAR","Alopecurus arundinaceus","Alopecurus arundinaceus","Introduced",FALSE,NA,NA,NA,NA
+"ALGE2","Alopecurus geniculatus","Alopecurus geniculatus","Introduced",FALSE,NA,NA,NA,NA
+"ALPR3","Alopecurus pratensis","Alopecurus pratensis","Introduced",TRUE,NA,3,"Low",3
+"ALAL3","Alyssum alyssoides","Alyssum alyssoides","Introduced",TRUE,NA,3,NA,NA
+"ALDE","Alyssum desertorum","Alyssum desertorum","Introduced",TRUE,NA,3,NA,NA
+"ALMU","Alyssum murale","Alyssum murale","Introduced",FALSE,NA,NA,NA,NA
+"ALSI8","Alyssum simplex","Alyssum simplex","Introduced",TRUE,NA,3,NA,NA
+"AMAL","Amaranthus albus","Amaranthus albus","Introduced",TRUE,NA,2,NA,NA
+"AMBL","Amaranthus blitoides","Amaranthus blitoides","Introduced",FALSE,NA,NA,NA,NA
+"AMAR2","Ambrosia artemisiifolia","Ambrosia artemisiifolia","Both",FALSE,NA,NA,NA,NA
+"ANAR","Anagallis arvensis","Anagallis arvensis","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"ANAZ","Anchusa azurea","Anchusa azurea","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"ANOF","Anchusa officinalis","Anchusa officinalis","Introduced",TRUE,"Watch List",NA,"Medium",6
+"ANAR6","Anthemis arvensis","Anthemis arvensis","Introduced",TRUE,NA,4,"Low/Insignificant",2
+"ANCO2","Anthemis cotula","Anthemis cotula","Introduced",TRUE,"List B",4,"Medium/Insignificant",5
+"ANTI","Anthemis tinctoria","Anthemis tinctoria","Introduced",FALSE,NA,NA,NA,NA
+"ANOD","Anthoxanthum odoratum","Anthoxanthum odoratum","Introduced",FALSE,NA,NA,NA,NA
+"APIN","Apera interrupta","Apera interrupta","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"ARLA3","Arctium lappa","Arctium lappa","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"ARMI2","Arctium minus","Arctium minus","Introduced",TRUE,"List C",4,"Medium/Insignificant",5
+"ARTO","Arctium tomentosum","Arctium tomentosum","Introduced",TRUE,NA,3,NA,NA
+"ARSE2","Arenaria serpyllifolia","Arenaria serpyllifolia","Introduced",FALSE,NA,NA,NA,NA
+"ARRU4","Armoracia rusticana","Armoracia rusticana","Introduced",TRUE,NA,1,NA,NA
+"AREL3","Arrhenatherum elatius","Arrhenatherum elatius","Introduced",TRUE,NA,2,"Low/Insignificant",2
+"ARAB2","Artemisia abrotanum","Artemisia abrotanum","Introduced",FALSE,NA,NA,NA,NA
+"ARAB3","Artemisia absinthium","Artemisia absinthium","Introduced",TRUE,"List B",4,"Low",3
+"ARAN3","Artemisia annua","Artemisia annua","Introduced",TRUE,NA,1,"Medium/Insignificant",5
+"ARBIB","Artemisia biennis var. biennis","Artemisia biennis var. biennis","Both",TRUE,NA,2,NA,NA
+"ARLU","Artemisia ludoviciana","Artemisia ludoviciana","Both",FALSE,NA,NA,NA,NA
+"ASOF","Asparagus officinalis","Asparagus officinalis","Introduced",TRUE,NA,2,"Medium/Insignificant",5
+"ASPR","Asperugo procumbens","Asperugo procumbens","Introduced",FALSE,NA,NA,NA,NA
+"ASCI4","Astragalus cicer","Astragalus cicer","Introduced",TRUE,NA,2,"Medium/Insignificant",5
+"ASFA3","Astragalus falcatus","Astragalus falcatus","Introduced",TRUE,NA,2,NA,NA
+"ATMI2","Atriplex micrantha","Atriplex heterosperma","Introduced",FALSE,NA,NA,NA,NA
+"ATHO","Atriplex hortensis","Atriplex hortensis","Introduced",FALSE,NA,NA,NA,NA
+"ATPA4","Atriplex patula","Atriplex patula","Introduced",FALSE,NA,NA,NA,NA
+"ATRO","Atriplex rosea","Atriplex rosea","Introduced",TRUE,NA,NA,"High/Low",7
+"AUSA","Aurinia saxatilis",NA,"Introduced",TRUE,NA,2,NA,NA
+"AVFA","Avena fatua","Avena fatua","Introduced",TRUE,NA,2,"High/Low",7
+"AVSA","Avena sativa","Avena sativa","Introduced",TRUE,NA,2,NA,NA
+"AXAM","Axyris amaranthoides","Axyris amaranthoides","Introduced",FALSE,NA,NA,NA,NA
+"BAVU","Barbarea vulgaris","Barbarea vulgaris","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"BAHY","Bassia hyssopifolia","Bassia hyssopifolia","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"BEVU","Berberis vulgaris","Berberis vulgaris","Introduced",TRUE,NA,1,"Medium/Low",4
+"BEIN2","Berteroa incana","Berteroa incana","Introduced",TRUE,"Watch List",2,"Low/Insignificant",2
+"BEPE3","Betula pendula","Betula pendula","Introduced",FALSE,NA,NA,NA,NA
+"BOBL","Bothriochloa bladhii","Bothriochloa bladhii","Introduced",TRUE,"Watch List",NA,NA,NA
+"BOIS","Bothriochloa ischaemum","Bothriochloa ischaemum","Introduced",TRUE,"Watch List",NA,NA,NA
+"BOLA2","Bothriochloa laguroides","Bothriochloa laguroides","Both",FALSE,NA,NA,NA,NA
+"BRDI2","Brachypodium distachyon","Brachypodium distachyon","Introduced",FALSE,NA,NA,NA,NA
+"BREL2","Brassica elongata","Brassica elongata","Introduced",TRUE,"List A",NA,"Insignificant",1
+"BRJU","Brassica juncea","Brassica juncea","Introduced",TRUE,NA,NA,"Insignificant",1
+"BRNA","Brassica napus","Brassica napus","Introduced",FALSE,NA,NA,NA,NA
+"BRNI","Brassica nigra","Brassica nigra","Introduced",TRUE,NA,3,"High/Low",7
+"BRRA","Brassica rapa","Brassica rapa","Introduced",TRUE,NA,2,NA,NA
+"BRBR5","Bromus briziformis","Bromus briziformis","Introduced",TRUE,NA,NA,"Insignificant",1
+"BRRA2","Bromus racemosus","Bromus commutatus","Introduced",TRUE,NA,2,NA,NA
+"BRDI3","Bromus diandrus","Bromus diandrus","Introduced",TRUE,NA,4,NA,NA
+"BRHOH","Bromus hordeaceus ssp. hordeaceus","Bromus hordeaceus ssp. hordeaceus","Introduced",FALSE,NA,NA,NA,NA
+"BRIN2","Bromus inermis","Bromus inermis","Both",TRUE,NA,4,"High/Medium",8
+"BRAR5","Bromus arvensis","Bromus japonicus","Introduced",TRUE,NA,4,NA,NA
+"BRRA2","Bromus racemosus","Bromus racemosus","Introduced",FALSE,NA,NA,NA,NA
+"BRRU2","Bromus rubens","Bromus rubens","Introduced",FALSE,NA,NA,NA,NA
+"BRSE","Bromus secalinus","Bromus secalinus","Introduced",TRUE,NA,2,NA,NA
+"BRSQ2","Bromus squarrosus","Bromus squarrosus","Introduced",FALSE,NA,NA,NA,NA
+"BRST2","Bromus sterilis","Bromus sterilis","Introduced",TRUE,NA,NA,"Medium/Low",4
+"BRTE","Bromus tectorum","Bromus tectorum","Introduced",TRUE,"List C",4,"High",9
+"CASE13","Calystegia sepium","Calystegia sepium","Both",FALSE,NA,NA,NA,NA
+"CASAA","Camelina sativa ssp. alyssum ","Camelina alyssum","Introduced",FALSE,NA,NA,NA,NA
+"CAMI2","Camelina microcarpa","Camelina microcarpa","Introduced",TRUE,NA,3,NA,NA
+"CARU15","Camelina rumelica","Camelina rumelica","Introduced",TRUE,NA,3,NA,NA
+"CASA2","Camelina sativa","Camelina sativa","Introduced",FALSE,NA,NA,NA,NA
+"CAGL2","Campanula glomerata","Campanula glomerata","Introduced",FALSE,NA,NA,NA,NA
+"CARA","Campanula rapunculoides","Campanula rapunculoides","Introduced",TRUE,NA,3,"High/Low",7
+"CASAS3","Cannabis sativa ssp. sativa","Cannabis sativa ssp. sativa","Introduced",TRUE,NA,2,"Medium/Low",4
+"CABU2","Capsella bursa-pastoris","Capsella bursa-pastoris","Introduced",TRUE,NA,4,"Insignificant",1
+"CAAR18","Caragana arborescens","Caragana arborescens","Introduced",TRUE,NA,NA,"High/Low",7
+"CAAU10","Caragana aurantiaca","Caragana aurantiaca","Introduced",FALSE,NA,NA,NA,NA
+"CAAC","Carduus acanthoides","Carduus acanthoides","Introduced",TRUE,"List B",4,"Medium/Low",4
+"CANU4","Carduus nutans","Carduus nutans","Introduced",TRUE,"List B",4,"High/Low",7
+"CATI","Carthamus tinctorius","Carthamus tinctorius","Introduced",FALSE,NA,NA,NA,NA
+"CACA19","Carum carvi","Carum carvi","Introduced",TRUE,"List B",4,NA,NA
+"CECY2","Centaurea cyanus","Centaurea cyanus","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"CEDI3","Centaurea diffusa","Centaurea diffusa","Introduced",TRUE,"List B",4,"High/Medium",8
+"CEJA","Centaurea jacea","Centaurea jacea","Introduced",FALSE,NA,NA,NA,NA
+"CEMA9","Centaurea macrocephala","Centaurea macrocephala","Introduced",TRUE,NA,4,"Medium/Insignificant",5
+"CEMO","Centaurea montana","Centaurea montana","Introduced",FALSE,NA,NA,NA,NA
+"CESO3","Centaurea solstitialis","Centaurea solstitialis","Introduced",TRUE,"List A",4,"High/Medium",8
+"CESTM","Centaurea stoebe ssp. micranthos","Centaurea stoebe ssp. micranthos","Introduced",TRUE,"List B",4,"High/Medium",8
+"CEVI","Centaurea virgata","Centaurea virgata","Introduced",TRUE,"List A",NA,NA,NA
+"CEPU3","Centaurium pulchellum","Centaurium pulchellum","Introduced",FALSE,NA,NA,NA,NA
+"CEFOV2","Cerastium fontanum ssp. vulgare","Cerastium fontanum ssp. vulgare","Introduced",TRUE,NA,3,NA,NA
+"CHMI","Chaenorhinum minus","Chaenorhinum minus","Introduced",FALSE,NA,NA,NA,NA
+"CHMAM","Chelidonium majus var. majus","Chelidonium majus var. majus","Introduced",FALSE,NA,NA,NA,NA
+"CHAL7","Chenopodium album","Chenopodium album","Both",TRUE,NA,3,NA,NA
+"CHALA","Chenopodium album var. album","Chenopodium album var. album","Introduced",FALSE,NA,NA,NA,NA
+"CHFO2","Chenopodium foliosum","Chenopodium foliosum","Introduced",FALSE,NA,NA,NA,NA
+"CHGL3","Chenopodium glaucum","Chenopodium glaucum","Introduced",TRUE,NA,3,NA,NA
+"CHGL3","Chenopodium glaucum","Chenopodium glaucum var. glaucum","Introduced",FALSE,NA,NA,NA,NA
+"CHTE2","Chorispora tenella","Chorispora tenella","Introduced",TRUE,NA,4,"Insignificant",1
+"GLCO6","Glebionis coronarium","Chrysanthemum coronarium","Introduced",FALSE,NA,NA,NA,NA
+"CIIN","Cichorium intybus","Cichorium intybus","Introduced",TRUE,"List C",4,"Medium/Insignificant",5
+"CIAR4","Cirsium arvense","Cirsium arvense","Introduced",TRUE,"List B",4,"High/Medium",8
+"CIVU","Cirsium vulgare","Cirsium vulgare","Introduced",TRUE,"List B",4,"Medium/Low",4
+"CLOR","Clematis orientalis","Clematis orientalis","Introduced",TRUE,"List B",4,"Medium/Insignificant",5
+"COAR6","Colutea arborescens","Colutea arborescens","Introduced",FALSE,NA,NA,NA,NA
+"COMA2","Conium maculatum","Conium maculatum","Introduced",TRUE,"List C",3,"Medium/Low",4
+"COOR","Conringia orientalis","Conringia orientalis","Introduced",FALSE,NA,NA,NA,NA
+"COAR4","Convolvulus arvensis","Convolvulus arvensis","Introduced",TRUE,"List C",4,"Medium/Low",4
+"COHY","Corispermum hyssopifolium","Corispermum hyssopifolium","Introduced",FALSE,NA,NA,NA,NA
+"COBI2","Cosmos bipinnatus","Cosmos bipinnatus","Introduced",TRUE,NA,2,NA,NA
+"COLU5","Cotoneaster lucidus","Cotoneaster lucidus","Introduced",FALSE,NA,NA,NA,NA
+"CRMO3","Crataegus monogyna","Crataegus monogyna","Introduced",FALSE,NA,NA,NA,NA
+"CRCA3","Crepis capillaris","Crepis capillaris","Introduced",TRUE,NA,3,NA,NA
+"CRAL2","Crypsis alopecuroides","Crypsis alopecuroides","Introduced",FALSE,NA,NA,NA,NA
+"CUAP2","Cuscuta approximata","Cuscuta approximata","Introduced",TRUE,NA,3,"High/Low",7
+"CYMU","Cymbalaria muralis",NA,"Introduced",FALSE,NA,NA,NA,NA
+"CYDA","Cynodon dactylon","Cynodon dactylon","Introduced",TRUE,NA,2,"Medium/Low",4
+"CYOF","Cynoglossum officinale","Cynoglossum officinale","Introduced",TRUE,"List B",4,"Medium/Low",4
+"CYES","Cyperus esculentus","Cyperus esculentus","Introduced",TRUE,"List B",4,NA,NA
+"DAGL","Dactylis glomerata","Dactylis glomerata","Introduced",TRUE,NA,3,"Medium/Insignificant",5
+"DAAE","Dactyloctenium aegyptium","Dactyloctenium aegyptium","Introduced",FALSE,NA,NA,NA,NA
+"DAST","Datura stramonium","Datura stramonium","Introduced",TRUE,NA,2,"High/Low",7
+"DACA6","Daucus carota","Daucus carota","Introduced",TRUE,NA,2,"Low",3
+"DESO2","Descurainia sophia","Descurainia sophia","Introduced",TRUE,NA,3,"Medium/Low",4
+"DIAR","Dianthus armeria","Dianthus armeria","Introduced",TRUE,NA,NA,"Low/Insignificant",2
+"DIDE","Dianthus deltoides","Dianthus deltoides ssp. deltoides","Introduced",TRUE,NA,NA,"Low/Insignificant",2
+"DIPUP2","Digitalis purpurea ssp. purpurea","Digitalis purpurea var. purpurea","Introduced",TRUE,NA,1,"Medium/Insignificant",5
+"DIIS","Digitaria ischaemum","Digitaria ischaemum","Introduced",TRUE,NA,3,NA,NA
+"DISA","Digitaria sanguinalis","Digitaria sanguinalis","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"DIMU2","Diplotaxis muralis","Diplotaxis muralis","Introduced",FALSE,NA,NA,NA,NA
+"DIFU2","Dipsacus fullonum","Dipsacus fullonum","Introduced",TRUE,"List B",4,"Medium/Low",4
+"DILA4","Dipsacus laciniatus","Dipsacus laciniatus","Introduced",TRUE,"List B",4,"Medium/Low",4
+"DYAM","Dysphania ambrosioides","Dysphania ambrosioides","Introduced",FALSE,NA,NA,NA,NA
+"DYBO","Dysphania botrys","Dysphania botrys","Introduced",FALSE,NA,NA,NA,NA
+"DYGR","Dysphania graveolens","Dysphania graveolens","Both",TRUE,NA,3,NA,NA
+"ECCR","Echinochloa crus-galli","Echinochloa crus-galli","Introduced",TRUE,NA,3,"Medium/Insignificant",5
+"ECFR","Echinochloa frumentacea","Echinochloa frumentacea","Introduced",FALSE,NA,NA,NA,NA
+"ECSP","Echinops sphaerocephalus","Echinops sphaerocephalus","Introduced",TRUE,NA,1,NA,NA
+"EICR","Eichhornia crassipes","Eichhornia crassipes","Introduced",FALSE,NA,NA,NA,NA
+"ELAN","Elaeagnus angustifolia","Elaeagnus angustifolia","Introduced",TRUE,"List B",4,"High",9
+"ELIN3","Eleusine indica","Eleusine indica","Introduced",TRUE,NA,2,NA,NA
+"ELRE4","Elymus repens","Elymus repens","Introduced",TRUE,"List C",4,"High/Medium",8
+"EPHI","Epilobium hirsutum","Epilobium hirsutum","Introduced",TRUE,"List A",NA,NA,NA
+"EPHE","Epipactis helleborine","Epipactis helleborine","Introduced",TRUE,NA,2,"Medium/Low",4
+"ERBA2","Eragrostis barrelieri","Eragrostis barrelieri","Introduced",FALSE,NA,NA,NA,NA
+"ERCI","Eragrostis cilianensis","Eragrostis cilianensis","Introduced",TRUE,NA,2,"Medium/Insignificant",5
+"ERCU2","Eragrostis curvula","Eragrostis curvula","Introduced",TRUE,NA,NA,"Medium/Low",4
+"ERMI5","Eragrostis minor","Eragrostis minor","Introduced",FALSE,NA,NA,NA,NA
+"ERPI2","Eragrostis pilosa","Eragrostis pilosa","Introduced",FALSE,NA,NA,NA,NA
+"ERTR13","Eremopyrum triticeum","Eremopyrum triticeum","Introduced",TRUE,NA,4,NA,NA
+"ERCI6","Erodium cicutarium","Erodium cicutarium","Introduced",TRUE,"List C",4,"Medium/Low",4
+"ERPL5","Eryngium planum","Eryngium planum","Introduced",FALSE,NA,NA,NA,NA
+"ERCH9","Erysimum cheiranthoides","Erysimum cheiranthoides","Introduced",FALSE,NA,NA,NA,NA
+"ERRE4","Erysimum repandum","Erysimum repandum","Introduced",TRUE,NA,4,NA,NA
+"EUSY","Euclidium syriacum","Euclidium syriacum","Introduced",FALSE,NA,NA,NA,NA
+"EUCY2","Euphorbia cyparissias","Euphorbia cyparissias","Introduced",TRUE,"List A",4,"Medium/Low",4
+"EUDE4","Euphorbia dentata","Euphorbia dentata","Both",FALSE,NA,NA,NA,NA
+"EUES","Euphorbia esula","Euphorbia esula","Introduced",TRUE,"List B",4,"High/Medium",8
+"EUMY2","Euphorbia myrsinites","Euphorbia myrsinites","Introduced",TRUE,"List A",4,"Medium/Low",4
+"EUPE6","Euphorbia peplus","Euphorbia peplus","Introduced",FALSE,NA,NA,NA,NA
+"FAES2","Fagopyrum esculentum","Fagopyrum esculentum","Introduced",FALSE,NA,NA,NA,NA
+"POBA3","Polygonum baldschuanicum","Fallopia baldschuanica","Introduced",FALSE,NA,NA,NA,NA
+"POCO10","Polygonum convolvulus","Fallopia convolvulus","Introduced",FALSE,NA,NA,NA,NA
+"POCU6","Polygonum cuspidatum","Fallopia japonica var. japonica","Introduced",TRUE,"List A",3,"High/Medium",8
+"FEBR7","Festuca brevipila","Festuca trachyphylla","Introduced",FALSE,NA,NA,NA,NA
+"FIULD2","Filipendula ulmaria ssp. denudata","Filipendula ulmaria ssp. denudata","Introduced",FALSE,NA,NA,NA,NA
+"FUVA","Fumaria vaillantii","Fumaria vaillantii","Introduced",FALSE,NA,NA,NA,NA
+"GAOF","Galega officinalis","Galega officinalis","Introduced",FALSE,NA,NA,NA,NA
+"GABI3","Galeopsis bifida","Galeopsis bifida","Introduced",FALSE,NA,NA,NA,NA
+"GALA","Galeopsis ladanum","Galeopsis ladanum","Introduced",FALSE,NA,NA,NA,NA
+"GAPA2","Galinsoga parviflora","Galinsoga parviflora var. parviflora","Introduced",FALSE,NA,NA,NA,NA
+"GAQU","Galinsoga quadriradiata","Galinsoga quadriradiata","Introduced",FALSE,NA,NA,NA,NA
+"GAOD3","Galium odoratum","Galium odoratum","Introduced",TRUE,NA,1,NA,NA
+"GAVE","Galium verum","Galium verum","Introduced",TRUE,NA,3,NA,NA
+"GEPU2","Geranium pusillum","Geranium pusillum","Introduced",FALSE,NA,NA,NA,NA
+"GLCO3","Glaucium corniculatum","Glaucium corniculatum","Introduced",FALSE,NA,NA,NA,NA
+"GLFL","Glaucium flavum","Glaucium flavum","Introduced",TRUE,NA,NA,"Medium/Low",4
+"GLHE2","Glechoma hederacea","Glechoma hederacea","Introduced",TRUE,NA,NA,"Low",3
+"GNUL","Gnaphalium uliginosum","Gnaphalium uliginosum","Introduced",FALSE,NA,NA,NA,NA
+"GYEL","Gypsophila elegans","Gypsophila elegans","Introduced",TRUE,NA,2,NA,NA
+"GYPA","Gypsophila paniculata","Gypsophila paniculata","Introduced",TRUE,"Watch List",4,"Medium/Low",4
+"GYSC","Gypsophila scorzonerifolia","Gypsophila scorzonerifolia","Introduced",TRUE,NA,3,NA,NA
+"HAGL","Halogeton glomeratus","Halogeton glomeratus","Introduced",TRUE,"List C",4,"High/Medium",8
+"HEFU","Hemerocallis fulva","Hemerocallis fulva","Introduced",FALSE,NA,NA,NA,NA
+"HEGL8","Herniaria glabra","Herniaria glabra","Introduced",FALSE,NA,NA,NA,NA
+"HEMA3","Hesperis matronalis","Hesperis matronalis","Introduced",TRUE,"List B",4,"Medium/Low",4
+"HITR","Hibiscus trionum","Hibiscus trionum","Introduced",TRUE,NA,4,NA,NA
+"HIAU","Hieracium aurantiacum","Hieracium aurantiacum","Introduced",TRUE,"List A",4,"Medium/Low",4
+"HOLA","Holcus lanatus","Holcus lanatus","Introduced",TRUE,NA,1,"High/Medium",8
+"HOUM","Holosteum umbellatum","Holosteum umbellatum ssp. umbellatum","Introduced",FALSE,NA,NA,NA,NA
+"HOMU","Hordeum murinum","Hordeum murinum","Introduced",TRUE,NA,NA,"High/Low",7
+"HOVU","Hordeum vulgare","Hordeum vulgare","Introduced",TRUE,NA,1,"Low/Insignificant",2
+"HYNI","Hyoscyamus niger","Hyoscyamus niger","Introduced",TRUE,"List B",4,"Medium/Insignificant",5
+"HYPE","Hypericum perforatum","Hypericum perforatum","Introduced",TRUE,"List C",4,"High/Medium",8
+"HYRA3","Hypochaeris radicata","Hypochaeris radicata","Introduced",TRUE,NA,4,"High/Low",7
+"IBAM","Iberis amara","Iberis amara","Introduced",FALSE,NA,NA,NA,NA
+"IPPU2","Ipomoea purpurea","Ipomoea purpurea","Introduced",TRUE,NA,NA,"Medium/Low",4
+"IRPS","Iris pseudacorus","Iris pseudacorus","Introduced",TRUE,"Watch List",NA,NA,NA
+"ISTI","Isatis tinctoria","Isatis tinctoria","Introduced",TRUE,"List A",4,"High/Low",7
+"JUAR2","Juncus arcticus","Juncus arcticus","Both",FALSE,NA,NA,NA,NA
+"JUCO","Juncus compressus","Juncus compressus","Introduced",TRUE,NA,3,NA,NA
+"KNAR","Knautia arvensis","Knautia arvensis","Introduced",FALSE,NA,NA,NA,NA
+"BASC5","Bassia scoparia","Kochia scoparia","Introduced",TRUE,NA,4,"Low",3
+"LASA","Lactuca saligna","Lactuca saligna","Introduced",FALSE,NA,NA,NA,NA
+"LASE","Lactuca serriola","Lactuca serriola","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"LAAM","Lamium amplexicaule","Lamium amplexicaule","Introduced",TRUE,NA,3,NA,NA
+"LAMA","Lamium maculatum","Lamium maculatum","Introduced",FALSE,NA,NA,NA,NA
+"LAPU2","Lamium purpureum","Lamium purpureum","Introduced",TRUE,NA,2,NA,NA
+"LASQ","Lappula squarrosa","Lappula squarrosa","Introduced",FALSE,NA,NA,NA,NA
+"LACO3","Lapsana communis","Lapsana communis","Introduced",FALSE,NA,NA,NA,NA
+"LALA4","Lathyrus latifolius","Lathyrus latifolius","Introduced",TRUE,NA,3,NA,NA
+"LASY","Lathyrus sylvestris","Lathyrus sylvestris","Introduced",FALSE,NA,NA,NA,NA
+"LECA2","Leonurus cardiaca","Leonurus cardiaca","Introduced",FALSE,NA,NA,NA,NA
+"CAPU6","Cardaria pubescens","Lepidium appelianum","Introduced",TRUE,NA,4,NA,NA
+"LECA5","Lepidium campestre","Lepidium campestre","Introduced",TRUE,NA,3,NA,NA
+"CACH42","Cardaria chalepensis","Lepidium chalapensis","Introduced",TRUE,NA,4,NA,NA
+"LEDE","Lepidium densiflorum","Lepidium densiflorum","Both",TRUE,NA,3,NA,NA
+"CADR","Cardaria draba","Lepidium draba","Introduced",TRUE,"List B",4,NA,NA
+"LEHE2","Lepidium heterophyllum","Lepidium heterophyllum","Introduced",FALSE,NA,NA,NA,NA
+"LELA2","Lepidium latifolium","Lepidium latifolium","Introduced",TRUE,"List B",4,"High",9
+"LEPE2","Lepidium perfoliatum","Lepidium perfoliatum","Introduced",TRUE,NA,4,"Low/Insignificant",2
+"LEMA8","Leucanthemum maximum","Leucanthemum maximum","Introduced",TRUE,NA,2,NA,NA
+"LEVU","Leucanthemum vulgare","Leucanthemum vulgare","Introduced",TRUE,"List B",4,"Medium/Low",4
+"LERA5","Leymus racemosus","Leymus racemosus","Introduced",FALSE,NA,NA,NA,NA
+"LIVU","Ligustrum vulgare","Ligustrum vulgare","Introduced",FALSE,NA,NA,NA,NA
+"LIDA","Linaria dalmatica","Linaria dalmatica","Introduced",TRUE,"List B",4,NA,NA
+"LIVU2","Linaria vulgaris","Linaria vulgaris","Introduced",TRUE,"List B",4,"High/Low",7
+"LIPE2","Linum perenne","Linum perenne","Introduced",FALSE,NA,NA,NA,NA
+"BUAR3","Buglossoides arvensis","Lithospermum arvense","Introduced",TRUE,NA,3,NA,NA
+"LOMA","Lobularia maritima","Lobularia maritima","Introduced",TRUE,NA,1,NA,NA
+"LOPEM2","Lolium perenne ssp. multiflorum","Lolium multiflorum","Introduced",FALSE,NA,NA,NA,NA
+"LOPEP","Lolium perenne ssp. perenne","Lolium perenne","Introduced",TRUE,NA,3,"Medium",6
+"LOMO2","Lonicera morrowii","Lonicera morrowii","Introduced",TRUE,NA,2,"High/Medium",8
+"LOTA","Lonicera tatarica","Lonicera tatarica","Introduced",TRUE,NA,2,"High/Medium",8
+"LOCO6","Lotus corniculatus","Lotus corniculatus","Introduced",FALSE,NA,NA,NA,NA
+"LOTE4","Lotus tenuis","Lotus tenuis","Introduced",TRUE,NA,3,"Medium/Low",4
+"LUAN","Lunaria annua","Lunaria annua","Introduced",FALSE,NA,NA,NA,NA
+"LYBA4","Lycium barbarum","Lycium barbarum","Introduced",TRUE,NA,3,NA,NA
+"LYNU","Lysimachia nummularia","Lysimachia nummularia","Introduced",TRUE,NA,NA,"Medium/Low",4
+"LYVU","Lysimachia vulgaris",NA,"Introduced",TRUE,"Watch List",NA,NA,NA
+"LYSA2","Lythrum salicaria","Lythrum salicaria","Introduced",TRUE,"List A",4,"High",9
+"MAPU","Malus pumila","Malus pumila","Introduced",TRUE,NA,2,"Medium/Insignificant",5
+"MANE","Malva neglecta","Malva neglecta","Introduced",TRUE,NA,4,"Medium/Insignificant",5
+"MAPA5","Malva parviflora","Malva parviflora","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"MAPU5","Malva pusilla","Malva pusilla","Introduced",FALSE,NA,NA,NA,NA
+"MASY","Malva sylvestris","Malva sylvestris","Introduced",FALSE,NA,NA,NA,NA
+"MAVE","Malva verticillata","Malva verticillata","Introduced",FALSE,NA,NA,NA,NA
+"MAVU","Marrubium vulgare","Marrubium vulgare","Introduced",TRUE,NA,3,"Medium/Low",4
+"MADI6","Matricaria discoidea","Matricaria discoidea","Introduced",FALSE,NA,NA,NA,NA
+"MESAF","Medicago sativa ssp. falcata","Medicago falcata","Introduced",FALSE,NA,NA,NA,NA
+"MELU","Medicago lupulina","Medicago lupulina","Introduced",TRUE,NA,3,"Medium/Insignificant",5
+"MESA","Medicago sativa","Medicago sativa","Introduced",TRUE,NA,3,"Insignificant",1
+"MEOF","Melilotus officinalis","Melilotus albus","Introduced",TRUE,NA,3,"Medium/Low",4
+"MEOF","Melilotus officinalis","Melilotus officinalis","Introduced",TRUE,NA,3,"Medium/Low",4
+"MESP3","Mentha spicata","Mentha spicata","Introduced",TRUE,NA,1,NA,NA
+"MISI","Miscanthus sinensis","Miscanthus sinensis","Introduced",TRUE,NA,NA,"Medium",6
+"MOAL","Morus alba","Morus alba","Introduced",TRUE,NA,2,"High/Medium",8
+"MYAR","Myosotis arvensis","Myosotis arvensis","Introduced",FALSE,NA,NA,NA,NA
+"MYSC","Myosotis scorpioides","Myosotis scorpioides","Introduced",FALSE,NA,NA,NA,NA
+"NAOF","Nasturtium officinale","Nasturtium officinale","Introduced",TRUE,NA,NA,"Medium/Low",4
+"NECA2","Nepeta cataria","Nepeta cataria","Introduced",TRUE,NA,3,NA,NA
+"NERA2","Nepeta racemosa","Nepeta racemosa","Introduced",FALSE,NA,NA,NA,NA
+"NIPH","Nicandra physalodes","Nicandra physalodes","Introduced",TRUE,NA,1,NA,NA
+"OECI","Oenothera cinerea","Oenothera cinerea","Both",FALSE,NA,NA,NA,NA
+"ONVI","Onobrychis viciifolia","Onobrychis viciifolia","Introduced",TRUE,NA,NA,"Insignificant",1
+"ONAC","Onopordum acanthium","Onopordum acanthium","Introduced",TRUE,"List B",4,NA,NA
+"ONTA","Onopordum tauricum","Onopordum tauricum","Introduced",TRUE,"List B",4,NA,NA
+"PAMI2","Panicum miliaceum","Panicum miliaceum","Introduced",TRUE,"List C",4,NA,NA
+"PADU","Papaver dubium","Papaver dubium","Introduced",FALSE,NA,NA,NA,NA
+"PAOR5","Papaver orientale","Papaver orientale","Introduced",FALSE,NA,NA,NA,NA
+"PARH2","Papaver rhoeas","Papaver rhoeas","Introduced",FALSE,NA,NA,NA,NA
+"PASO2","Papaver somniferum","Papaver somniferum","Introduced",FALSE,NA,NA,NA,NA
+"PADI3","Paspalum dilatatum","Paspalum dilatatum","Introduced",FALSE,NA,NA,NA,NA
+"PARA6","Paspalum racemosum","Paspalum racemosum","Introduced",FALSE,NA,NA,NA,NA
+"PASA2","Pastinaca sativa","Pastinaca sativa","Introduced",TRUE,NA,NA,"Low/Insignificant",2
+"PEHA","Peganum harmala","Peganum harmala","Introduced",TRUE,"List A",NA,NA,NA
+"PEGL2","Pennisetum glaucum","Pennisetum glaucum","Introduced",FALSE,NA,NA,NA,NA
+"POHY","Polygonum hydropiper","Persicaria hydropiper","Introduced",TRUE,NA,2,NA,NA
+"POPE3","Polygonum persicaria","Persicaria maculosa","Introduced",TRUE,NA,4,NA,NA
+"PHCA5","Phalaris canariensis","Phalaris canariensis","Introduced",FALSE,NA,NA,NA,NA
+"PHMI3","Phalaris minor","Phalaris minor","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"PHPR3","Phleum pratense","Phleum pratense","Introduced",TRUE,NA,3,"Medium",6
+"PHAU7","Phragmites australis","Phragmites australis","Both",TRUE,"Watch List",NA,"High",9
+"PHAU7","Phragmites australis var. autralis","Phragmites australis","Introduced",TRUE,"Watch List",NA,"High",9
+"PLLA","Plantago lanceolata","Plantago lanceolata","Introduced",TRUE,NA,3,"High/Low",7
+"PLMA2","Plantago major","Plantago major","Introduced",TRUE,NA,3,NA,NA
+"POAN","Poa annua","Poa annua","Introduced",TRUE,NA,3,"Medium/Insignificant",5
+"POBU","Poa bulbosa","Poa bulbosa","Introduced",TRUE,"List C",3,NA,NA
+"POCO","Poa compressa","Poa compressa","Introduced",TRUE,NA,NA,"High/Low",7
+"POPR","Poa pratensis","Poa pratensis","Both",TRUE,NA,4,"Medium",6
+"POTR2","Poa trivialis","Poa trivialis","Introduced",TRUE,NA,NA,"Medium/Low",4
+"POAR5","Polygonum argyrocoleon","Polygonum argyrocoleon","Introduced",TRUE,NA,NA,"Medium/Insignificant",5
+"POAV","Polygonum aviculare","Polygonum aviculare","Introduced",TRUE,NA,3,"Low",3
+"POMO5","Polypogon monspeliensis","Polypogon monspeliensis","Introduced",TRUE,NA,3,"High/Low",7
+"POVI9","Polypogon viridis","Polypogon viridis","Introduced",TRUE,NA,NA,"High/Low",7
+"POAL7","Populus alba","Populus alba","Introduced",FALSE,NA,NA,NA,NA
+"POOL","Portulaca oleracea","Portulaca oleracea","Introduced",TRUE,NA,3,NA,NA
+"POCR3","Potamogeton crispus","Potamogeton crispus","Introduced",TRUE,NA,NA,"Medium",6
+"POAN7","Potentilla anglica","Potentilla anglica","Introduced",FALSE,NA,NA,NA,NA
+"POAR8","Potentilla argentea","Potentilla argentea","Introduced",TRUE,NA,2,NA,NA
+"PORE5","Potentilla recta","Potentilla recta","Introduced",TRUE,"List B",4,"High/Medium",8
+"PORE6","Potentilla reptans","Potentilla reptans","Introduced",FALSE,NA,NA,NA,NA
+"PRAR3","Prunus armeniaca","Prunus armeniaca","Introduced",TRUE,NA,2,NA,NA
+"PRCE2","Prunus cerasifera","Prunus cerasifera","Introduced",FALSE,NA,NA,NA,NA
+"PRDO","Prunus domestica","Prunus domestica","Introduced",FALSE,NA,NA,NA,NA
+"PRPA5","Prunus padus","Prunus padus","Introduced",FALSE,NA,NA,NA,NA
+"PRPE3","Prunus persica","Prunus persica","Introduced",FALSE,NA,NA,NA,NA
+"PSJU3","Psathyrostachys juncea","Psathyrostachys juncea","Introduced",TRUE,NA,4,"Low/Insignificant",2
+"PUDI","Puccinellia distans","Puccinellia distans","Both",FALSE,NA,NA,NA,NA
+"RAAC3","Ranunculus acris","Ranunculus acris","Both",FALSE,NA,NA,NA,NA
+"RARE3","Ranunculus repens","Ranunculus repens","Introduced",TRUE,NA,NA,"High/Medium",8
+"CETE5","Ceratocephala testiculata","Ranunculus testiculatus","Introduced",FALSE,NA,NA,NA,NA
+"RARA2","Raphanus raphanistrum","Raphanus raphanistrum","Introduced",FALSE,NA,NA,NA,NA
+"RASA2","Raphanus sativus","Raphanus sativus","Introduced",TRUE,NA,1,NA,NA
+"RELU","Reseda lutea","Reseda lutea","Introduced",FALSE,NA,NA,NA,NA
+"RELU2","Reseda luteola","Reseda luteola","Introduced",FALSE,NA,NA,NA,NA
+"RHCA3","Rhamnus cathartica","Rhamnus cathartica","Introduced",TRUE,NA,4,"High/Medium",8
+"FRAL4","Frangula alnus","Rhamnus frangula","Introduced",TRUE,NA,NA,"High/Medium",8
+"RHRH2","Rheum rhabarbarum","Rheum rhabarbarum","Introduced",TRUE,NA,1,NA,NA
+"RIRU80","Ribes rubrum","Ribes rubrum","Introduced",FALSE,NA,NA,NA,NA
+"ROSY","Rorippa sylvestris","Rorippa sylvestris","Introduced",TRUE,NA,3,"Medium/Low",4
+"ROHA4","Rosa ×harisonii [foetida × spinosissima]","Rosa ×harisonii","Introduced",FALSE,NA,NA,NA,NA
+"ROCA3","Rosa canina","Rosa canina","Introduced",FALSE,NA,NA,NA,NA
+"ROEG","Rosa eglanteria","Rosa eglanteria","Introduced",TRUE,NA,2,NA,NA
+"RUAR9","Rubus armeniacus","Rubus armeniacus","Introduced",TRUE,"Watch List",2,NA,NA
+"RULA","Rubus laciniatus","Rubus laciniatus","Introduced",TRUE,NA,2,NA,NA
+"RUAC3","Rumex acetosella","Rumex acetosella","Introduced",TRUE,NA,2,"Medium/Low",4
+"RUCR","Rumex crispus","Rumex crispus","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"RUOB","Rumex obtusifolius","Rumex obtusifolius","Introduced",FALSE,NA,NA,NA,NA
+"RUST4","Rumex stenophyllus","Rumex stenophyllus","Introduced",FALSE,NA,NA,NA,NA
+"SAPR","Sagina procumbens","Sagina procumbens","Introduced",FALSE,NA,NA,NA,NA
+"SAFR","Salix fragilis","Salix ×fragilis","Introduced",TRUE,NA,3,NA,NA
+"SAAL2","Salix alba","Salix alba","Introduced",TRUE,NA,2,NA,NA
+"SABA","Salix babylonica","Salix babylonica","Introduced",TRUE,NA,2,NA,NA
+"SAMA13","Salix matsudana","Salix matsudana","Introduced",TRUE,NA,2,NA,NA
+"SAPU2","Salix purpurea","Salix purpurea","Introduced",TRUE,NA,2,NA,NA
+"SACO8","Salsola collina","Salsola collina","Introduced",FALSE,NA,NA,NA,NA
+"SAPA8","Salsola paulsenii","Salsola paulsenii","Introduced",TRUE,NA,NA,"Low",3
+"SATR12","Salsola tragus","Salsola tragus","Introduced",TRUE,NA,4,NA,NA
+"SASY","Salvia ×sylvestris","Salvia ×sylvestris","Introduced",FALSE,NA,NA,NA,NA
+"SAAE","Salvia aethiopis","Salvia aethiopis","Introduced",TRUE,"List A",4,"Low",3
+"SAPR2","Salvia pratensis","Salvia pratensis","Introduced",FALSE,NA,NA,NA,NA
+"SASC2","Salvia sclarea","Salvia sclarea","Introduced",FALSE,NA,NA,NA,NA
+"SAMI3","Sanguisorba minor","Sanguisorba minor","Introduced",TRUE,NA,2,"Insignificant",1
+"SAOC80","Saponaria ocymoides","Saponaria ocymoides","Introduced",FALSE,NA,NA,NA,NA
+"SAOF4","Saponaria officinalis","Saponaria officinalis","Introduced",TRUE,"List B",4,"Low/Insignificant",2
+"SCAR7","Schedonorus arundinaceus","Schedonorus arundinaceus","Introduced",TRUE,NA,NA,"High/Medium",8
+"SCPR4","Schedonorus pratensis","Schedonorus pratensis","Introduced",TRUE,NA,NA,"High/Low",7
+"SCDU2","Sclerochloa dura","Sclerochloa dura","Introduced",FALSE,NA,NA,NA,NA
+"SCLA6","Scorzonera laciniata","Scorzonera laciniata","Introduced",FALSE,NA,NA,NA,NA
+"SECE","Secale cereale","Secale cereale","Introduced",TRUE,NA,1,NA,NA
+"SEVA4","Securigera varia","Securigera varia","Introduced",TRUE,NA,NA,"High",9
+"SEAC","Sedum acre","Sedum acre","Introduced",FALSE,NA,NA,NA,NA
+"SESP2","Sedum spurium","Sedum spurium","Introduced",FALSE,NA,NA,NA,NA
+"SEVU","Senecio vulgaris","Senecio vulgaris","Introduced",TRUE,NA,2,"Low/Insignificant",2
+"SEIT","Setaria italica","Setaria italica","Introduced",FALSE,NA,NA,NA,NA
+"SEPUP2","Setaria pumila ssp. pumila","Setaria pumila ssp. pumila","Introduced",FALSE,NA,NA,NA,NA
+"SEVE3","Setaria verticillata","Setaria verticillata","Introduced",TRUE,NA,2,NA,NA
+"SEVIV","Setaria viridis var. viridis","Setaria viridis var. viridis","Introduced",TRUE,NA,2,NA,NA
+"SICS","Silene csereii","Silene csereii","Introduced",FALSE,NA,NA,NA,NA
+"SIDI2","Silene dichotoma","Silene dichotoma ssp. dichotoma","Introduced",FALSE,NA,NA,NA,NA
+"SILA21","Silene latifolia","Silene latifolia","Introduced",FALSE,NA,NA,NA,NA
+"SINO","Silene noctiflora","Silene noctiflora","Introduced",FALSE,NA,NA,NA,NA
+"SIVU","Silene vulgaris","Silene vulgaris","Introduced",FALSE,NA,NA,NA,NA
+"SIAL5","Sinapis alba","Sinapis alba","Introduced",FALSE,NA,NA,NA,NA
+"SIAR4","Sinapis arvensis","Sinapis arvensis","Introduced",TRUE,NA,NA,"Low/Insignificant",2
+"SIAL2","Sisymbrium altissimum","Sisymbrium altissimum","Introduced",TRUE,NA,4,NA,NA
+"SILO3","Sisymbrium loeselii","Sisymbrium loeselii","Introduced",FALSE,NA,NA,NA,NA
+"SIOF","Sisymbrium officinale","Sisymbrium officinale","Introduced",TRUE,NA,3,NA,NA
+"SODU","Solanum dulcamara","Solanum dulcamara","Introduced",TRUE,NA,1,"Low",3
+"SOPH","Solanum physalifolium","Solanum physalifolium","Introduced",FALSE,NA,NA,NA,NA
+"SOAR2","Sonchus arvensis","Sonchus arvensis","Introduced",TRUE,"List C",4,"Medium/Low",4
+"SOAS","Sonchus asper","Sonchus asper","Introduced",TRUE,NA,3,NA,NA
+"SOOL","Sonchus oleraceus","Sonchus oleraceus","Introduced",TRUE,NA,3,NA,NA
+"SOARU","Sonchus arvensis ssp. uliginosus","Sonchus uliginosus","Introduced",FALSE,NA,NA,NA,NA
+"SOAU","Sorbus aucuparia","Sorbus aucuparia","Introduced",FALSE,NA,NA,NA,NA
+"SOBI2","Sorghum bicolor","Sorghum bicolor","Introduced",TRUE,NA,2,NA,NA
+"SOHA","Sorghum halepense","Sorghum halepense","Introduced",TRUE,"List C",4,"High/Medium",8
+"SPAR","Spergula arvensis","Spergula arvensis","Introduced",FALSE,NA,NA,NA,NA
+"SPMA10","Spergularia maritima","Spergularia media","Introduced",FALSE,NA,NA,NA,NA
+"SPRU","Spergularia rubra","Spergularia rubra","Introduced",FALSE,NA,NA,NA,NA
+"SPSA3","Sphaerophysa salsula","Sphaerophysa salsula","Introduced",TRUE,"Watch List",NA,NA,NA
+"STGR","Stellaria graminea","Stellaria graminea","Introduced",FALSE,NA,NA,NA,NA
+"STME2","Stellaria media","Stellaria media","Introduced",TRUE,NA,NA,"Low",3
+"STMEP","Stellaria media ssp. pallida","Stellaria pallida","Introduced",FALSE,NA,NA,NA,NA
+"STAM2","Streptopus amplexifolius","Streptopus amplexifolius","Both",FALSE,NA,NA,NA,NA
+"MAAF","Malcolmia africana","Strigosella africana","Introduced",TRUE,NA,2,NA,NA
+"SYOF","Symphytum officinale","Symphytum officinale","Introduced",FALSE,NA,NA,NA,NA
+"SYVU","Syringa vulgaris","Syringa vulgaris","Introduced",FALSE,NA,NA,NA,NA
+"TACH","Tamarix chinensis","Tamarix chinensis","Introduced",TRUE,"List B",4,"High",9
+"TAPA4","Tamarix parviflora","Tamarix parviflora","Introduced",TRUE,NA,4,NA,NA
+"TABA","Tanacetum balsamita","Tanacetum balsamita","Introduced",TRUE,NA,NA,"Low/Insignificant",2
+"TAPA6","Tanacetum parthenium","Tanacetum parthenium","Introduced",FALSE,NA,NA,NA,NA
+"TAVU","Tanacetum vulgare","Tanacetum vulgare","Introduced",TRUE,"List B",4,"Low",3
+"TALA2","Taraxacum laevigatum","Taraxacum laevigatum","Introduced",FALSE,NA,NA,NA,NA
+"TAOF","Taraxacum officinale","Taraxacum officinale","Both",TRUE,NA,3,NA,NA
+"THIN6","Thinopyrum intermedium","Thinopyrum intermedium","Introduced",TRUE,NA,3,"Medium/Insignificant",5
+"THPO7","Thinopyrum ponticum","Thinopyrum ponticum","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"THAR5","Thlaspi arvense","Thlaspi arvense","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"TRDU","Tragopogon dubius","Tragopogon dubius","Introduced",TRUE,NA,2,"Medium/Low",4
+"TRPO","Tragopogon porrifolius","Tragopogon porrifolius","Introduced",TRUE,NA,2,NA,NA
+"TRPR","Tragopogon pratensis","Tragopogon pratensis","Introduced",TRUE,NA,2,NA,NA
+"TRTE","Tribulus terrestris","Tribulus terrestris","Introduced",TRUE,"List C",4,NA,NA
+"TRFR2","Trifolium fragiferum","Trifolium fragiferum","Introduced",TRUE,NA,3,NA,NA
+"TRHY","Trifolium hybridum","Trifolium hybridum","Introduced",TRUE,NA,3,"Medium/Low",4
+"TRPR2","Trifolium pratense","Trifolium pratense","Introduced",TRUE,NA,3,"Low/Insignificant",2
+"TRRE3","Trifolium repens","Trifolium repens","Introduced",TRUE,NA,3,"Medium/Low",4
+"TRPE21","Tripleurospermum perforatum","Tripleurospermum inodorum","Introduced",TRUE,"List B",4,NA,NA
+"TRFL5","Trisetum flavescens","Trisetum flavescens","Introduced",FALSE,NA,NA,NA,NA
+"TRAE","Triticum aestivum","Triticum aestivum","Introduced",TRUE,NA,3,NA,NA
+"TYGL","Typha ×glauca",NA,"Both",FALSE,NA,NA,NA,NA
+"TYAN","Typha angustifolia","Typha angustifolia","Both",TRUE,NA,NA,"High/Medium",8
+"ULPU","Ulmus pumila","Ulmus pumila","Introduced",TRUE,"Watch List",4,"Medium",6
+"URDI","Urtica dioica","Urtica dioica","Both",FALSE,NA,NA,NA,NA
+"VAHI2","Vaccaria hispanica","Vaccaria hispanica","Introduced",FALSE,NA,NA,NA,NA
+"VEBL","Verbascum blattaria","Verbascum blattaria","Introduced",TRUE,"List B",4,NA,NA
+"VELY","Verbascum lychnitis","Verbascum lychnitis","Introduced",FALSE,NA,NA,NA,NA
+"VEPH","Verbascum phlomoides","Verbascum phlomoides","Introduced",FALSE,NA,NA,NA,NA
+"VETH","Verbascum thapsus","Verbascum thapsus","Introduced",TRUE,"List C",4,"Medium",6
+"VEAR","Veronica arvensis","Veronica arvensis","Introduced",FALSE,NA,NA,NA,NA
+"VEBI2","Veronica biloba","Veronica biloba","Introduced",FALSE,NA,NA,NA,NA
+"VEPE3","Veronica persica","Veronica persica","Introduced",FALSE,NA,NA,NA,NA
+"VEPO","Veronica polita","Veronica polita","Introduced",FALSE,NA,NA,NA,NA
+"VILA","Viburnum lantana","Viburnum lantana","Introduced",TRUE,NA,1,NA,NA
+"VISAN2","Vicia sativa ssp. nigra","Vicia sativa ssp. nigra","Introduced",FALSE,NA,NA,NA,NA
+"VIVI","Vicia villosa","Vicia villosa","Introduced",FALSE,NA,NA,NA,NA
+"VIOD","Viola odorata","Viola odorata","Introduced",FALSE,NA,NA,NA,NA
+"VITR","Viola tricolor","Viola tricolor","Introduced",FALSE,NA,NA,NA,NA
+"XASP2","Xanthium spinosum","Xanthium spinosum","Introduced",FALSE,NA,NA,NA,NA
+"ZEMA","Zea mays","Zea mays","Introduced",FALSE,NA,NA,NA,NA
+"ZYFA","Zygophyllum fabago","Zygophyllum fabago","Introduced",TRUE,"Watch List",NA,NA,NA

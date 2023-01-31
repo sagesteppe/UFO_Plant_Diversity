@@ -1,0 +1,23 @@
+INDICATOR_TYPE,LIFEFORM,DURATION,NOXIOUS,FUNCTIONAL 
+SINGLE,FORB,PERENNIAL,0,NonNoxPerenForbCover 
+SINGLE,FORB,ANNUAL,0,NonNoxAnnForbCover 
+SINGLE,GRAMINOID,PERENNIAL,0,NonNoxPerenGrassCover 
+SINGLE,GRAMINOID,ANNUAL,0,NonNoxAnnGrassCover 
+SINGLE,SHRUB,PERENNIAL,0,NonNoxShrubCover 
+SINGLE,SUBSHRUB,PERENNIAL,0,NonNoxSubShrubCover 
+SINGLE,SUCCULENT,PERENNIAL,0,NonNoxSucculentCover 
+SINGLE,TREE,PERENNIAL,0,NonNoxTreeCover 
+SINGLE,FORB,PERENNIAL,1,NoxPerenForbCover 
+SINGLE,FORB,ANNUAL,1,NoxAnnForbCover 
+SINGLE,GRAMINOID,PERENNIAL,1,NoxPerenGrassCover 
+SINGLE,GRAMINOID,ANNUAL,1,NoxAnnGrassCover 
+SINGLE,SHRUB,PERENNIAL,1,NoxShrubCover 
+SINGLE,SUBSHRUB,PERENNIAL,1,NoxSubShrubCover 
+SINGLE,SUCCULENT,PERENNIAL,1,NoxSucculentCover 
+SINGLE,TREE,PERENNIAL,1,NoxTreeCover 
+MULTIPLE,NonNoxPerenForbCover + NonNoxPerenGrassCover ,PERENNIAL,0,NonNoxPerenForbGrassCover 
+MULTIPLE,NonNoxAnnForbCover +NonNoxAnnGrassCover ,ANNUAL,0,NonNoxAnnForbGrassCover 
+MULTIPLE,NonNoxPerenForbCover + NonNoxPerenGrassCover + NonNoxAnnForbCover +NonNoxAnnGrassCover  + NonNoxShrubCover + NonNoxSubShrubCover + NonNoxSubShrubCover + NonNoxSucculentCover + NonNoxTreeCover ,ANNUAL+PERENNIAL,0,NonNoxCover 
+MULTIPLE,NoxPerenForbCover +NoxPerenGrassCover ,PERENNIAL,1,NoxPerenForbGrassCover 
+MULTIPLE,NoxAnnForbCover +NoxAnnGrassCover ,ANNUAL,1,NoxAnnForbGrassCover 
+MULTIPLE,NoxPerenForbCover + NoxPerenGrassCover + NoxAnnForbCover + NoxAnnGrassCover  + NoxShrubCover + NoxSubShrubCover + NoxSubShrubCover + NoxSucculentCover + NoxTreeCover ,ANNUAL+PERENNIAL,1,NoxCover 

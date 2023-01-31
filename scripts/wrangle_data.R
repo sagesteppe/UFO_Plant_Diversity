@@ -431,8 +431,8 @@ rm(photosynthetic, shrub_sprout)
 
 ### append nativity information
 
-nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) #%>% 
-  select(SYMBOL, NATIVITY) 
+nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
+  select(SYMBOL:BINOMIAL_ACKER, NATIVITY) 
 
 spp_attri <- spp_attri %>% 
   mutate(SYMBOL_NEW = case_when(
@@ -478,6 +478,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'CYLE6' ~ 'PSMO',
     SYMBOL == 'DIBI8' ~ 'MABIB',
     SYMBOL == 'DICA18' ~ 'MACA2',
+    SYMBOL == 'DRPA' ~ 'DRPA2',
     SYMBOL == 'DRCUC' ~ 'DRCU',
     SYMBOL == 'ECCOC' ~ 'ECTR',
     SYMBOL == 'ELGL' ~ 'ELGLG',
@@ -495,6 +496,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'ERCO24' ~ 'ARCOC4',
     SYMBOL == 'FEOC3' ~ 'VUOC',
     SYMBOL == 'FOME' ~ 'GLSPM',
+    SYMBOL == 'JUAR2' ~ 'JUARL',
     SYMBOL == 'GAPIP2' ~ 'GAPI',
     SYMBOL == 'GAMUC' ~ 'GACO2',
     SYMBOL == 'GATR2' ~ 'GATRS2',
@@ -578,15 +580,42 @@ out <- left_join(spp_attri, nativity %>%
 
 # not known from CO yet, 
 # SIIR , 
-# ERAB3, ERRO2 - LIKELY E. STRICTUM, THPU3,  # DRPA, # BOAR
+# ERAB3, ERRO2 - LIKELY E. STRICTUM, THPU3,  # BOAR
 
 # Identity cannot be ascertained # ARPU2 --  # BOST4
 
+# Append INVASIVE STATUS
+
+
+invasive <- read.csv(file.path(praw, f[grep('Introduced', f)])) %>% 
+  select(SYMBOL_NEW = National_USDASymbol, Invasive) 
+
+out <- left_join(out, invasive, by = 'SYMBOL_NEW') %>% 
+  mutate(Invasive = replace_na(Invasive, F))
+
+rm(invasive)
+
+## Create normal AIM Functional Groups
+fnct_lkp <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>% 
+  filter(INDICATOR_TYPE == 'SINGLE') %>% 
+  mutate(INVASIVE = as.character(if_else(NOXIOUS == 1, T, F))) %>%
+  select(FUNCTIONAL, GROWTHHABITSUB =  LIFEFORM, DURATION, INVASIVE)
 
 ### Create Finer Functional Groups
-spp_attri <- spp_attri %>% 
-  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
+out <- out %>% 
+  rename_with(toupper) %>% 
+  relocate(any_of(c('GROWTHHABIT', 'GROWTHHABITSUB', 'DURATION', 'NATIVITY',
+                    'INVASIVE',"PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE")), 
            .after = last_col()) %>% 
-  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:FUNCTIONAL, 
-        sep = "-", na.rm = T, remove = F) %>% 
-  select(-PHOTOSYNTHETIC, -RESPROUT)
+  mutate(across(.cols = GROWTHHABIT:RESPROUT, ~ str_to_upper(.)), 
+         GROWTHHABITSUB = str_replace(GROWTHHABITSUB, 'SEDGE', 'GRAMINOID')) %>% 
+  left_join(., fnct_lkp, by = c('GROWTHHABITSUB', 'DURATION', 'INVASIVE')) %>% 
+  relocate('FUNCTIONAL', .before = 'GROWTHHABIT') %>% 
+  rename(SYMBOL_AIM = SYMBOL , SYMBOL_USDA = SYMBOL_NEW) 
+
+
+
+write.csv(out, file.path(ppro, 'SpeciesAttributes.csv'))
+
+  
+

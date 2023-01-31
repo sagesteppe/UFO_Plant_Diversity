@@ -1,0 +1,380 @@
+"","SYMBOL","GrowthHabit","GrowthHabitSub","Duration","PHOTOSYNTHETIC","RESPROUT","SYMBOL_NEW","BINOMIAL_NAT","BINOMIAL_ACKER","NATIVITY","Invasive"
+"1","ZIEL2","NonWoody","Forb","Perennial",NA,NA,"ZIELE","Zigadenus elegans","Zigadenus elegans","Native",FALSE
+"2","ERFL","NonWoody","Forb","Perennial",NA,NA,"ERFL","Erigeron flagellaris","Erigeron flagellaris","Native",FALSE
+"3","ACRE3","NonWoody","Forb","Perennial",NA,NA,"ACRE3","Acroptilon repens","Acroptilon repens","Introduced",TRUE
+"4","TARA","Woody","Shrub","Perennial",NA,NA,"TACH","Tamarix chinensis","Tamarix chinensis","Introduced",TRUE
+"5","BASC5","NonWoody","Forb","Annual",NA,NA,"BASC5","Bassia scoparia","Kochia scoparia","Introduced",TRUE
+"6","PEPA8","NonWoody","Forb","Perennial",NA,NA,"PEPA8","Penstemon palmeri","Penstemon palmeri","Native",FALSE
+"7","KOAM","Woody","SubShrub","Perennial",NA,NA,"BAAM4","Bassia americana","Kochia americana","Native",FALSE
+"8","PHCRC","NonWoody","Forb","Annual",NA,NA,"PHCRC","Phacelia crenulata var. corrugata","Phacelia crenulata var. corrugata","Native",FALSE
+"9","SYRO","Woody","Shrub","Perennial",NA,"RESPROUT","SYRO","Symphoricarpos rotundifolius","Symphoricarpos rotundifolius","Native",FALSE
+"10","PERA4","Woody","Shrub","Perennial",NA,"NON-RESPROUT","PERA4","Peraphyllum ramosissimum","Peraphyllum ramosissimum","Native",FALSE
+"11","EREA","NonWoody","Forb","Perennial",NA,NA,"EREAE","Erigeron eatonii var. eatonii","Erigeron eatonii var. eatonii","Native",FALSE
+"12","PECO5","NonWoody","Forb","Perennial",NA,NA,"PECO5","Penstemon comarrhenus","Penstemon comarrhenus","Native",FALSE
+"13","PUPA5","NonWoody","Forb","Perennial",NA,NA,"PUPAM","Pulsatilla patens ssp. multifida","Anemone patens var. multifida","Native",FALSE
+"14","TAOF","NonWoody","Forb","Perennial",NA,NA,"TAOF","Taraxacum officinale","Taraxacum officinale","Both",TRUE
+"15","SELA","NonWoody","Forb","Perennial",NA,NA,"SELA","Sedum lanceolatum","Sedum lanceolatum","Native",FALSE
+"16","LUBR2","NonWoody","Forb","Annual",NA,NA,"LUBR2","Lupinus brevicaulis","Lupinus brevicaulis","Native",FALSE
+"17","CRFL5","NonWoody","Forb","Perennial",NA,NA,"CRFL5","Cryptantha flava","Oreocarya flava","Native",FALSE
+"18","THEL","NonWoody","Forb","Annual",NA,NA,"THEL","Thelypodiopsis elegans","Thelypodiopsis elegans","Native",FALSE
+"19","PHLO2","NonWoody","Forb","Perennial",NA,NA,"PHLO2","Phlox longifolia","Phlox longifolia","Native",FALSE
+"20","LUAR3","NonWoody","Forb","Perennial",NA,NA,"LUAR3","Lupinus argenteus","Lupinus argenteus","Native",FALSE
+"21","HEFO9","NonWoody","Forb","Perennial",NA,NA,"HEVIF","Heterotheca villosa var. foliosa","Heterotheca foliosa","Native",FALSE
+"22","MIMUG","NonWoody","Forb","Perennial",NA,NA,"MIMUG","Mirabilis multiflora var. glandulosa","Mirabilis multiflora var. glandulosa","Native",FALSE
+"23","CHSC","NonWoody","Forb","Perennial",NA,NA,"CHSC","Chamaechaenactis scaposa","Chamaechaenactis scaposa","Native",FALSE
+"24","ASAM5","NonWoody","Forb","Perennial",NA,NA,"ASAMV","Astragalus amphioxys var. vespertinus","Astragalus amphioxys var. vespertinus","Native",FALSE
+"25","LECI4","NonWoody","Graminoid","Perennial","C3",NA,"LECI4","Leymus cinereus","Leymus cinereus","Native",FALSE
+"26","ACLE9","NonWoody","Graminoid","Perennial","C3",NA,"ACLE9","Achnatherum lettermanii","Achnatherum lettermanii","Native",FALSE
+"27","HOJU","NonWoody","Graminoid","Annual","C3",NA,"HOJU","Hordeum jubatum","Hordeum jubatum","Native",FALSE
+"28","ANPA4","NonWoody","Forb","Perennial",NA,NA,"ANPA4","Antennaria parvifolia","Antennaria parvifolia","Native",FALSE
+"29","STAM2","NonWoody","Forb","Perennial",NA,NA,"STAM2","Streptopus amplexifolius","Streptopus amplexifolius","Both",FALSE
+"30","THIN","NonWoody","Forb","Annual",NA,NA,"THIN","Thelypodium integrifolium","Thelypodium integrifolium","Native",FALSE
+"31","ERCA14","NonWoody","Forb","Perennial",NA,NA,"ERCA14","Erysimum capitatum","Erysimum capitatum","Native",FALSE
+"32","COUM","NonWoody","Forb","Perennial",NA,NA,"COUMP","Comandra umbellata ssp. pallida","Comandra umbellata ssp. pallida","Native",FALSE
+"33","PECY4","NonWoody","Forb","Perennial",NA,NA,"PECY4","Penstemon cyanocaulis","Penstemon cyanocaulis","Native",FALSE
+"34","LALA3","NonWoody","Forb","Perennial",NA,NA,"LALA3","Lathyrus lanszwertii","Lathyrus lanszwertii","Native",FALSE
+"35","ERCO24","NonWoody","Forb","Perennial",NA,NA,"ARCOC4","Arenaria congesta var. congesta","Eremogone congesta var. congesta","Native",FALSE
+"36","ERSP4","NonWoody","Forb","Perennial",NA,NA,"ERSP4","Erigeron speciosus","Erigeron speciosus","Native",FALSE
+"37","CRAC2","NonWoody","Forb","Perennial",NA,NA,"CRAC2","Crepis acuminata","Crepis acuminata","Native",FALSE
+"38","PAST10","NonWoody","Forb","Perennial",NA,NA,"PAST10","Packera streptanthifolia","Packera streptanthifolia","Native",FALSE
+"39","ASMO7","NonWoody","Forb","Perennial",NA,NA,"ASMO7","Astragalus mollissimus","Astragalus mollissimus","Native",FALSE
+"40","YUBA2","Woody","Shrub","Perennial",NA,NA,"YUBA","Yucca baccata","Yucca baccata var. baccata","Native",FALSE
+"41","ARCO9","NonWoody","Forb","Perennial",NA,NA,"ARCO9","Arnica cordifolia","Arnica cordifolia","Native",FALSE
+"42","VACE","Woody","Shrub","Perennial",NA,NA,"VACE","Vaccinium cespitosum","Vaccinium cespitosum","Native",FALSE
+"43","ABLA","Woody","Tree","Perennial",NA,NA,"ABLA","Abies lasiocarpa","Abies bifolia","Native",FALSE
+"44","PERA","NonWoody","Forb","Perennial",NA,NA,"PERAA","Pedicularis racemosa ssp. alba","Pedicularis racemosa ssp. alba","Native",FALSE
+"45","CHAN9","NonWoody","Forb","Perennial",NA,NA,"CHAN9","Chamerion angustifolium","Chamerion angustifolium","Native",FALSE
+"46","PYCH","Woody","SubShrub","Perennial",NA,NA,"PYCH","Pyrola chlorantha","Pyrola chlorantha","Native",FALSE
+"47","LOIN5","Woody","Shrub","Perennial",NA,"RESPROUT","LOIN5","Lonicera involucrata","Lonicera involucrata","Native",FALSE
+"48","OSBE","NonWoody","Forb","Perennial",NA,NA,"OSBE","Osmorhiza berteroi","Osmorhiza berteroi","Native",FALSE
+"49","SEBI2","NonWoody","Forb","Perennial",NA,NA,"SEBIH","Senecio bigelovii var. hallii","Senecio bigelovii var. hallii","Native",FALSE
+"50","KOMA","NonWoody","Graminoid","Perennial","C3",NA,"KOMA","Koeleria macrantha","Koeleria macrantha","Native",FALSE
+"51","GABI","NonWoody","Forb","Annual",NA,NA,"GABI","Galium bifolium","Galium bifolium","Native",FALSE
+"52","TOGL4","NonWoody","Forb","Perennial",NA,NA,"TOGL4","Townsendia glabella","Townsendia glabella","Native",FALSE
+"53","GOOB2","NonWoody","Forb","Perennial",NA,NA,"GOOB2","Goodyera oblongifolia","Goodyera oblongifolia","Native",FALSE
+"54","LEPE2","NonWoody","Forb","Annual",NA,NA,"LEPE2","Lepidium perfoliatum","Lepidium perfoliatum","Introduced",TRUE
+"55","ALPA14","NonWoody","Forb","Perennial",NA,NA,"ALPA14","Almutaster pauciflorus","Almutaster pauciflorus","Native",FALSE
+"56","MATA2","NonWoody","Forb","Annual",NA,NA,"MATA2","Machaeranthera tanacetifolia","Machaeranthera tanacetifolia","Native",FALSE
+"57","COVI9","Woody","Succulent","Perennial",NA,NA,"ESVIV","Escobaria vivipara var. vivipara","Coryphantha vivipara","Native",FALSE
+"58","ORLO","NonWoody","Forb","Perennial",NA,NA,"CRLO6","Cryptantha longiflora","Oreocarya longiflora","Native",FALSE
+"59","PEBR9","NonWoody","Forb","Perennial",NA,NA,"PEBR9","Penstemon breviculus","Penstemon breviculus","Native",FALSE
+"60","IPCO5","NonWoody","Forb","Perennial",NA,NA,"IPCO5","Ipomopsis congesta","Ipomopsis congesta","Native",FALSE
+"61","RICE","Woody","Shrub","Perennial",NA,"NON-RESPROUT","RICE","Ribes cereum","Ribes cereum","Native",FALSE
+"62","ANSE4","NonWoody","Forb","Annual",NA,NA,"ANSE4","Androsace septentrionalis","Androsace septentrionalis","Native",FALSE
+"63","DRAU","NonWoody","Forb","Perennial",NA,NA,"DRAU","Draba aurea","Draba aurea","Native",FALSE
+"64","SONE","NonWoody","Forb","Perennial",NA,NA,"SONEL","Solidago nemoralis var. longipetiolata","Solidago nemoralis var. decemflora","Native",FALSE
+"65","BRAN","NonWoody","Graminoid","Perennial","C3",NA,"BRPO2","Bromus porteri","Bromus porteri","Native",FALSE
+"66","ERCO4","NonWoody","Forb","Perennial",NA,NA,"ERCO4","Erigeron compositus","Erigeron compositus","Native",FALSE
+"67","HEPA11","NonWoody","Forb","Perennial",NA,NA,"HEPA11","Heuchera parvifolia","Heuchera parvifolia","Native",FALSE
+"68","ARHI","NonWoody","Forb","Perennial",NA,NA,"ARHIP","Arabis hirsuta var. pycnocarpa","Arabis pycnocarpa var. pycnocarpa","Native",FALSE
+"69","ERGR9","NonWoody","Forb","Perennial",NA,NA,"ERGRG3","Erythronium grandiflorum ssp. grandiflorum","Erythronium grandiflorum ssp. grandiflorum","Native",FALSE
+"70","ALTE","NonWoody","Forb","Perennial",NA,NA,"ALTE","Allium textile","Allium textile","Native",FALSE
+"71","ZIPA2","NonWoody","Forb","Perennial",NA,NA,"ZIPA2","Zigadenus paniculatus","Zigadenus paniculatus","Native",FALSE
+"72","COPA3","NonWoody","Forb","Annual",NA,NA,"COPA3","Collinsia parviflora","Collinsia parviflora","Native",FALSE
+"73","OECAM4","NonWoody","Forb","Perennial",NA,NA,"OECAM4","Oenothera caespitosa ssp. marginata","Oenothera cespitosa ssp. marginata","Native",FALSE
+"74","CEIN7","Woody","Shrub","Perennial",NA,"NON-RESPROUT","CEIN7","Cercocarpus intricatus","Cercocarpus intricatus","Native",FALSE
+"75","PEEA","NonWoody","Forb","Perennial",NA,NA,"PEEA","Penstemon eatonii","Penstemon eatonii","Native",FALSE
+"76","ASASC","NonWoody","Forb","Perennial",NA,NA,"ASASA","Asclepias asperula ssp. asperula","Asclepias asperula ssp. asperula","Native",FALSE
+"77","CRCRE","NonWoody","Forb","Annual",NA,NA,"CRCRE","Cryptantha crassisepala var. elachantha","Cryptantha crassisepala var. elachantha","Native",FALSE
+"78","IPCOC3","NonWoody","Forb","Perennial",NA,NA,"IPCOC3","Ipomopsis congesta ssp. congesta","Ipomopsis congesta ssp. congesta","Native",FALSE
+"79","TOEX2","NonWoody","Forb","Perennial",NA,NA,"TOEX2","Townsendia exscapa","Townsendia exscapa","Native",FALSE
+"80","BRRA2","NonWoody","Graminoid","Annual","C3",NA,"BRRA2","Bromus racemosus","Bromus commutatus","Introduced",TRUE
+"81","BRRA2","NonWoody","Graminoid","Annual","C3",NA,"BRRA2","Bromus racemosus","Bromus commutatus","Introduced",FALSE
+"82","HEMU3","NonWoody","Forb","Perennial",NA,NA,"HEMU3","Heliomeris multiflora","Heliomeris multiflora","Native",FALSE
+"83","RUHY","NonWoody","Forb","Perennial",NA,NA,"RUHY","Rumex hymenosepalus","Rumex hymenosepalus","Native",FALSE
+"84","ERMIS2","Woody","Shrub","Perennial",NA,NA,"ERMIS2","Eriogonum microthecum var. simpsonii","Eriogonum microthecum var. simpsonii","Native",FALSE
+"85","ERMI4","Woody","SubShrub","Perennial",NA,"RESPROUT","ERMI4","Eriogonum microthecum","Eriogonum microthecum","Native",FALSE
+"86","ASCI4","NonWoody","Forb","Perennial",NA,NA,"ASCI4","Astragalus cicer","Astragalus cicer","Introduced",TRUE
+"87","LUSE4","NonWoody","Forb","Perennial",NA,NA,"LUSES2","Lupinus sericeus ssp. sericeus","Lupinus sericeus var. sericeus","Native",FALSE
+"88","BASA3","NonWoody","Forb","Perennial",NA,NA,"BASA3","Balsamorhiza sagittata","Balsamorhiza sagittata","Native",FALSE
+"89","ASPA14","NonWoody","Forb","Perennial",NA,NA,"ASPA14","Astragalus pattersonii","Astragalus pattersonii","Native",FALSE
+"90","SIAL11","NonWoody","Forb","Annual",NA,NA,"ALPE4","Alliaria petiolata","Alliaria petiolata","Introduced",TRUE
+"91","POBU","NonWoody","Graminoid","Perennial","C3",NA,"POBU","Poa bulbosa","Poa bulbosa","Introduced",TRUE
+"92","LIPO","NonWoody","Forb","Perennial",NA,NA,"LIPO","Ligusticum porteri","Ligusticum porteri","Native",FALSE
+"93","PACA15","NonWoody","Forb","Perennial",NA,NA,"PACA15","Packera cana","Packera cana","Native",FALSE
+"94","LIIN2","NonWoody","Forb","Perennial",NA,NA,"LIIN2","Lithospermum incisum","Lithospermum incisum","Native",FALSE
+"95","ERAR25","NonWoody","Forb","Perennial",NA,NA,"ERJAF","Eriogonum jamesii var. flavescens","Eriogonum arcuatum","Native",FALSE
+"96","BRMA4","NonWoody","Graminoid","Perennial","C3",NA,"BRCA5","Bromus carinatus","Bromus carinatus","Native",FALSE
+"97","CODI4","NonWoody","Forb","Perennial",NA,NA,"CODI4","Commelina dianthifolia","Commelina dianthifolia","Native",FALSE
+"98","GABO2","NonWoody","Forb","Perennial",NA,NA,"GABO2","Galium boreale","Galium boreale","Native",FALSE
+"99","PADI11","NonWoody","Forb","Perennial",NA,NA,"PACR5","Packera crocata","Packera crocata","Native",FALSE
+"100","THFE","NonWoody","Forb","Perennial",NA,NA,"THFE","Thalictrum fendleri","Thalictrum fendleri","Native",FALSE
+"101","HEMUM","NonWoody","Forb","Perennial",NA,"RESPROUT","HEMUM","Heliomeris multiflora var. multiflora","Heliomeris multiflora var. multiflora","Native",FALSE
+"102","CISC2","NonWoody","Forb","Perennial",NA,NA,"CISC2","Cirsium scariosum","Cirsium scariosum","Native",FALSE
+"103","ACNE9","NonWoody","Graminoid","Perennial","C3",NA,"ACNEN2","Achnatherum nelsonii","Achnatherum nelsonii","Native",FALSE
+"104","VETH","NonWoody","Forb","Annual",NA,NA,"VETH","Verbascum thapsus","Verbascum thapsus","Introduced",TRUE
+"105","DAGL","NonWoody","Graminoid","Perennial","C3",NA,"DAGL","Dactylis glomerata","Dactylis glomerata","Introduced",TRUE
+"106","POTR5","Woody","Tree","Perennial",NA,NA,"POTR5","Populus tremuloides","Populus tremuloides","Native",FALSE
+"107","AQCO","NonWoody","Forb","Perennial",NA,NA,"AQCO","Aquilegia coerulea","Aquilegia coerulea","Native",FALSE
+"108","CYOF","NonWoody","Forb","Perennial",NA,NA,"CYOF","Cynoglossum officinale","Cynoglossum officinale","Introduced",TRUE
+"109","GERI","NonWoody","Forb","Perennial",NA,NA,"GERI","Geranium richardsonii","Geranium richardsonii","Native",FALSE
+"110","PEPR7","NonWoody","Forb","Perennial",NA,NA,"PEPR7","Pedicularis procera","Pedicularis procera","Native",FALSE
+"111","MOFI","NonWoody","Forb","Perennial",NA,NA,"MOFIM2","Monarda fistulosa ssp. fistulosa var. menthifolia","Monarda fistulosa var. menthifolia","Native",FALSE
+"112","LUPOP5","NonWoody","Forb","Perennial",NA,NA,"LUPR2","Lupinus prunophilus","Lupinus polyphyllus var. prunophilus","Native",FALSE
+"113","RULA3","NonWoody","Forb","Perennial",NA,NA,"RULAA","Rudbeckia laciniata var. ampla","Rudbeckia laciniata var. ampla","Native",FALSE
+"114","PHPR3","NonWoody","Graminoid","Perennial","C3",NA,"PHPR3","Phleum pratense","Phleum pratense","Introduced",TRUE
+"115","LITE2","NonWoody","Forb","Perennial",NA,NA,"LITE2","Ligusticum tenuifolium","Ligusticum tenuifolium","Native",FALSE
+"116","MELU","NonWoody","Forb","Perennial",NA,NA,"MELU","Medicago lupulina","Medicago lupulina","Introduced",TRUE
+"117","WYAR","NonWoody","Forb","Perennial",NA,NA,"WYAR","Wyethia arizonica","Wyethia arizonica","Native",FALSE
+"118","SAOF4","NonWoody","Forb","Perennial",NA,NA,"SAOF4","Saponaria officinalis","Saponaria officinalis","Introduced",TRUE
+"119","PLMA2","NonWoody","Forb","Perennial",NA,NA,"PLMA2","Plantago major","Plantago major","Introduced",TRUE
+"120","LUARR2","NonWoody","Forb","Perennial",NA,NA,"LUARR","Lupinus argenteus var. rubricaulis","Lupinus argenteus var. rubricaulis","Native",FALSE
+"121","KRLA","NonWoody","Forb","Perennial",NA,NA,"KRLA","Krameria lanceolata","Krameria lanceolata","Native",FALSE
+"122","ERLO4","Woody","SubShrub","Perennial",NA,NA,"ERLO4","Eriogonum lonchophyllum","Eriogonum lonchophyllum","Native",FALSE
+"123","SOVE6","NonWoody","Forb","Perennial",NA,NA,"SOVE6","Solidago velutina","Solidago velutina ssp. sparsiflora","Native",FALSE
+"124","SALA5","Woody","Shrub","Perennial",NA,NA,"SALUL","Salix lucida ssp. lasiandra","Salix lasiandra","Native",FALSE
+"125","ERVI22","Woody","Shrub","Perennial",NA,NA,"CHVIV2","Chrysothamnus viscidiflorus ssp. viscidiflorus","Chrysothamnus viscidiflorus var. viscidiflorus","Native",FALSE
+"126","ELCA4","NonWoody","Graminoid","Perennial","C3",NA,"ELCA4","Elymus canadensis","Elymus canadensis","Native",FALSE
+"127","ERJA","NonWoody","Forb","Perennial",NA,NA,"ERJAJ","Eriogonum jamesii var. jamesii","Eriogonum jamesii var. jamesii","Native",FALSE
+"128","SEIN2","NonWoody","Forb","Perennial",NA,NA,"SEIN2","Senecio integerrimus","Senecio integerrimus","Native",FALSE
+"129","LASQ","NonWoody","Forb","Annual",NA,NA,"LASQ","Lappula squarrosa","Lappula squarrosa","Introduced",FALSE
+"130","DRCUC","NonWoody","Forb","Annual",NA,NA,"DRCU","Draba cuneifolia","Draba cuneifolia","Native",FALSE
+"131","DENU2","NonWoody","Forb","Perennial",NA,NA,"DENU2","Delphinium nuttallianum","Delphinium nuttallianum","Native",FALSE
+"132","EROVC2","NonWoody","Forb","Perennial",NA,NA,"EROVP2","Eriogonum ovalifolium var. purpureum","Eriogonum ovalifolium var. purpureum","Native",FALSE
+"133","CRWA2","NonWoody","Forb","Annual",NA,NA,"CRWA2","Cryptantha watsonii","Cryptantha watsonii","Native",FALSE
+"134","OEAL","NonWoody","Forb","Annual",NA,NA,"OEAL","Oenothera albicaulis","Oenothera albicaulis","Native",FALSE
+"135","CHFR3","NonWoody","Forb","Annual",NA,NA,"CHFR3","Chenopodium fremontii","Chenopodium fremontii","Native",FALSE
+"136","ORBA4","NonWoody","Forb","Perennial",NA,NA,"CRBA4","Cryptantha bakeri","Oreocarya bakeri","Native",FALSE
+"137","CYFE","NonWoody","Forb","Perennial",NA,NA,"CYACF","Cymopterus acaulis var. fendleri","Cymopterus fendleri","Native",FALSE
+"138","ABEL","NonWoody","Forb","Perennial",NA,NA,"ABEL","Abronia elliptica","Abronia elliptica","Native",FALSE
+"139","GIOP","NonWoody","Forb","Annual",NA,NA,"GIOP","Gilia ophthalmoides","Gilia ophthalmoides","Native",FALSE
+"140","MEAL6","NonWoody","Forb","Annual",NA,NA,"MEAL6","Mentzelia albicaulis","Mentzelia albicaulis","Native",FALSE
+"141","BRJA","NonWoody","Graminoid","Annual",NA,NA,"BRAR5","Bromus arvensis","Bromus japonicus","Introduced",TRUE
+"142","RATE","NonWoody","Forb","Annual",NA,NA,"CETE5","Ceratocephala testiculata","Ranunculus testiculatus","Introduced",FALSE
+"143","FEAR2","NonWoody","Graminoid","Perennial","C3",NA,"FEAR2","Festuca arizonica","Festuca arizonica","Native",FALSE
+"144","CHRU","NonWoody","Forb","Annual",NA,NA,"CHRU","Chenopodium rubrum","Chenopodium rubrum","Native",FALSE
+"145","CYMO","NonWoody","Forb","Perennial",NA,NA,"CYMO","Cymopterus montanus","Cymopterus montanus","Native",FALSE
+"146","ARARA","Woody","Shrub","Perennial",NA,"NON-RESPROUT","ARARA","Artemisia arbuscula ssp. arbuscula","Artemisia arbuscula ssp. arbuscula","Native",FALSE
+"147","CHTE2","NonWoody","Forb","Annual",NA,NA,"CHTE2","Chorispora tenella","Chorispora tenella","Introduced",TRUE
+"148","LATA","NonWoody","Forb","Perennial",NA,NA,"LATAP","Lactuca tatarica var. pulchella","Lactuca tatarica var. pulchella","Native",FALSE
+"149","MILI3","NonWoody","Forb","Perennial",NA,"RESPROUT","MILI3","Mirabilis linearis","Mirabilis lanceolata","Native",FALSE
+"150","COAR4","NonWoody","Forb","Perennial",NA,NA,"COAR4","Convolvulus arvensis","Convolvulus arvensis","Introduced",TRUE
+"151","HEBO","NonWoody","Forb","Perennial",NA,NA,"HEBO","Hedysarum boreale","Hedysarum boreale","Native",FALSE
+"152","MASO","NonWoody","Forb","Annual",NA,NA,"MASO","Malacothrix sonchoides","Malacothrix sonchoides","Native",FALSE
+"153","CHST","NonWoody","Forb","Annual",NA,NA,"CHST","Chaenactis stevioides","Chaenactis stevioides","Native",FALSE
+"154","ASTE5","NonWoody","Forb","Perennial",NA,NA,"ASTE5","Astragalus tenellus","Astragalus tenellus","Native",FALSE
+"155","HECO26","NonWoody","Graminoid","Perennial","C3",NA,"HECO26","Hesperostipa comata","Hesperostipa comata","Native",FALSE
+"156","PEDIO","Woody","Succulent","Perennial",NA,NA,"PESI","Pediocactus simpsonii","Pediocactus simpsonii","Native",FALSE
+"157","CHALA","NonWoody","Forb","Annual",NA,NA,"CHALA","Chenopodium album var. album","Chenopodium album var. album","Introduced",FALSE
+"158","LAOCC","NonWoody","Forb","Annual",NA,NA,"LAOCC","Lappula occidentalis var. cupulata","Lappula occidentalis var. cupulata","Native",FALSE
+"159","EREL9","NonWoody","Forb","Perennial",NA,NA,"EREL9","Erigeron elatior","Erigeron elatior","Native",FALSE
+"160","COAU2","NonWoody","Forb","Annual",NA,NA,"COAU2","Corydalis aurea","Corydalis aurea","Native",FALSE
+"161","ERCA2","NonWoody","Forb","Perennial",NA,NA,"ERCA2","Erigeron caespitosus","Erigeron caespitosus","Native",FALSE
+"162","CINE","NonWoody","Forb","Perennial",NA,NA,"CINE","Cirsium neomexicanum","Cirsium neomexicanum","Native",FALSE
+"163","ECCOC","Woody","Succulent","Perennial",NA,NA,"ECTR","Echinocereus triglochidiatus","Echinocereus triglochidiatus","Native",FALSE
+"164","PLLA","NonWoody","Forb","Perennial",NA,NA,"PLLA","Plantago lanceolata","Plantago lanceolata","Introduced",TRUE
+"165","ERFO3","NonWoody","Forb","Perennial",NA,NA,"ERFO3","Erigeron formosissimus","Erigeron formosissimus","Native",FALSE
+"166","CRGR3","NonWoody","Forb","Annual",NA,NA,"CRGR3","Cryptantha gracilis","Cryptantha gracilis","Native",FALSE
+"167","PUST","Woody","Shrub","Perennial",NA,"NON-RESPROUT","PUST","Purshia stansburiana","Purshia stansburiana","Native",FALSE
+"168","SUNI","Woody","SubShrub","Perennial",NA,NA,"SUMO","Suaeda moquinii","Suaeda nigra","Native",FALSE
+"169","AGSC5","NonWoody","Graminoid","Perennial","C3",NA,"AGSC5","Agrostis scabra","Agrostis scabra","Native",FALSE
+"170","CHNA2","Woody","Shrub","Perennial",NA,NA,"ERNA10","Ericameria nauseosa","Ericameria nauseosa","Native",FALSE
+"171","CHCA4","NonWoody","Forb","Annual",NA,NA,"CHCA4","Chenopodium capitatum","Chenopodium capitatum","Native",FALSE
+"172","ARSP5","Woody","Shrub","Perennial",NA,NA,"PIDE4","Picrothamnus desertorum","Artemisia spinescens","Native",FALSE
+"173","FEOC3","NonWoody","Graminoid","Annual","C3",NA,"VUOC","Vulpia octoflora","Vulpia octoflora","Native",FALSE
+"174","CHAT","NonWoody","Forb","Annual",NA,NA,"CHAT","Chenopodium atrovirens","Chenopodium atrovirens","Native",FALSE
+"175","THAU3","NonWoody","Forb","Perennial",NA,NA,"THAU3","Thelypodiopsis aurea","Thelypodiopsis aurea","Native",FALSE
+"176","EUBR","NonWoody","Forb","Perennial",NA,NA,"EUBR","Euphorbia brachycera","Euphorbia brachycera","Native",FALSE
+"177","COOR","NonWoody","Forb","Annual",NA,NA,"COOR","Conringia orientalis","Conringia orientalis","Introduced",FALSE
+"178","ERCO15","NonWoody","Forb","Perennial",NA,NA,"ERCO15","Erigeron consimilis","Erigeron consimilis","Native",FALSE
+"179","METH","NonWoody","Forb","Annual",NA,NA,"MEHUH","Mentzelia humilis var. humilis","Mentzelia thompsonii","Native",FALSE
+"180","AGPA14","NonWoody","Forb","Perennial",NA,NA,"AGGLL","Agoseris glauca var. laciniata","Agoseris parviflora","Native",FALSE
+"181","ZIVE","NonWoody","Forb","Perennial",NA,NA,"ZIVEG","Zigadenus venenosus var. gramineus","Zigadenus paniculatus var. gramineus","Native",FALSE
+"182","COCA5","NonWoody","Forb","Annual",NA,NA,"COCA5","Conyza canadensis","Conyza canadensis","Native",FALSE
+"183","SYCI2","NonWoody","Forb","Annual",NA,NA,"SYCI2","Symphyotrichum ciliatum","Symphyotrichum ciliatum","Native",FALSE
+"184","PODO4","NonWoody","Forb","Annual",NA,NA,"PODO4","Polygonum douglasii","Polygonum douglasii","Native",FALSE
+"185","ALAC","NonWoody","Forb","Perennial",NA,NA,"ALAC4","Allium acuminatum","Allium acuminatum","Native",FALSE
+"186","LOGRG2","NonWoody","Forb","Perennial",NA,NA,"LOGRG2","Lomatium grayi var. grayi","Lomatium grayi var. grayi","Native",FALSE
+"187","CICL","NonWoody","Forb","Perennial",NA,NA,"CICL","Cirsium clavatum","Cirsium clavatum","Native",FALSE
+"188","QUGAG","Woody","Shrub","Perennial",NA,NA,"QUGA","Quercus gambelii","Quercus gambelii","Native",FALSE
+"189","SILI5","NonWoody","Forb","Perennial",NA,NA,"SCLI","Schoenocrambe linifolia","Sisymbrium linifolium","Native",FALSE
+"190","PEWA","NonWoody","Forb","Perennial",NA,NA,"PEWA","Penstemon watsonii","Penstemon watsonii","Native",FALSE
+"191","AMUTU","Woody","Shrub","Perennial",NA,NA,"AMUT","Amelanchier utahensis","Amelanchier alnifolia var. utahensis","Native",FALSE
+"192","YUHAH","Woody","Succulent","Perennial",NA,NA,"YUHA","Yucca harrimaniae","Yucca harrimaniae","Native",FALSE
+"193","TETO","NonWoody","Forb","Perennial",NA,NA,"TETO","Tetraneuris torreyana","Tetraneuris torreyana","Native",FALSE
+"194","POPRP2","NonWoody","Graminoid","Perennial","C3",NA,"POPR","Poa pratensis","Poa pratensis","Both",TRUE
+"195","AGAU2","NonWoody","Forb","Perennial",NA,NA,"AGAU2","Agoseris aurantiaca","Agoseris aurantiaca","Native",FALSE
+"196","AGHE2","NonWoody","Forb","Annual",NA,NA,"AGHEH","Agoseris heterophylla var. heterophylla","Agoseris heterophylla var. heterophylla","Native",FALSE
+"197","PECR5","Woody","SubShrub","Perennial",NA,NA,"PECR5","Penstemon crandallii","Penstemon crandallii","Native",FALSE
+"198","TRRE3","NonWoody","Forb","Perennial",NA,NA,"TRRE3","Trifolium repens","Trifolium repens","Introduced",TRUE
+"199","IPLO2","NonWoody","Forb","Annual",NA,NA,"IPLO2","Ipomopsis longiflora","Ipomopsis longiflora","Native",FALSE
+"200","THRH","NonWoody","Forb","Perennial",NA,NA,"THRH","Thermopsis rhombifolia","Thermopsis rhombifolia","Native",FALSE
+"201","MIAL5","NonWoody","Forb","Perennial",NA,NA,"MIAL5","Mirabilis alipes","Mirabilis alipes","Native",FALSE
+"202","PHBE2","NonWoody","Forb","Perennial",NA,NA,"PHBE2","Physaria bellii","Physaria bellii","Native",FALSE
+"203","ASAS2","NonWoody","Forb","Perennial",NA,NA,"ASAS2","Astragalus asclepiadoides","Astragalus asclepiadoides","Native",FALSE
+"204","ORFA","NonWoody","Forb","Annual",NA,NA,"ORFA","Orobanche fasciculata","Orobanche fasciculata","Native",FALSE
+"205","NASI2","NonWoody","Forb","Annual",NA,NA,"NASI2","Navarretia sinistra","Navarretia sinistra","Native",FALSE
+"206","AREAE","NonWoody","Forb","Perennial",NA,NA,"AREAE","Arenaria eastwoodiae var. eastwoodiae","Eremogone eastwoodiae var. eastwoodiae","Native",FALSE
+"207","LEALE","NonWoody","Forb","Perennial",NA,NA,"LEALE","Lepidium alyssoides var. eastwoodiae","Lepidium eastwoodiae","Native",FALSE
+"208","ASTH2","NonWoody","Forb","Perennial",NA,NA,"ASMOT","Astragalus mollissimus var. thompsoniae","Astragalus thompsoniae","Native",FALSE
+"209","CASCS3","NonWoody","Forb","Annual",NA,NA,"CASC18","Camissonia scapoidea","Chylismia scapoidea ssp. scapoidea","Native",FALSE
+"210","LYGR","NonWoody","Forb","Perennial",NA,NA,"LYGR","Lygodesmia grandiflora","Lygodesmia grandiflora","Native",FALSE
+"211","COWR2","NonWoody","Forb","Annual",NA,NA,"COWR2","Cordylanthus wrightii","Cordylanthus wrightii","Native",FALSE
+"212","SORO","NonWoody","Forb","Annual",NA,NA,"SORO","Solanum rostratum","Solanum rostratum","Native",FALSE
+"213","PASM","NonWoody","Graminoid","Perennial","C3",NA,"PASM","Pascopyrum smithii","Pascopyrum smithii","Native",FALSE
+"214","BERE","Woody","Shrub","Perennial",NA,NA,"MARE11","Mahonia repens","Berberis repens","Native",FALSE
+"215","PIPOS","Woody","Tree","Perennial",NA,NA,"PIPOS","Pinus ponderosa var. scopulorum","Pinus ponderosa var. scopulorum","Native",FALSE
+"216","HEDR","NonWoody","Forb","Perennial",NA,NA,"HEDR","Hedeoma drummondii","Hedeoma drummondii","Native",FALSE
+"217","BEFE","Woody","Shrub","Perennial",NA,"RESPROUT","BEFE","Berberis fendleri","Berberis fendleri","Native",FALSE
+"218","ARPUP","NonWoody","Forb","Perennial",NA,NA,"ARPUP","Arabis pulchra var. pallens","Boechera formosa","Native",FALSE
+"219","POSA19","NonWoody","Forb","Perennial",NA,NA,"POSA19","Polypodium saximontanum","Polypodium saximontanum","Native",FALSE
+"220","THSA2","NonWoody","Forb","Perennial",NA,NA,"THSAS","Thelypodium sagittatum ssp. sagittatum","Thelypodium sagittatum ssp. sagittatum","Native",FALSE
+"221","ARCA12","NonWoody","Forb","Perennial",NA,NA,"ARCA12","Artemisia campestris","Artemisia campestris","Native",FALSE
+"222","ASNU4","NonWoody","Forb","Annual",NA,NA,"ASNUM2","Astragalus nuttallianus var. micranthiformis","Astragalus nuttallianus var. micranthiformis","Native",FALSE
+"223","PEME7","NonWoody","Forb","Perennial",NA,NA,"PEME7","Pediomelum megalanthum","Pediomelum megalanthum","Native",FALSE
+"224","TEGR3","NonWoody","Forb","Perennial",NA,NA,"TEGR3","Tetraneuris grandiflora","Hymenoxys grandiflora","Native",FALSE
+"225","CYLE6","NonWoody","Forb","Perennial",NA,NA,"PSMO","Pseudocymopterus montanus","Cymopterus lemmonii","Native",FALSE
+"226","HEPA","NonWoody","Forb","Perennial",NA,NA,"HEPA","Helianthella parryi","Helianthella parryi","Native",FALSE
+"227","XASP","NonWoody","Forb","Perennial",NA,NA,"XASP2","Xanthium spinosum","Xanthium spinosum","Introduced",FALSE
+"228","COLI2","NonWoody","Forb","Annual",NA,NA,"COLI2","Collomia linearis","Collomia linearis","Native",FALSE
+"229","ERPA30","Woody","Shrub","Perennial",NA,"RESPROUT","ERPA30","Ericameria parryi","Ericameria parryi","Native",FALSE
+"230","SETA","NonWoody","Forb","Perennial",NA,NA,"SETA","Senecio taraxacoides","Senecio taraxacoides","Native",FALSE
+"231","PEAN4","NonWoody","Forb","Perennial",NA,NA,"PEAN4","Penstemon angustifolius","Penstemon angustifolius","Native",FALSE
+"232","ASLI5","NonWoody","Forb","Perennial",NA,NA,"ASLI5","Astragalus linifolius","Astragalus linifolius","Native",FALSE
+"233","CRIN4","NonWoody","Forb","Perennial",NA,NA,"CRIN4","Crepis intermedia","Crepis intermedia","Native",FALSE
+"234","DRPA2","NonWoody","Forb","Annual",NA,NA,"DRPA2","Dracocephalum parviflorum","Dracocephalum parviflorum","Native",FALSE
+"235","WYAM","NonWoody","Forb","Perennial",NA,NA,"WYAM","Wyethia amplexicaulis","Wyethia amplexicaulis","Native",FALSE
+"236","ORSE","Woody","SubShrub","Perennial",NA,NA,"ORSE","Orthilia secunda","Orthilia secunda","Native",FALSE
+"237","EREX4","NonWoody","Forb","Perennial",NA,NA,"EREX4","Erigeron eximius","Erigeron eximius","Native",FALSE
+"238","BRCI2","NonWoody","Graminoid","Perennial","C3",NA,"BRCI2","Bromus ciliatus","Bromus ciliatus","Native",FALSE
+"239","SEAMH","NonWoody","Forb","Perennial",NA,NA,"SEAMH","Senecio amplectens var. holmii","Senecio amplectens var. holmii","Native",FALSE
+"240","EPBR3","NonWoody","Forb","Annual",NA,NA,"EPBR3","Epilobium brachycarpum","Epilobium brachycarpum","Native",FALSE
+"241","MANE","NonWoody","Forb","Annual",NA,NA,"MANE","Malva neglecta","Malva neglecta","Introduced",TRUE
+"242","VIAM","NonWoody","Forb","Perennial",NA,NA,"VIAM","Vicia americana","Vicia americana","Native",FALSE
+"243","SOCA6","NonWoody","Forb","Perennial",NA,NA,"SOCA6","Solidago canadensis","Solidago canadensis","Native",FALSE
+"244","JUAR2","NonWoody","Sedge","Perennial",NA,NA,"JUARL","Juncus arcticus ssp. littoralis","Juncus arcticus var. balticus","Native",FALSE
+"245","ERSP","NonWoody","Graminoid","Perennial","C4",NA,"ERSP","Eragrostis spectabilis","Eragrostis spectabilis","Native",FALSE
+"246","RUCR","NonWoody","Forb","Perennial",NA,NA,"RUCR","Rumex crispus","Rumex crispus","Introduced",TRUE
+"247","CITR4","NonWoody","Forb","Perennial",NA,NA,"CIUNT","Cirsium undulatum var. tracyi","Cirsium tracyi","Native",FALSE
+"248","POAR8","NonWoody","Forb","Perennial",NA,NA,"POAR8","Potentilla argentea","Potentilla argentea","Introduced",TRUE
+"249","LUCA","NonWoody","Forb","Perennial",NA,NA,"LUCA","Lupinus caudatus","Lupinus caudatus","Native",FALSE
+"250","CAGE","NonWoody","Sedge","Perennial",NA,NA,"CAGE","Carex geophila","Carex geophila","Native",FALSE
+"251","POAV","NonWoody","Forb","Annual",NA,NA,"POAV","Polygonum aviculare","Polygonum aviculare","Introduced",TRUE
+"252","ALGE","NonWoody","Forb","Perennial",NA,NA,"ALGE","Allium geyeri","Allium geyeri","Native",FALSE
+"253","GYEL","NonWoody","Forb","Annual",NA,NA,"GYEL","Gypsophila elegans","Gypsophila elegans","Introduced",TRUE
+"254","PERY","NonWoody","Forb","Perennial",NA,NA,"PERY","Penstemon rydbergii","Penstemon rydbergii","Native",FALSE
+"255","ORLU2","NonWoody","Forb","Annual",NA,NA,"ORLU2","Orthocarpus luteus","Orthocarpus luteus","Native",FALSE
+"256","CACH42","Woody","Shrub","Perennial",NA,NA,"CACH42","Cardaria chalepensis","Lepidium chalapensis","Introduced",TRUE
+"257","LILE3","NonWoody","Forb","Perennial",NA,NA,"LILE3","Linum lewisii","Linum lewisii","Native",FALSE
+"258","GEMA4","NonWoody","Forb","Perennial",NA,NA,"GEMAP","Geum macrophyllum var. perincisum","Geum macrophyllum var. perincisum","Native",FALSE
+"259","POGR9","NonWoody","Forb","Perennial",NA,NA,"POGR9","Potentilla gracilis","Potentilla gracilis","Native",FALSE
+"260","SOSI3","NonWoody","Forb","Perennial",NA,NA,"SOSIS","Solidago simplex ssp. simplex","Solidago simplex var. simplex","Native",FALSE
+"261","GAMUC","NonWoody","Forb","Perennial",NA,NA,"GACO2","Galium coloradoense","Galium multiflorum var. coloradoense","Native",FALSE
+"262","POPA2","NonWoody","Graminoid","Perennial","C3",NA,"POPA2","Poa palustris","Poa palustris","Native",FALSE
+"263","STPII","NonWoody","Forb","Perennial",NA,NA,"STPII","Stanleya pinnata var. integrifolia","Stanleya pinnata var. integrifolia","Native",FALSE
+"264","SYCAC","NonWoody","Forb","Perennial",NA,NA,"SYCAC","Symphyotrichum campestre var. campestre","Symphyotrichum campestre","Native",FALSE
+"265","HEMUN","NonWoody","Forb","Perennial",NA,NA,"HEMUN","Heliomeris multiflora var. nevadensis","Heliomeris multiflora var. nevadensis","Native",FALSE
+"266","HEPU3","NonWoody","Forb","Perennial",NA,NA,"HEPU3","Helianthus pumilus","Helianthus pumilus","Native",FALSE
+"267","DIBI8","NonWoody","Forb","Perennial",NA,NA,"MABIB","Machaeranthera bigelovii var. bigelovii","Dieteria bigelovii var. bigelovii","Native",FALSE
+"268","OSOC","NonWoody","Forb","Perennial",NA,NA,"OSOC","Osmorhiza occidentalis","Osmorhiza occidentalis","Native",FALSE
+"269","SEWO","NonWoody","Forb","Perennial",NA,NA,"SEWO","Senecio wootonii","Senecio wootonii","Native",FALSE
+"270","ENNU","NonWoody","Forb","Perennial",NA,NA,"ENNU","Enceliopsis nudicaulis","Enceliopsis nudicaulis","Native",FALSE
+"271","CRMI5","NonWoody","Forb","Annual",NA,NA,"CRMI5","Cryptantha minima","Cryptantha minima","Native",FALSE
+"272","FOME","Woody","Shrub","Perennial",NA,NA,"GLSPM","Glossopetalon spinescens var. meionandrum","Forsellesia meionandra","Native",FALSE
+"273","GAPIP2","NonWoody","Forb","Perennial",NA,NA,"GAPI","Gaillardia pinnatifida","Gaillardia pinnatifida","Native",FALSE
+"274","CADO2","NonWoody","Sedge","Perennial",NA,NA,"CADO2","Carex douglasii","Carex douglasii","Native",FALSE
+"275","MAST4","NonWoody","Forb","Perennial",NA,NA,"MAST4","Maianthemum stellatum","Maianthemum stellatum","Native",FALSE
+"276","ELGL","NonWoody","Graminoid","Perennial","C3",NA,"ELGLG","Elymus glaucus ssp. glaucus","Elymus glaucus ssp. glaucus","Native",FALSE
+"277","AQEL","NonWoody","Forb","Perennial",NA,NA,"AQEL","Aquilegia elegantula","Aquilegia elegantula","Native",FALSE
+"278","FRVI","NonWoody","Forb","Perennial",NA,NA,"FRVI","Fragaria virginiana","Fragaria virginiana","Native",FALSE
+"279","ORPA3","NonWoody","Forb","Perennial",NA,NA,"ORPA3","Oreochrysum parryi","Oreochrysum parryi","Native",FALSE
+"280","ACRU2","NonWoody","Forb","Perennial",NA,NA,"ACRU2","Actaea rubra","Actaea rubra","Native",FALSE
+"281","SETR","NonWoody","Forb","Perennial",NA,NA,"SETR","Senecio triangularis","Senecio triangularis","Native",FALSE
+"282","MARAR","NonWoody","Forb","Perennial",NA,NA,"MARAA","Maianthemum racemosum ssp. amplexicaule","Maianthemum racemosum ssp. amplexicaule","Native",FALSE
+"283","ROBL","Woody","SubShrub","Perennial",NA,NA,"BROBL","Brickellia oblongifolia var. linifolia","Brickellia oblongifolia var. linifolia","Native",FALSE
+"284","COSC2","NonWoody","Forb","Perennial",NA,NA,"COSC2","Conioselinum scopulorum","Conioselinum scopulorum","Native",FALSE
+"285","VIAMA3","NonWoody","Forb","Perennial",NA,NA,"VIAMA3","Vicia americana ssp. americana","Vicia americana ssp. americana","Native",FALSE
+"286","OSDE","NonWoody","Forb","Perennial",NA,NA,"OSDE","Osmorhiza depauperata","Osmorhiza depauperata","Native",FALSE
+"287","SAMO2","Woody","Shrub","Perennial",NA,NA,"SAMO2","Salix monticola","Salix monticola","Native",FALSE
+"288","ASFL2","NonWoody","Forb","Perennial",NA,NA,"ASFL2","Astragalus flexuosus","Astragalus flexuosus","Native",FALSE
+"289","ENNU4","NonWoody","Forb","Perennial",NA,NA,"ENNU4","Encelia nutans","Encelia nutans","Native",FALSE
+"290","SPCOC","NonWoody","Forb","Perennial",NA,NA,"SPCO","Sphaeralcea coccinea","Sphaeralcea coccinea","Native",FALSE
+"291","LESAS","NonWoody","Graminoid","Perennial","C3",NA,"LESAS","Leymus salinus ssp. salinus","Leymus salina ssp. salina","Native",FALSE
+"292","LEKI2","NonWoody","Graminoid","Perennial","C3",NA,"LEKI2","Leucopoa kingii","Leucopoa kingii","Native",FALSE
+"293","FETH","NonWoody","Graminoid","Perennial","C3",NA,"FETH","Festuca thurberi","Festuca thurberi","Native",FALSE
+"294","CARO2","NonWoody","Forb","Perennial",NA,NA,"CARO2","Campanula rotundifolia","Campanula rotundifolia","Native",FALSE
+"295","IRMI","NonWoody","Forb","Perennial",NA,NA,"IRMI","Iris missouriensis","Iris missouriensis","Native",FALSE
+"296","RIIN2","Woody","Shrub","Perennial",NA,NA,"RIIN2","Ribes inerme","Ribes inerme","Native",FALSE
+"297","NAVI4","NonWoody","Graminoid","Perennial","C3",NA,"NAVI4","Nassella viridula","Nassella viridula","Native",FALSE
+"298","ORHU2","NonWoody","Forb","Annual",NA,NA,"CRHU2","Cryptantha humilis","Oreocarya humilis","Native",FALSE
+"299","CIVU","NonWoody","Forb","Annual",NA,NA,"CIVU","Cirsium vulgare","Cirsium vulgare","Introduced",TRUE
+"300","MIOX","NonWoody","Forb","Perennial",NA,NA,"MIOX","Mirabilis oxybaphoides","Mirabilis oxybaphoides","Native",FALSE
+"301","ASLE8","NonWoody","Forb","Annual",NA,NA,"ASLE8","Astragalus lentiginosus","Astragalus lentiginosus","Native",FALSE
+"302","STAL2","NonWoody","Forb","Perennial",NA,NA,"STAL2","Stanleya albescens","Stanleya albescens","Native",FALSE
+"303","THLA4","NonWoody","Forb","Perennial",NA,NA,"THLA4","Thelypodium laxiflorum","Thelypodium laxiflorum","Native",FALSE
+"304","ORPU2","NonWoody","Forb","Annual",NA,NA,"ORPU2","Orthocarpus purpureoalbus","Orthocarpus purpureoalbus","Native",FALSE
+"305","DICA18","NonWoody","Forb","Perennial",NA,NA,"MACA2","Machaeranthera canescens","Dieteria canescens","Native",FALSE
+"306","ERPU2","NonWoody","Forb","Perennial",NA,NA,"ERPU2","Erigeron pumilus","Erigeron pumilus","Native",FALSE
+"307","THIN6","NonWoody","Graminoid","Perennial","C3",NA,"THIN6","Thinopyrum intermedium","Thinopyrum intermedium","Introduced",TRUE
+"308","BAHI2","NonWoody","Forb","Perennial",NA,NA,"BAHOH2","Balsamorhiza hookeri var. hispidula","Balsamorhiza hispidula","Native",FALSE
+"309","ASMI10","NonWoody","Forb","Perennial",NA,NA,"ASMI10","Astragalus missouriensis","Astragalus missouriensis","Native",FALSE
+"310","OXPA2","NonWoody","Forb","Perennial",NA,NA,"OXPA2","Oxytropis parryi","Oxytropis parryi","Native",FALSE
+"311","DEPIB","NonWoody","Forb","Annual",NA,NA,"DEPIB","Descurainia pinnata ssp. brachycarpa","Descurainia pinnata ssp. brachycarpa","Native",FALSE
+"312","MIGR","NonWoody","Forb","Annual",NA,NA,"MIGR","Microsteris gracilis","Microsteris gracilis","Native",FALSE
+"313","PLINO","NonWoody","Forb","Perennial",NA,NA,"PLINO","Platyschkuhria integrifolia var. oblongifolia","Platyschkuhria integrifolia var. oblongifolia","Native",FALSE
+"314","PODE3","Woody","Tree","Perennial",NA,NA,"PODE3","Populus deltoides","Populus deltoides","Native",FALSE
+"315","SILI7","NonWoody","Forb","Perennial",NA,NA,"SCLI12","Schoenocrambe linearifolia","Hesperidanthus linearifolius","Native",FALSE
+"316","ERINI4","NonWoody","Forb","Annual",NA,NA,"ERIN4","Eriogonum inflatum","Eriogonum inflatum","Native",FALSE
+"317","CASCS4","NonWoody","Forb","Perennial",NA,NA,"CASCS4","Castilleja scabrida var. scabrida","Castilleja scabrida var. scabrida","Native",FALSE
+"318","ASMO10","NonWoody","Forb","Perennial",NA,NA,"ASMOC2","Astragalus monumentalis var. cottamii","Astragalus monumentalis var. cottamii","Native",FALSE
+"319","ANRO3","NonWoody","Forb","Perennial",NA,NA,"ANRO3","Antennaria rosulata","Antennaria rosulata","Native",FALSE
+"320","ELLA3","NonWoody","Graminoid","Perennial","C3",NA,"ELLA3","Elymus lanceolatus","Elymus lanceolatus","Native",FALSE
+"321","NIAT","NonWoody","Forb","Annual",NA,NA,"NIAT","Nicotiana attenuata","Nicotiana attenuata","Native",FALSE
+"322","ARPA6","Woody","Shrub","Perennial",NA,"RESPROUT","ARPA6","Arctostaphylos patula","Arctostaphylos patula","Native",FALSE
+"323","DRSP","NonWoody","Forb","Perennial",NA,NA,"DRSP","Draba spectabilis","Draba spectabilis","Native",FALSE
+"324","ERUT","NonWoody","Forb","Perennial",NA,NA,"ERUT","Erigeron utahensis","Erigeron utahensis","Native",FALSE
+"325","ASCO8","NonWoody","Forb","Perennial",NA,NA,"ASCO8","Astragalus coltonii","Astragalus coltonii","Native",FALSE
+"326","ASDE3","NonWoody","Forb","Perennial",NA,NA,"ASDE3","Astragalus desperatus","Astragalus desperatus","Native",FALSE
+"327","LUKI","NonWoody","Forb","Annual",NA,NA,"LUKI","Lupinus kingii","Lupinus kingii","Native",FALSE
+"328","SEAT","NonWoody","Forb","Perennial",NA,NA,"SEAT","Senecio atratus","Senecio atratus","Native",FALSE
+"329","ORAL","NonWoody","Forb","Perennial",NA,NA,"ORAL","Oreoxis alpina","Cymopterus alpinus","Native",FALSE
+"330","CHER","NonWoody","Forb","Perennial",NA,NA,"CHERN","Chamaerhodos erecta ssp. nuttallii","Chamaerhodos erecta var. parviflora","Native",FALSE
+"331","POTR","NonWoody","Graminoid","Perennial","C3",NA,"POTR","Poa tracyi","Poa tracyi","Native",FALSE
+"332","SHCA","Woody","Shrub","Perennial",NA,NA,"SHCA","Shepherdia canadensis","Shepherdia canadensis","Native",FALSE
+"333","VAMY2","Woody","Shrub","Perennial",NA,NA,"VAMY2","Vaccinium myrtillus","Vaccinium myrtillus","Native",FALSE
+"334","SAMI15","Woody","Shrub","Perennial",NA,NA,"SARAR3","Sambucus racemosa var. racemosa","Sambucus racemosa var. microbotrys","Native",FALSE
+"335","COSE16","Woody","Shrub","Perennial",NA,NA,"COSES","Cornus sericea ssp. sericea","Cornus sericea ssp. sericea","Native",FALSE
+"336","CALE4","NonWoody","Forb","Perennial",NA,NA,"CALE4","Caltha leptosepala","Caltha leptosepala","Native",FALSE
+"337","ACNE2","Woody","Tree","Perennial",NA,NA,"ACNE2","Acer negundo","Acer negundo","Native",FALSE
+"338","PHRE3","NonWoody","Forb","Perennial",NA,NA,"ILRI","Iliamna rivularis","Iliamna rivularis","Native",FALSE
+"339","FOPU2","Woody","Shrub","Perennial",NA,"RESPROUT","FOPU2","Forestiera pubescens","Forestiera pubescens","Native",FALSE
+"340","PLIND","NonWoody","Forb","Perennial",NA,NA,"PLIND","Platyschkuhria integrifolia var. desertorum","Platyschkuhria integrifolia var. desertorum","Native",FALSE
+"341","TRSP2","NonWoody","Graminoid","Perennial","C3",NA,"TRSP2","Trisetum spicatum","Trisetum spicatum","Native",FALSE
+"342","PSBA2","NonWoody","Forb","Perennial",NA,NA,"PSBA2","Psilostrophe bakeri","Psilostrophe bakeri","Native",FALSE
+"343","STPA4","NonWoody","Forb","Perennial",NA,NA,"STPA4","Stephanomeria pauciflora","Stephanomeria pauciflora","Native",FALSE
+"344","ASSU2","NonWoody","Forb","Perennial",NA,NA,"ASSU2","Asclepias subverticillata","Asclepias subverticillata","Native",FALSE
+"345","CIUN","NonWoody","Forb","Perennial",NA,NA,"CIUN","Cirsium undulatum","Cirsium undulatum","Native",FALSE
+"346","SCPA9","Woody","Shrub","Perennial",NA,NA,"SCPA9","Sclerocactus parviflorus","Sclerocactus parviflorus","Native",FALSE
+"347","ERIN7","NonWoody","Forb","Perennial",NA,NA,"ERIN7","Erysimum inconspicuum","Erysimum inconspicuum","Native",FALSE
+"348","ERFL4","NonWoody","Forb","Perennial",NA,NA,"ERFLF","Eriogonum flavum var. flavum","Eriogonum flavum var. flavum","Native",FALSE
+"349","POAN3","Woody","Tree","Perennial",NA,NA,"POAN3","Populus angustifolia","Populus angustifolia","Native",FALSE
+"350","TORY","Woody","Shrub","Perennial",NA,"RESPROUT","TORY","Toxicodendron rydbergii","Toxicodendron rydbergii","Native",FALSE
+"351","ERDI13","Woody","SubShrub","Perennial",NA,NA,"ERCO14","Eriogonum corymbosum","Eriogonum corymbosum","Native",FALSE
+"352","POOL","NonWoody","Forb","Annual",NA,NA,"POOL","Portulaca oleracea","Portulaca oleracea","Introduced",TRUE
+"353","GUMI","Woody","SubShrub","Perennial",NA,"NON-RESPROUT","GUMI","Gutierrezia microcephala","Gutierrezia microcephala","Native",FALSE
+"354","STPIP","Woody","SubShrub","Perennial",NA,NA,"STPIP","Stanleya pinnata var. pinnata","Stanleya pinnata var. pinnata","Native",FALSE
+"355","GRSQS2","NonWoody","Forb","Annual",NA,NA,"GRSQS2","Grindelia squarrosa var. squarrosa","Grindelia squarrosa var. squarrosa","Native",FALSE
+"356","BRTEG","NonWoody","Graminoid","Annual",NA,NA,"BRTE","Bromus tectorum","Bromus tectorum","Introduced",TRUE
+"357","TYLA","NonWoody","Forb","Perennial","C3",NA,"TYLA","Typha latifolia","Typha latifolia","Native",FALSE
+"358","SOAR2","NonWoody","Forb","Perennial",NA,NA,"SOAR2","Sonchus arvensis","Sonchus arvensis","Introduced",TRUE
+"359","SAGE2","Woody","Shrub","Perennial",NA,NA,"SAGE2","Salix geyeriana","Salix geyeriana","Native",FALSE
+"360","POAR3","NonWoody","Graminoid","Perennial","C3",NA,"POAR3","Poa arida","Poa arida","Native",FALSE
+"361","ASCH4","NonWoody","Forb","Perennial",NA,NA,"ASCHC2","Astragalus chamaeleuce var. chamaeleuce","Astragalus chamaeleuce var. chamaeleuce","Native",FALSE
+"362","BRMI","Woody","Shrub","Perennial",NA,"NON-RESPROUT","BRMIS","Brickellia microphylla var. scabra","Brickellia microphylla var. scabra","Native",FALSE
+"363","BOER4","NonWoody","Graminoid","Perennial","C4",NA,"BOER4","Bouteloua eriopoda","Bouteloua eriopoda","Native",FALSE
+"364","PAWE4","NonWoody","Forb","Perennial",NA,NA,"PAWE4","Packera werneriifolia","Packera werneriifolia","Native",FALSE
+"365","PIMI7","NonWoody","Graminoid","Perennial","C3",NA,"PIMI7","Piptatherum micranthum","Piptatherum micranthum","Native",FALSE
+"366","AMDI5","NonWoody","Forb","Perennial",NA,NA,"BADI","Bahia dissecta","Bahia dissecta","Native",FALSE
+"367","CELE3","Woody","Shrub","Perennial",NA,"NON-RESPROUT","CELE3","Cercocarpus ledifolius","Cercocarpus ledifolius","Native",FALSE
+"368","AMRE","NonWoody","Forb","Annual",NA,NA,"AMRE","Amaranthus retroflexus","Amaranthus retroflexus","Native",FALSE
+"369","LODI","NonWoody","Forb","Perennial",NA,NA,"LODIM","Lomatium dissectum var. multifidum","Lomatium dissectum var. eatonii","Native",FALSE
+"370","BREU","NonWoody","Forb","Perennial",NA,NA,"BREU","Brickellia eupatorioides","Brickellia eupatorioides","Native",FALSE
+"371","OPFRF","Woody","Succulent","Perennial",NA,NA,"OPFR","Opuntia fragilis","Opuntia fragilis","Native",FALSE
+"372","GATR2","NonWoody","Forb","Perennial",NA,NA,"GATRS2","Galium trifidum ssp. subbiflorum","Galium trifidum ssp. subbiflorum","Native",FALSE
+"373","POPU9","NonWoody","Forb","Perennial",NA,NA,"POPU9","Potentilla pulcherrima","Potentilla pulcherrima","Native",FALSE
+"374","POAR7","NonWoody","Forb","Perennial",NA,NA,"POAR7","Potentilla arguta","Potentilla arguta","Native",FALSE
+"375","CLHI","NonWoody","Forb","Perennial",NA,NA,"CLHI","Clematis hirsutissima","Clematis hirsutissima","Native",FALSE
+"376","CANE2","NonWoody","Sedge","Perennial","C3",NA,"CANE2","Carex nebrascensis","Carex nebrascensis","Native",FALSE
+"377","CEFE","Woody","Shrub","Perennial",NA,"RESPROUT","CEFE","Ceanothus fendleri","Ceanothus fendleri","Native",FALSE
+"378","ERMIL5","Woody","SubShrub","Perennial",NA,NA,"ERMIL2","Eriogonum microthecum var. laxiflorum","Eriogonum microthecum var. laxiflorum","Native",FALSE
+"379","ASPUP7","NonWoody","Forb","Perennial",NA,NA,"ASPUP7","Astragalus purshii var. purshii","Astragalus purshii var. purshii","Native",FALSE
