@@ -363,4 +363,230 @@ write.csv(richness,  row.names = F,
 
 rm(richness, nativity, life_cycle)
 ################################################################################
-#
+# Clean AIM Species attribute table
+
+
+### Import AIM LPI Data
+praw <- '../data/raw'
+ppro <-  '../data/processed'
+f <- list.files(praw, pattern = 'csv')
+files <- list.files(ppro, pattern = 'csv')
+
+## Extract the Main Species Attributes from AIM database
+
+plot_char <- read.csv( file.path(praw, f[grep('Characterization', f)]) ) %>% 
+  select(PrimaryKey, Easting, Northing) %>% 
+  drop_na()  %>% 
+  st_as_sf(coords = c('Easting', 'Northing'), crs = 4269) %>% 
+  st_transform(26913)
+
+pts <- st_read(
+  '/media/sagesteppe/ExternalHD/aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+  quiet = T) %>% 
+  st_transform(26913) %>% 
+  st_buffer(55) %>% 
+  select(PLOTID, STRATUM) 
+
+plot_char <- plot_char %>% 
+  st_transform(26913)
+
+spp_attri <- read.csv( file.path(praw, 'TerrestrialSpeciesAttributes.csv')) %>% 
+  distinct(Species, .keep_all = T) %>% 
+  select(SYMBOL = Species,  PrimaryKey, GrowthHabit:Duration) %>% 
+  mutate(across(.cols = everything(), ~ na_if(.x, ""))) %>% # there are a number
+  drop_na() # of records without attributes, but these codes appear in error
+
+plots <- st_intersection(pts, plot_char) 
+spp_attri <- filter(spp_attri, PrimaryKey %in% plots$PrimaryKey) %>% 
+  select(-PrimaryKey)
+
+rm(plot_char, pts, plots)
+
+
+### lookup grass and shrub status
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
+
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
+  bind_rows(., read.csv(file.path(praw, f[grep('shrubs_resprout', f)]))) %>% 
+  select(SYMBOL, RESPROUT) %>% 
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
+
+spp_attri <- spp_attri %>% 
+  mutate(SYMBOL = case_when(
+    SYMBOL == 'KOMY' ~ 'KOMA',
+    SYMBOL == 'PHPRN' ~ 'PHPR3',
+    SYMBOL == 'CHER4' ~ 'BOER4',
+    SYMBOL == 'BRPO5' ~ 'BRPO2',
+    SYMBOL == 'STCO4' ~ 'HECO26',
+    SYMBOL == 'AGSM' ~ 'PASM',
+    SYMBOL == 'AGIN2' ~ 'THIN6',
+    SYMBOL == 'ERRA' ~ 'SARA3',
+    TRUE ~ as.character(SYMBOL)
+  )) %>% 
+  left_join(., photosynthetic, by = 'SYMBOL') %>% 
+  left_join(., shrub_sprout, by = 'SYMBOL')
+
+rm(photosynthetic, shrub_sprout)
+
+### append nativity information
+
+nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) #%>% 
+  select(SYMBOL, NATIVITY) 
+
+spp_attri <- spp_attri %>% 
+  mutate(SYMBOL_NEW = case_when(
+    SYMBOL == 'ABBI3' ~ 'ABLA',
+    SYMBOL == 'ACNE9' ~ 'ACNEN2',
+    SYMBOL == 'AGPA14' ~ 'AGGLL',
+    SYMBOL == 'ALAC' ~ 'ALAC4',
+    SYMBOL == 'AMUTU' ~ 'AMUT',
+    SYMBOL == 'AGHE2' ~ 'AGHEH',
+    SYMBOL == 'ARHI' ~ 'ARHIP',
+    SYMBOL == 'ARFEF' ~ str_remove('F$', SYMBOL), # arenaria also possible, but generally higher
+    SYMBOL == 'ASCH4' ~ 'ASCHC2',
+    SYMBOL == 'ARSP5' ~ 'PIDE4',
+    SYMBOL == 'ASAM5' ~ 'ASAMV',
+    SYMBOL == 'AMDI5' ~ 'BADI',
+    SYMBOL == 'ASMO10' ~ 'ASMOC2',
+    SYMBOL == 'ASASC' ~ 'ASASA',
+    SYMBOL == 'ASNU4' ~ 'ASNUM2',
+    SYMBOL == 'AMUTU' ~ 'AMUT',
+    SYMBOL == 'ASTH2' ~ 'ASMOT',
+    SYMBOL == 'BAHI2' ~ 'BAHOH2',
+    SYMBOL == 'BERE' ~ 'MARE11', 
+    SYMBOL == 'BRAN' ~ 'BRPO2',
+    SYMBOL == 'BRMA4' ~ 'BRCA5',
+    SYMBOL == 'BRCO' ~ 'BRRA2', 
+    SYMBOL == 'BRCO4' ~ 'BRRA2', 
+    SYMBOL == 'BRTEG' ~ 'BRTE',
+    SYMBOL == 'BRMI' ~ 'BRMIS', 
+    SYMBOL == 'ROBL' ~ 'BROBL',
+    SYMBOL == 'BOFE' ~ 'ARFEF',
+    SYMBOL == 'CASCS3' ~ 'CASC18',
+    SYMBOL == 'CHNA2' ~ 'ERNA10',
+    SYMBOL == 'CHER' ~ 'CHERN', 
+    SYMBOL == 'CHVIA4' ~ 'CHVIV2', 
+    SYMBOL == 'CITR4' ~ 'CIUNT', 
+    SYMBOL == 'CRCR3' ~ 'CRCRE',
+    SYMBOL == 'COUM' ~ 'COUMP',
+    SYMBOL == 'COMAN' ~ 'COUMP',
+    SYMBOL == 'COSE16' ~ 'COSES',
+    SYMBOL == 'COVI9' ~ 'ESVIV',
+    SYMBOL == 'CRACA' ~ 'CRAC2',
+    SYMBOL == 'CYFE' ~ 'CYACF',
+    SYMBOL == 'CYLE6' ~ 'PSMO',
+    SYMBOL == 'DIBI8' ~ 'MABIB',
+    SYMBOL == 'DICA18' ~ 'MACA2',
+    SYMBOL == 'DRCUC' ~ 'DRCU',
+    SYMBOL == 'ECCOC' ~ 'ECTR',
+    SYMBOL == 'ELGL' ~ 'ELGLG',
+    SYMBOL == 'ERFL4' ~ 'ERFLF',
+    SYMBOL == 'ERDI13' ~ 'ERCO14',
+    SYMBOL == 'ERMIL5' ~ 'ERMIL2',
+    SYMBOL == 'ERGR9' ~ 'ERGRG3',
+    SYMBOL == 'ERAR25' ~ 'ERJAF',
+    SYMBOL == 'ERJA' ~ 'ERJAJ',
+    SYMBOL == 'ERVI22' ~ 'CHVIV2', 
+    SYMBOL == 'EREA' ~ 'EREAE',
+    SYMBOL == 'ERINI4' ~ 'ERIN4',
+    SYMBOL == 'EROVC2' ~ 'EROVP2',
+    SYMBOL == 'ERCOC13' ~ 'ARCOC4',
+    SYMBOL == 'ERCO24' ~ 'ARCOC4',
+    SYMBOL == 'FEOC3' ~ 'VUOC',
+    SYMBOL == 'FOME' ~ 'GLSPM',
+    SYMBOL == 'GAPIP2' ~ 'GAPI',
+    SYMBOL == 'GAMUC' ~ 'GACO2',
+    SYMBOL == 'GATR2' ~ 'GATRS2',
+    SYMBOL == 'GLSP' ~ 'GLSPM',
+    SYMBOL == 'GEMA4' ~ 'GEMAP',
+    SYMBOL == 'HEFO9' ~ 'HEVIF',
+    SYMBOL == 'JUARA4' ~ 'JUARL',
+    SYMBOL == 'KOAM' ~ 'BAAM4',
+    SYMBOL == 'LATA' ~ 'LATAP', 
+    SYMBOL == 'LIIN' ~ 'LIIN2', 
+    SYMBOL == 'LODI' ~ 'LODIM',
+    SYMBOL == 'LOGR' ~ 'LOGRG2',
+    SYMBOL == 'LUSE4' ~ 'LUSES2',
+    SYMBOL == 'LUPOP5' ~ 'LUPR2',
+    SYMBOL == 'LUARR2' ~ 'LUARR',
+    SYMBOL == 'MATA' ~ 'MATA2', # technically could possibly be M. tagetina...
+    SYMBOL == 'MARAR' ~ 'MARAA',
+    SYMBOL == 'METH' ~ 'MEHUH',
+    SYMBOL == 'MOFI' ~ 'MOFIM2',
+    SYMBOL == 'ORBA4' ~ 'CRBA4',
+    SYMBOL == 'ORLO' ~ 'CRLO6',
+    SYMBOL == 'ORFL5' ~ 'CRFL5',
+    SYMBOL == 'ORFL2' ~ 'CRFL5',
+    SYMBOL == 'ORHU2' ~ 'CRHU2', 
+    SYMBOL == 'OPFRF' ~ 'OPFR', 
+    SYMBOL == 'PADI11' ~ 'PACR5',
+    SYMBOL == 'PEDIO' ~ 'PESI',
+    SYMBOL == 'PERA' ~ 'PERAA',
+    SYMBOL == 'PHCR' ~ 'PHCRC',
+    SYMBOL == 'PHRE3' ~ 'ILRI',
+    SYMBOL == 'POPRP2' ~ 'POPR', 
+    SYMBOL == 'PUPA5' ~ 'PUPAM', 
+    SYMBOL == 'QUGAG' ~ 'QUGA',
+    SYMBOL == 'RATE' ~ 'CETE5', 
+    SYMBOL == 'RULA3' ~ 'RULAA',
+    SYMBOL == 'SAMI15' ~ 'SARAR3',
+    SYMBOL == 'SALA5' ~ 'SALUL',
+    SYMBOL == 'SEBI2' ~ 'SEBIH',
+    SYMBOL == 'SIAL11' ~ 'ALPE4',
+    SYMBOL == 'SILI7' ~ 'SCLI12',
+    SYMBOL == 'SILI5' ~ 'SCLI',
+    SYMBOL == 'SPCOC' ~ 'SPCO', 
+    SYMBOL == 'SOSI' ~ 'SOSIS',
+    SYMBOL == 'SOSI3' ~ 'SOSIS',
+    SYMBOL == 'SUNI' ~ 'SUMO',
+    SYMBOL == 'SONE' ~ 'SONEL',
+    SYMBOL == 'TARA' ~ 'TACH',
+    SYMBOL == 'TACH2' ~ 'TACH',
+    SYMBOL == 'THSA2' ~ 'THSAS',
+    SYMBOL == 'YUBAB' ~ 'YUBA',
+    SYMBOL == 'YUBA2' ~ 'YUBA',
+    SYMBOL == 'YUBAV' ~ 'YUBA',
+    SYMBOL == 'YUHAH' ~ 'YUHA',
+    SYMBOL == 'ZIEL2' ~ 'ZIELE',
+    SYMBOL == 'ZIVE' ~ 'ZIVEG',
+    SYMBOL == 'XASP' ~ 'XASP2',
+    SYMBOL == 'LEAL' ~ 'LEALE', # Speculative
+    SYMBOL == 'BRJA' ~ 'BRAR5', # slightly speculative
+    TRUE ~ as.character(SYMBOL)
+  ))
+
+# MAYBE ADD TO CNHP ???
+# SPCO. # BOST4 - this is stricta...
+nativity <- nativity %>% 
+  mutate(SYMBOL_NEW = case_when(
+    SYMBOL == 'CALEL4' ~ 'CALE4',
+    #   SYMBOL == 'YUBA' ~ 'YUBAB',
+    SYMBOL == 'ZIEL2' ~ 'ZIELE', 
+    SYMBOL == 'LALAA' ~ 'LALA3',
+    SYMBOL == 'ACNE9' ~ 'ACNEN2',
+    TRUE ~ as.character(SYMBOL)
+  ))
+
+# HELIA ~ NATIVE
+# 'PHLEU' ~ Introduced 
+
+out <- left_join(spp_attri, nativity %>% 
+                   select(-SYMBOL), by = 'SYMBOL_NEW') %>% 
+  distinct(SYMBOL_NEW, .keep_all = T) %>% 
+  drop_na(BINOMIAL_NAT)
+
+# not known from CO yet, 
+# SIIR , 
+# ERAB3, ERRO2 - LIKELY E. STRICTUM, THPU3,  # DRPA, # BOAR
+
+# Identity cannot be ascertained # ARPU2 --  # BOST4
+
+
+### Create Finer Functional Groups
+spp_attri <- spp_attri %>% 
+  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
+           .after = last_col()) %>% 
+  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:FUNCTIONAL, 
+        sep = "-", na.rm = T, remove = F) %>% 
+  select(-PHOTOSYNTHETIC, -RESPROUT)

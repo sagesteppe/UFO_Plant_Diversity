@@ -137,13 +137,13 @@ nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>%
 spp_attri <- spp_attri %>% 
   mutate(SYMBOL = case_when(
     SYMBOL == 'ABBI3' ~ 'ABLA',
-    SYMBOL == 'ACNE9' ~ 'ACNEN2'
+    SYMBOL == 'ACNE9' ~ 'ACNEN2',
     SYMBOL == 'AGPA14' ~ 'AGGLL',
     SYMBOL == 'ALAC' ~ 'ALAC4',
     SYMBOL == 'AMUTU' ~ 'AMUT',
     SYMBOL == 'AGHE2' ~ 'AGHEH',
     SYMBOL == 'ARHI' ~ 'ARHIP',
-    SYMBOL == 'ARFEF' ~ 'ARFE', # arenaria also possible, but generally higher
+    SYMBOL == 'ARFEF' ~ str_remove('F$', SYMBOL), # arenaria also possible, but generally higher
     SYMBOL == 'ASCH4' ~ 'ASCHC2',
     SYMBOL == 'ARSP5' ~ 'PIDE4',
     SYMBOL == 'ASAM5' ~ 'ASAMV',
@@ -272,10 +272,9 @@ out <- left_join(spp_attri, nativity, by = 'SYMBOL') %>%
   distinct(SYMBOL, .keep_all = T)
 
 # not known from CO yet, 
-# BRAN , SIIR , ERAB3, ERRO2 - LIKELY E. STRICTUM, THPU3, 
-# ASASC - MISTYPED ASTRAGALUS ASCLEPI..?,  # DRPA, # BOAR
+# SIIR , ERAB3, ERRO2 - LIKELY E. STRICTUM, THPU3, 
+  # DRPA, # BOAR
 
-# BRMA4
 # Identity cannot be ascertained # ARPU2 --  # BOST4
 
 ```
