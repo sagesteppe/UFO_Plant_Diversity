@@ -443,7 +443,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'AMUTU' ~ 'AMUT',
     SYMBOL == 'AGHE2' ~ 'AGHEH',
     SYMBOL == 'ARHI' ~ 'ARHIP',
-    SYMBOL == 'ARFEF' ~ str_remove('F$', SYMBOL), # arenaria also possible, but generally higher
+    SYMBOL == 'ARFEF' ~ str_remove('F$', SYMBOL), 
     SYMBOL == 'ASCH4' ~ 'ASCHC2',
     SYMBOL == 'ARSP5' ~ 'PIDE4',
     SYMBOL == 'ASAM5' ~ 'ASAMV',
@@ -461,8 +461,9 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'BRCO4' ~ 'BRRA2', 
     SYMBOL == 'BRTEG' ~ 'BRTE',
     SYMBOL == 'BRMI' ~ 'BRMIS', 
+    SYMBOL == 'BOAR' ~ 'BOBA2',
     SYMBOL == 'ROBL' ~ 'BROBL',
-    SYMBOL == 'BOFE' ~ 'ARFEF',
+    SYMBOL == 'BOFE' ~ 'ARFE',
     SYMBOL == 'CASCS3' ~ 'CASC18',
     SYMBOL == 'CHNA2' ~ 'ERNA10',
     SYMBOL == 'CHER' ~ 'CHERN', 
@@ -482,6 +483,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'DRCUC' ~ 'DRCU',
     SYMBOL == 'ECCOC' ~ 'ECTR',
     SYMBOL == 'ELGL' ~ 'ELGLG',
+    SYMBOL == 'ERAB3' ~ 'ERCO4',
     SYMBOL == 'ERFL4' ~ 'ERFLF',
     SYMBOL == 'ERDI13' ~ 'ERCO14',
     SYMBOL == 'ERMIL5' ~ 'ERMIL2',
@@ -494,6 +496,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'EROVC2' ~ 'EROVP2',
     SYMBOL == 'ERCOC13' ~ 'ARCOC4',
     SYMBOL == 'ERCO24' ~ 'ARCOC4',
+    SYMBOL == 'ERRO2' ~ 'ERCE2',
     SYMBOL == 'FEOC3' ~ 'VUOC',
     SYMBOL == 'FOME' ~ 'GLSPM',
     SYMBOL == 'JUAR2' ~ 'JUARL',
@@ -512,7 +515,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'LUSE4' ~ 'LUSES2',
     SYMBOL == 'LUPOP5' ~ 'LUPR2',
     SYMBOL == 'LUARR2' ~ 'LUARR',
-    SYMBOL == 'MATA' ~ 'MATA2', # technically could possibly be M. tagetina...
+    SYMBOL == 'MATA' ~ 'MATA2', 
     SYMBOL == 'MARAR' ~ 'MARAA',
     SYMBOL == 'METH' ~ 'MEHUH',
     SYMBOL == 'MOFI' ~ 'MOFIM2',
@@ -545,6 +548,7 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'SONE' ~ 'SONEL',
     SYMBOL == 'TARA' ~ 'TACH',
     SYMBOL == 'TACH2' ~ 'TACH',
+    SYMBOL == 'THPU3' ~ 'THEL', 
     SYMBOL == 'THSA2' ~ 'THSAS',
     SYMBOL == 'YUBAB' ~ 'YUBA',
     SYMBOL == 'YUBA2' ~ 'YUBA',
@@ -553,8 +557,8 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'ZIEL2' ~ 'ZIELE',
     SYMBOL == 'ZIVE' ~ 'ZIVEG',
     SYMBOL == 'XASP' ~ 'XASP2',
-    SYMBOL == 'LEAL' ~ 'LEALE', # Speculative
-    SYMBOL == 'BRJA' ~ 'BRAR5', # slightly speculative
+    SYMBOL == 'LEAL' ~ 'LEALE', 
+    SYMBOL == 'BRJA' ~ 'BRAR5', 
     TRUE ~ as.character(SYMBOL)
   ))
 
@@ -575,8 +579,8 @@ nativity <- nativity %>%
 
 out <- left_join(spp_attri, nativity %>% 
                    select(-SYMBOL), by = 'SYMBOL_NEW') %>% 
-  distinct(SYMBOL_NEW, .keep_all = T) %>% 
-  drop_na(BINOMIAL_NAT)
+  distinct(SYMBOL_NEW, .keep_all = T) #%>% 
+#  drop_na(BINOMIAL_NAT)
 
 # not known from CO yet, 
 # SIIR , 
@@ -613,9 +617,7 @@ out <- out %>%
   relocate('FUNCTIONAL', .before = 'GROWTHHABIT') %>% 
   rename(SYMBOL_AIM = SYMBOL , SYMBOL_USDA = SYMBOL_NEW) 
 
+write.csv(out, file.path(ppro, 'SpeciesAttributes.csv'), row.names = F)
 
-
-write.csv(out, file.path(ppro, 'SpeciesAttributes.csv'))
-
-  
+rm(fnct_lkp, nativity, out, spp_attri)
 
