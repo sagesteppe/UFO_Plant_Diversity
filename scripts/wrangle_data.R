@@ -547,7 +547,6 @@ spp_attri <- spp_attri %>%
     SYMBOL == 'SUNI' ~ 'SUMO',
     SYMBOL == 'SONE' ~ 'SONEL',
     SYMBOL == 'TARA' ~ 'TACH',
-    SYMBOL == 'TACH2' ~ 'TACH',
     SYMBOL == 'THPU3' ~ 'THEL', 
     SYMBOL == 'THSA2' ~ 'THSAS',
     SYMBOL == 'YUBAB' ~ 'YUBA',
@@ -568,25 +567,17 @@ nativity <- nativity %>%
   mutate(SYMBOL_NEW = case_when(
     SYMBOL == 'CALEL4' ~ 'CALE4',
     #   SYMBOL == 'YUBA' ~ 'YUBAB',
+    SYMBOL == 'TACH2' ~ 'TACH',
     SYMBOL == 'ZIEL2' ~ 'ZIELE', 
     SYMBOL == 'LALAA' ~ 'LALA3',
     SYMBOL == 'ACNE9' ~ 'ACNEN2',
     TRUE ~ as.character(SYMBOL)
   ))
 
-# HELIA ~ NATIVE
-# 'PHLEU' ~ Introduced 
 
 out <- left_join(spp_attri, nativity %>% 
                    select(-SYMBOL), by = 'SYMBOL_NEW') %>% 
-  distinct(SYMBOL_NEW, .keep_all = T) #%>% 
-#  drop_na(BINOMIAL_NAT)
-
-# not known from CO yet, 
-# SIIR , 
-# ERAB3, ERRO2 - LIKELY E. STRICTUM, THPU3,  # BOAR
-
-# Identity cannot be ascertained # ARPU2 --  # BOST4
+  distinct(SYMBOL_NEW, .keep_all = T) 
 
 # Append INVASIVE STATUS
 
@@ -619,5 +610,181 @@ out <- out %>%
 
 write.csv(out, file.path(ppro, 'SpeciesAttributes.csv'), row.names = F)
 
-rm(fnct_lkp, nativity, out, spp_attri)
+rm(fnct_lkp, nativity, spp_attri, out)
 
+## Now detect which species are missing the MAIN attributes from all LPI data - 
+# turns out the last table does not actually contain all species from LPI lines. 
+
+spp_attribute_tbl <- read.csv(file.path(ppro, 'SpeciesAttributes.csv')) %>% 
+  rename(BINOMIAL_ACK = BINOMIAL_ACKER)
+
+c_vals <- read_csv(file.path(praw, f[grep('C-Values', f)]), show_col_types = FALSE) %>% 
+  select(SYMBOL_USDA = National_USDASymbol,  BINOMIAL_NAT = National_SciName_noAuthority, 
+         BINOMIAL_ACK = Ack_SciName_noAuthority, NATIVITY = National_NativeStatus,
+         GROWTHHABITSUB = USDA_GrowthHabitSimple, DURATION = USDA_Duration)  %>% 
+  mutate(SYMBOL_USDA = case_when(
+    SYMBOL_USDA == 'TACH' ~ 'TACH2', 
+    TRUE ~ as.character(SYMBOL_USDA)))
+
+lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>% 
+  select(PrimaryKey, PointLoc:SoilSurface) %>% 
+  mutate(across(.cols = TopCanopy:SoilSurface, ~ na_if(.x, ""))) %>% 
+  pivot_longer(TopCanopy:SoilSurface, values_to = 'SYMBOL_AIM') %>% 
+  drop_na(SYMBOL_AIM) %>% 
+  filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4) %>% 
+  distinct(SYMBOL_AIM) 
+  
+lpi <- lpi[str_detect(lpi$SYMBOL_AIM, "^[A-Z]{2}\\d", negate = T),]
+
+in_att_table <- left_join(lpi, spp_attribute_tbl, by = 'SYMBOL_AIM') %>% 
+  drop_na(SYMBOL_USDA)
+in_att_table1 <- left_join(lpi, spp_attribute_tbl, keep = T,
+                           by = c('SYMBOL_AIM' = 'SYMBOL_USDA')) %>% 
+  drop_na(SYMBOL_AIM.y) %>% 
+  select(-SYMBOL_AIM.y)
+
+attributes_found <- bind_rows(in_att_table, in_att_table1) %>% distinct()
+
+rm(in_att_table1, in_att_table)
+
+lpi1 <- lpi %>% 
+  filter(!SYMBOL_AIM %in% 
+           c(spp_attribute_tbl$SYMBOL_AIM, spp_attribute_tbl$SYMBOL_USDA))
+
+# lpi1 all need looked up codes.... 
+
+lpi1 <- left_join(lpi1, c_vals, 
+                  by = c('SYMBOL_AIM' = 'SYMBOL_USDA'), keep = T) 
+
+need <- lpi1 %>% 
+  filter(is.na(GROWTHHABITSUB)) %>% 
+  mutate(SYMBOL_USDA = case_when(
+    SYMBOL_AIM == 'ABBI3' ~ 'ABLA', 
+    SYMBOL_AIM == 'ACGL' ~ 'ACGLG2',
+    SYMBOL_AIM == 'AGCRC' ~ 'AGCR',
+    SYMBOL_AIM == 'AGSM' ~ 'PASM',
+    SYMBOL_AIM == 'ASVE11' ~ 'XYVE',
+    SYMBOL_AIM == 'ATCAC' ~ 'ATCA2',
+    SYMBOL_AIM == 'BRCO4' ~ 'BRRA2',
+    SYMBOL_AIM == 'BRPO5' ~ 'BRPO2',
+    SYMBOL_AIM == 'CEST8' ~ 'CESTM',
+    SYMBOL_AIM == 'DEPI' ~ 'DEPIB',
+    SYMBOL_AIM == 'DEPII' ~ 'DEPIB',
+    SYMBOL_AIM == 'ELTRT' ~ 'ELTR7',
+    SYMBOL_AIM == 'ERCIC' ~ 'ERCI6',
+    SYMBOL_AIM == 'ERDIJ' ~ 'ERDI2',
+    SYMBOL_AIM == 'EREA3' ~ 'AREAE',
+    SYMBOL_AIM == 'GLSP' ~ 'GLSPM',
+    SYMBOL_AIM == 'GUSU2' ~ 'GUSA2',
+    SYMBOL_AIM == 'HAAR2' ~ 'STARA',
+    SYMBOL_AIM == 'HIJA' ~ 'PLJA',
+    SYMBOL_AIM == 'JUAR2' ~ 'JUARL',
+    SYMBOL_AIM == 'JUARA4' ~ 'JUARL',
+    SYMBOL_AIM == 'LAMA9' ~'LAOCC',
+    SYMBOL_AIM == 'LADE4' ~ 'LAPOP',
+    SYMBOL_AIM == 'LESA2' ~ 'THAR5',
+    SYMBOL_AIM == 'LESA4' ~ 'LESAS',
+    SYMBOL_AIM == 'LOGR' ~ 'LOGRG2',
+    SYMBOL_AIM == 'MAGR2' ~ 'MAGRG',
+    SYMBOL_AIM == 'ORFL2' ~ 'CRFL5',
+    SYMBOL_AIM == 'ORFL3' ~ 'CRFL6',
+    SYMBOL_AIM == 'PELE2' ~ 'PELEL2',
+    SYMBOL_AIM == 'PEPU7' ~ 'PEPUP',
+    SYMBOL_AIM == 'PHCR' ~ 'PHCRC',
+    SYMBOL_AIM == 'PIEN' ~ 'PIENE', 
+    SYMBOL_AIM == 'PIPO' ~ 'PIPOS',
+    SYMBOL_AIM == 'POSA17' ~ 'PODOJ2', 
+    SYMBOL_AIM == 'PRVI' ~ 'PRVIM',
+    SYMBOL_AIM == 'PSME' ~ 'PSMEG',
+    SYMBOL_AIM == 'SEMU' ~ 'SEMUM', 
+    SYMBOL_AIM == 'STAR10' ~ 'STARA',
+    SYMBOL_AIM == 'STCO4' ~ 'HECO26',
+    TRUE ~ as.character(SYMBOL_AIM)
+  )) %>% 
+  select(SYMBOL_AIM, SYMBOL_USDA)
+
+
+need <- left_join(need, c_vals, by = 'SYMBOL_USDA' ) 
+lpi1 <- lpi1 %>% 
+  filter(!is.na(GROWTHHABITSUB))
+
+got <- bind_rows(need, lpi1)
+
+invasive <- read.csv(file.path(praw, f[grep('Introduced', f)])) %>% 
+  select(SYMBOL_USDA = National_USDASymbol, INVASIVE = Invasive) 
+
+photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
+  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
+
+shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
+  bind_rows(., read.csv(file.path(praw, f[grep('shrubs_resprout', f)]))) %>% 
+  select(SYMBOL, RESPROUT) %>% 
+  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
+
+got <- left_join(got, invasive, by = "SYMBOL_USDA") %>% 
+  mutate(INVASIVE = replace_na(INVASIVE, F)) %>% 
+  left_join(., photosynthetic, by = c('SYMBOL_USDA' = 'SYMBOL')) %>% 
+  left_join(., shrub_sprout, by = c('SYMBOL_USDA' = 'SYMBOL'))
+
+rm(need, lpi1, invasive, photosynthetic, shrub_sprout)
+
+# need to add on photosynthetic, invasiveness and shrub resprout status !!! 
+
+results_maybe <- bind_rows(attributes_found,  got) %>% 
+  distinct(SYMBOL_AIM, .keep_all = T) %>% 
+  mutate(across(.cols = GROWTHHABIT:RESPROUT, ~ str_to_upper(.)),
+         INVASIVE = as.logical(INVASIVE)) %>% 
+  select(-SYMBOL_AIM.x)
+
+r  <- bind_rows(spp_attribute_tbl, results_maybe)
+
+wtf <- r %>% 
+  group_by(SYMBOL_AIM) %>% 
+  filter(n() > 1) %>% 
+  distinct()
+k <- r %>% 
+  group_by(SYMBOL_AIM) %>% 
+  filter(n() == 1) %>% 
+  filter(! SYMBOL_AIM %in% wtf$SYMBOL_AIM)
+
+consensus <- bind_rows(wtf, k)  %>% 
+  mutate(DURATION = case_when(
+    DURATION == 'BIENNIAL, PERENNIAL' ~ 'PERENNIAL', 
+    DURATION == 'PERENNIAL, BIENNIAL' ~ 'PERENNIAL', 
+    DURATION == 'ANNUAL, PERENNIAL' ~ 'PERENNIAL', 
+    DURATION == 'ANNUAL, BIENNIAL, PERENNIAL' ~ 'PERENNIAL',
+    DURATION == 'ANNUAL, BIENNIAL' ~ 'ANNUAL',
+    DURATION == 'BIENNIAL, ANNUAL' ~ 'ANNUAL',
+    DURATION == 'BIENNIAL' ~ 'ANNUAL', 
+    TRUE ~ as.character(DURATION)
+  ), 
+  GROWTHHABITSUB = str_replace(GROWTHHABITSUB, 'VINE', 'FORB')) 
+
+rm(r, wtf, k)
+
+fnct_lkp <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>% 
+  filter(INDICATOR_TYPE == 'SINGLE') %>% 
+  mutate(INVASIVE = if_else(NOXIOUS == 1, T, F)) %>%
+  select(FUNCTIONAL, GROWTHHABITSUB =  LIFEFORM, DURATION, INVASIVE)
+
+consensus <- consensus %>%
+  select(-FUNCTIONAL) %>% 
+  left_join(., fnct_lkp, by = c('GROWTHHABITSUB', 'DURATION', 'INVASIVE'))
+
+consensus %>% 
+  filter(is.na(FUNCTIONAL)) %>% 
+  write.csv(. , file.path(praw, 'genera_need_chars.csv'), row.names = F)
+
+consensus <- consensus %>% 
+  filter(!is.na(FUNCTIONAL))  %>% 
+  mutate(NATIVITY = as.logical(NATIVITY))
+
+consensus <- read.csv( file.path(praw, 'genera_need_chars-RCB.csv')) %>% 
+  select(-FUNCTIONAL) %>% 
+  left_join(., fnct_lkp, by = c('GROWTHHABITSUB', 'DURATION', 'INVASIVE')) %>% 
+  bind_rows(consensus, .)
+
+write.csv(consensus, file.path(ppro, 'SpeciesAttributeTable.csv'),  row.names = F)
+
+rm(attributes_found, c_vals, consensus, fnct_lkp, genera, got, h, lpi, results_maybe, 
+   spp_attribute_tbl)

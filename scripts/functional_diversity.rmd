@@ -69,7 +69,7 @@ lpi_part2 <- left_join(lpi, attributes, by = c('SYMBOL_AIM' = 'SYMBOL_USDA')) %>
   distinct(SYMBOL_AIM, .keep_all = T) %>% 
   drop_na(BINOMIAL_NAT) # clean name on this pupper. 
 
-sort(unique(lpi$SYMBOL_AIM))
+lpi_part$SYMBOL_AIM %in% lpi_part2$SYMBOL_AIM
 
 # what is not in either...
 

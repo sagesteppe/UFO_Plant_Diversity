@@ -400,6 +400,7 @@
 "STPIP","STPIP","Stanleya pinnata var. pinnata","Stanleya pinnata var. pinnata","NonNoxSubShrubCover ","WOODY","SUBSHRUB","PERENNIAL","NATIVE","FALSE",NA,NA
 "GRSQS2","GRSQS2","Grindelia squarrosa var. squarrosa","Grindelia squarrosa var. squarrosa","NonNoxAnnForbCover ","NONWOODY","FORB","ANNUAL","NATIVE","FALSE",NA,NA
 "BRTEG","BRTE","Bromus tectorum","Bromus tectorum","NoxAnnGrassCover ","NONWOODY","GRAMINOID","ANNUAL","INTRODUCED","TRUE",NA,NA
+"TACH2","TACH2",NA,NA,"NonNoxShrubCover ","WOODY","SHRUB","PERENNIAL",NA,"FALSE",NA,NA
 "TYLA","TYLA","Typha latifolia","Typha latifolia","NonNoxPerenForbCover ","NONWOODY","FORB","PERENNIAL","NATIVE","FALSE","C3",NA
 "SOAR2","SOAR2","Sonchus arvensis","Sonchus arvensis","NoxPerenForbCover ","NONWOODY","FORB","PERENNIAL","INTRODUCED","TRUE",NA,NA
 "SAGE2","SAGE2","Salix geyeriana","Salix geyeriana","NonNoxShrubCover ","WOODY","SHRUB","PERENNIAL","NATIVE","FALSE",NA,NA
