@@ -428,7 +428,7 @@
 "CEFE","CEFE","Ceanothus fendleri","Ceanothus fendleri","WOODY","SHRUB","PERENNIAL",NA,FALSE,NA,"RESPROUT","NonNoxShrubCover "
 "ERMIL5","ERMIL2","Eriogonum microthecum var. laxiflorum","Eriogonum microthecum var. laxiflorum","WOODY","SUBSHRUB","PERENNIAL",NA,FALSE,NA,NA,"NonNoxSubShrubCover "
 "ASPUP7","ASPUP7","Astragalus purshii var. purshii","Astragalus purshii var. purshii","NONWOODY","FORB","PERENNIAL",NA,FALSE,NA,NA,"NonNoxPerenForbCover "
-NA,"BRTE","Bromus tectorum","Bromus tectorum","NONWOODY","GRAMINOID","ANNUAL",NA,TRUE,NA,NA,"NoxAnnGrassCover "
+"BRTE","BRTE","Bromus tectorum","Bromus tectorum","NONWOODY","GRAMINOID","ANNUAL",NA,TRUE,NA,NA,"NoxAnnGrassCover "
 "LADE4","LAPOP","Lathyrus polymorphus ssp. polymorphus","Lathyrus polymorphus ssp. polymorphus",NA,"FORB","PERENNIAL",NA,FALSE,NA,NA,"NonNoxPerenForbCover "
 "PEPU7","PEPUP","Petradoria pumila ssp. pumila","Petradoria pumila ssp. pumila",NA,"FORB","PERENNIAL",NA,FALSE,NA,NA,"NonNoxPerenForbCover "
 "GUSU2","GUSA2","Gutierrezia sarothrae","Gutierrezia sarothrae",NA,"FORB","PERENNIAL",NA,FALSE,NA,"NON-RESPROUT","NonNoxPerenForbCover "

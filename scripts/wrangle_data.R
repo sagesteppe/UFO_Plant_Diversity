@@ -784,7 +784,25 @@ consensus <- read.csv( file.path(praw, 'genera_need_chars-RCB.csv')) %>%
   left_join(., fnct_lkp, by = c('GROWTHHABITSUB', 'DURATION', 'INVASIVE')) %>% 
   bind_rows(consensus, .)
 
+consensus <- consensus %>% 
+  mutate(SYMBOL_AIM = if_else(is.na(SYMBOL_AIM), SYMBOL_USDA, SYMBOL_AIM))
+
+
+aim_symbs_need <- data.frame(
+  SYMBOL_AIM = c('AMUT', 'SPCO', 'YUHA', 'OPFR', 'QUGA', 'VUOC', 'SCLI', 
+                 'CETE5', 'ERNA10', 'YUBA', 'MARE11', 'SARAR3', 'PSMO', 
+                 'DRCU', 'JUARL', 'ERCO14', 'BAAM4', 'MACA2', 'ALAC4', 
+                 'ECTR', 'ERIN4', 'PESI')
+  )
+
+extra <- left_join(aim_symbs_need, ungroup(consensus) %>%  
+            select(-SYMBOL_AIM), 
+          by = c('SYMBOL_AIM' = "SYMBOL_USDA"))
+extra <- extra[-15,]
+
+consensus <- bind_rows(consensus, extra)
+
 write.csv(consensus, file.path(ppro, 'SpeciesAttributeTable.csv'),  row.names = F)
 
 rm(attributes_found, c_vals, consensus, fnct_lkp, genera, got, h, lpi, results_maybe, 
-   spp_attribute_tbl)
+   spp_attribute_tbl, aim_symbs_need, extra, consensus, conc1)

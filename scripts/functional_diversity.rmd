@@ -62,14 +62,7 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
   filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4) 
 
 lpi_part <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
-  distinct(SYMBOL_AIM, .keep_all = T) %>% 
-  drop_na(BINOMIAL_NAT)
-
-lpi_part2 <- left_join(lpi, attributes, by = c('SYMBOL_AIM' = 'SYMBOL_USDA')) %>% 
-  distinct(SYMBOL_AIM, .keep_all = T) %>% 
-  drop_na(BINOMIAL_NAT) # clean name on this pupper. 
-
-lpi_part$SYMBOL_AIM %in% lpi_part2$SYMBOL_AIM
+  distinct(SYMBOL_AIM, .keep_all = T) 
 
 # what is not in either...
 
@@ -78,7 +71,7 @@ lpi_part$SYMBOL_AIM %in% lpi_part2$SYMBOL_AIM
 
 ```{r Calculate Covers based on updated hits}
 
-attributes <- read.csv( file.path(ppro, files[grep('Attributes', files)]) )
+attributes <- read.csv( file.path(ppro, files[grep('Attribute.*Table', files)]) )
 
 indicators <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>% 
   filter(INDICATOR_TYPE == 'MULTIPLE') %>% 
