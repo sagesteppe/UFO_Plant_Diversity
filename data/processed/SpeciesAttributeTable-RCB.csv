@@ -431,7 +431,7 @@ ASPUP7,ASPUP7,Astragalus purshii var. purshii,Astragalus purshii var. purshii,NO
 BRTE,BRTE,Bromus tectorum,Bromus tectorum,NONWOODY,GRAMINOID,ANNUAL,NA,TRUE,NA,NA,NoxAnnGrassCover 
 LADE4,LAPOP,Lathyrus polymorphus ssp. polymorphus,Lathyrus polymorphus ssp. polymorphus,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 PEPU7,PEPUP,Petradoria pumila ssp. pumila,Petradoria pumila ssp. pumila,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
-GUSU2,GUSA2,Gutierrezia sarothrae,Gutierrezia sarothrae,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxPerenShrubCover 
+GUSU2,GUSA2,Gutierrezia sarothrae,Gutierrezia sarothrae,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxShrubCover 
 DEPI,DEPIB,Descurainia pinnata ssp. brachycarpa,Descurainia pinnata ssp. brachycarpa,NA,FORB,ANNUAL,NA,FALSE,NA,NA,NonNoxAnnForbCover 
 ATCAC,ATCA2,Atriplex canescens,Atriplex canescens,NA,SHRUB,PERENNIAL,NA,FALSE,NA,RESPROUT,NonNoxShrubCover 
 ELTRT,ELTR7,Elymus trachycaulus,Elymus trachycaulus,NA,GRAMINOID,PERENNIAL,NA,FALSE,C3,NA,NonNoxPerenGrassCover 
@@ -470,7 +470,7 @@ GLSP,GLSPM,Glossopetalon spinescens var. meionandrum,Forsellesia meionandra,NA,S
 EREA3,AREAE,Arenaria eastwoodiae var. eastwoodiae,Eremogone eastwoodiae var. eastwoodiae,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 PIED,PIED,Pinus edulis,Pinus edulis,NA,TREE,PERENNIAL,NA,FALSE,NA,NA,NonNoxTreeCover 
 CEMO2,CEMO2,Cercocarpus montanus,Cercocarpus montanus,NA,SHRUB,PERENNIAL,NA,FALSE,NA,RESPROUT,NonNoxShrubCover 
-GUSA2,GUSA2,Gutierrezia sarothrae,Gutierrezia sarothrae,NA,FORB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxPerenForbCover 
+GUSA2,GUSA2,Gutierrezia sarothrae,Gutierrezia sarothrae,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxShrubCover 
 ERTR13,ERTR13,Eremopyrum triticeum,Eremopyrum triticeum,NA,GRAMINOID,ANNUAL,NA,TRUE,C3,NA,NoxAnnGrassCover 
 JUOS,JUOS,Juniperus osteosperma,Juniperus osteosperma,NA,TREE,PERENNIAL,NA,FALSE,NA,NA,NonNoxTreeCover 
 EPVI,EPVI,Ephedra viridis,Ephedra viridis,NA,SHRUB,PERENNIAL,NA,FALSE,NA,RESPROUT,NonNoxShrubCover 
@@ -487,7 +487,7 @@ ELEL5,ELEL5,Elymus elymoides,Elymus elymoides,NA,GRAMINOID,PERENNIAL,NA,FALSE,C3
 BOGR2,BOGR2,Bouteloua gracilis,Bouteloua gracilis,NA,GRAMINOID,PERENNIAL,NA,FALSE,C4,NA,NonNoxPerenGrassCover 
 SPCR,SPCR,Sporobolus cryptandrus,Sporobolus cryptandrus,NA,GRAMINOID,PERENNIAL,NA,FALSE,C4,NA,NonNoxPerenGrassCover 
 ATCA2,ATCA2,Atriplex canescens,Atriplex canescens,NA,SHRUB,PERENNIAL,NA,FALSE,NA,RESPROUT,NonNoxShrubCover 
-OPPO,OPPO,Opuntia polyacantha,Opuntia polyacantha,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxShrubCover 
+OPPO,OPPO,Opuntia polyacantha,Opuntia polyacantha,NA,SUCCULENT,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxSucculentCover 
 KRLA2,KRLA2,Krascheninnikovia lanata,Krascheninnikovia lanata,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxShrubCover 
 ARTRT,ARTRT,Artemisia tridentata ssp. tridentata,Artemisia tridentata var. tridentata,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxShrubCover 
 PLPA2,PLPA2,Plantago patagonica,Plantago patagonica,NA,FORB,ANNUAL,NA,FALSE,NA,NA,NonNoxAnnForbCover 
@@ -530,7 +530,7 @@ PUTR2,PUTR2,Purshia tridentata,Purshia tridentata,NA,SHRUB,PERENNIAL,NA,FALSE,NA
 ERCI6,ERCI6,Erodium cicutarium,Erodium cicutarium,NA,FORB,ANNUAL,NA,TRUE,NA,NA,NoxAnnForbCover 
 DESC,DESC,Delphinium scaposum,Delphinium scaposum,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 HAGL,HAGL,Halogeton glomeratus,Halogeton glomeratus,NA,FORB,ANNUAL,NA,TRUE,NA,NA,NoxAnnForbCover 
-OPPOP,OPPOP,Opuntia polyacantha var. polyacantha,Opuntia polyacantha var. polyacantha,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NA,NonNoxShrubCover 
+OPPOP,OPPOP,Opuntia polyacantha var. polyacantha,Opuntia polyacantha var. polyacantha,NA,SUCCULENT,PERENNIAL,NA,FALSE,NA,NA,NonNoxSucculentCover 
 TESP2,TESP2,Tetradymia spinosa,Tetradymia spinosa,NA,SHRUB,PERENNIAL,NA,FALSE,NA,RESPROUT,NonNoxShrubCover 
 CYBU,CYBU,Cymopterus bulbosus,Cymopterus bulbosus,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 HYFI,HYFI,Hymenopappus filifolius,Hymenopappus filifolius,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
@@ -542,7 +542,7 @@ XYVE,XYVE,Xylorhiza venusta,Xylorhiza venusta,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NA,
 CLPA3,CLPA3,Cleomella palmeriana,Cleomella palmeriana,NA,FORB,ANNUAL,NA,FALSE,NA,NA,NonNoxAnnForbCover 
 STPI,STPI,Stanleya pinnata,Stanleya pinnata,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 CORA,CORA,Coleogyne ramosissima,Coleogyne ramosissima,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NON-RESPROUT,NonNoxShrubCover 
-OPPH,OPPH,Opuntia phaeacantha,Opuntia phaeacantha,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NA,NonNoxShrubCover 
+OPPH,OPPH,Opuntia phaeacantha,Opuntia phaeacantha,NA,SUCCULENT,PERENNIAL,NA,FALSE,NA,NA,NonNoxSucculentCover 
 LEMO2,LEMO2,Lepidium montanum,Lepidium montanum,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 ARFR4,ARFR4,Artemisia frigida,Artemisia frigida,NA,SHRUB,PERENNIAL,NA,FALSE,NA,RESPROUT,NonNoxShrubCover 
 ERRA3,ERRA3,Eriogonum racemosum,Eriogonum racemosum,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 

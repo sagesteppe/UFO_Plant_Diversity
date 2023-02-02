@@ -68,10 +68,10 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
 ```
 
 
-```{r Calculate Covers based on updated hits}
+```{r Calculate Individual Covers based on updated hits}
 
 attributes <- read.csv(file.path(ppro, files[grep('Attribute.*Table-RCB', files)]) )
-lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+lpi_sub <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
   mutate(Intercept = factor(
     Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface'))) %>% 
   mutate(FUNCTIONAL2 = if_else(FUNCTIONAL == 'NonNoxSubShrubCover', 'NonNoxShrubCover', FUNCTIONAL)) %>% 
@@ -79,7 +79,7 @@ lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>%
   slice_max(order_by = Intercept,  n = 1, with_ties = F) %>% 
   ungroup()
 
-all_hits <- lpi %>% 
+all_hits <- lpi_sub %>% 
   group_by(PrimaryKey, SYMBOL_USDA) %>% 
   add_count(SYMBOL_USDA, name = 'NIntercepts') %>% 
   select(PrimaryKey, SYMBOL_USDA, NIntercepts, SYMBOL_AIM, Intercept, FUNCTIONAL) %>% 
@@ -104,20 +104,92 @@ all_hits_w <- all_hits_sum %>%
   mutate(across(where(is.numeric), ~ (./150)*100))
 
 home_brew <- all_hits_w  %>% 
-  mutate(Forb = sum(NonNoxAnnForbCover, NonNoxPerenForbCover, 
-                             NoxPerenForbCover, NoxAnnForbCover),
-         Grass = sum(NonNoxAnnGrassCover, NonNoxPerenGrassCover, 
-                             NoxPerenGrassCover, NoxAnnGrassCover),
+  mutate(Forb = sum(NonNoxAnnForbCover, NoxAnnForbCover, 
+                             NonNoxPerenForbCover, NoxPerenForbCover),
+         Grass = sum(NonNoxAnnGrassCover, NoxAnnGrassCover, 
+                             NoxPerenGrassCover, NonNoxPerenGrassCover),
          PerenGrass = sum(NonNoxPerenGrassCover, NoxPerenGrassCover), 
-         ShrubCover = sum(NonNoxShrubCover, NoxShrubCover, NoxSubShrubCover),
+         Shrub = sum(NonNoxShrubCover, NoxShrubCover, NoxSubShrubCover, 
+                          NonNoxShrubCover),
          PerenForb = sum(NonNoxPerenForbCover, NoxPerenForbCover)
          ) %>% 
   rename(Tree = NonNoxTreeCover) %>% 
   select(PrimaryKey, Forb:PerenForb, Tree) %>% 
   pivot_longer(!PrimaryKey, names_to = 'Variable', values_to = 'Cover_HB')
 
-rm(attributes, indicators)
+rm(indicators)
 ```
+
+
+```{r These are the Standards from TerraDat}
+
+terradat_calc <- summary %>% 
+  select(PrimaryKey, starts_with('AH')) %>% 
+  pivot_longer(!PrimaryKey, names_to = 'Variable', values_to = 'Cover_TD') %>% 
+  filter(Variable %in% c('AH_ForbCover', 'AH_GrassCover', 'AH_PerenGrassCover', 
+                         'AH_ShrubCover', 'AH_PerenForbCover', 'AH_NonNoxTreeCover', 
+                         'AH_PerenForbCover') ) %>% 
+  mutate(Variable = str_remove(Variable, "AH_"),
+         Variable = str_remove(Variable, "Cover"), 
+         Variable = str_remove(Variable, "NonNox"))
+
+```
+
+```{r Create compound metrics}
+
+# this calculates CORRECTLY, BUT !!! it seems that some things have
+# not always been shrubs the entire time. 
+
+agg <- read.csv(file.path(praw, f[grep('Func_', f)]) ) %>% 
+  filter(!FUNCTIONAL_AGGREGATE %in% c('PerenForb', 'PerenGrass'))
+
+lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+  mutate(Intercept = factor(
+    Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface')),
+    FUNCTIONAL = str_trim(FUNCTIONAL)) %>% 
+  left_join(., agg, by = 'FUNCTIONAL') %>% 
+  group_by(PrimaryKey, RecKey, PointNbr, FUNCTIONAL_AGGREGATE) %>% 
+  slice_max(order_by = Intercept,  n = 1, with_ties = F) %>% 
+  ungroup()
+
+all_hits_agg <- lpi_agg %>% 
+  group_by(PrimaryKey, SYMBOL_USDA) %>% 
+  add_count(SYMBOL_USDA, name = 'NIntercepts') %>% 
+  select(PrimaryKey, SYMBOL_USDA, NIntercepts, SYMBOL_AIM, Intercept, FUNCTIONAL_AGGREGATE) %>% 
+  distinct(PrimaryKey, SYMBOL_USDA, .keep_all = T)
+  
+all_hits_agg_sum <- all_hits_agg %>% 
+  ungroup() %>% 
+  group_by(PrimaryKey, FUNCTIONAL_AGGREGATE) %>% 
+  summarize(Cover_HB = sum(NIntercepts)) %>% 
+  rename(Variable = FUNCTIONAL_AGGREGATE) %>% 
+  mutate(across(where(is.numeric), ~ (./150)*100))
+
+compare_agg <- inner_join(all_hits_agg_sum, terradat_calc, by = c('PrimaryKey', 'Variable')) %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2)))
+
+ggplot(data = compare_agg, aes(x = Cover_TD, y = Cover_HB)) +
+  geom_point() +
+  facet_wrap(~Variable) +
+  theme_bw() + 
+  theme(aspect.ratio = 1) +
+  xlim(0,100) + ylim(0,100) +
+  geom_abline(intercept = 0, slope = 1, col = 'red')
+
+off <- compare_agg %>% 
+  rowwise %>% 
+  filter(Cover_HB != Cover_TD) %>% 
+  mutate(difference = abs(Cover_HB - Cover_TD))
+
+mean(off$difference) # 2.9 with OPPO included, # 2.6 without OPPO
+off[off$Variable=='Shrub','Cover_HB']
+
+cor(off[off$Variable=='Shrub','Cover_HB'], 
+    off[off$Variable=='Shrub','Cover_TD'],
+    method = "pearson") # much lower but still 0.97 pearson correlation 
+
+```
+
 
 
 
@@ -151,6 +223,7 @@ off <- compare %>%
   filter(Cover_HB != Cover_TD) %>% 
   mutate(difference = abs(Cover_HB - Cover_TD))
 # WE CAN COMPARE THESE VARIABLES TO OUT RESULTS, THEY SHOULD ALL EQUAL OUR RESULTS
+
 
 ```
 
