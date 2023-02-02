@@ -161,10 +161,40 @@ cor(off[off$Variable=='Shrub','Cover_HB'],
     off[off$Variable=='Shrub','Cover_TD'],
     method = "pearson") # much lower but still 0.97 pearson correlation 
 
-rm(attributes, agg, lpi_agg, all_hits_agg, all_hits_agg_sum)
+rm(agg, lpi_agg, all_hits_agg, all_hits_agg_sum, terradat_calc)
 ```
 
- we need TREE, SHRUB, NATIVE FORB, NATIVE GRASS, 
+we need TREE, SHRUB, NATIVE FORB, NATIVE GRASS for ESD's
+ 
+```{r Create the ESD style metrics with only NATIVES}
+
+native_esd_grps <- read.csv( file.path(praw, f[grep('native_esd_covers', f)])) 
+
+lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+  mutate(Intercept = factor(
+    Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface')),
+    FUNCTIONAL = str_trim(FUNCTIONAL)) %>% 
+  left_join(., native_esd_grps, by = 'FUNCTIONAL') %>% 
+  group_by(PrimaryKey, RecKey, PointNbr, FUNCTIONAL_AGGREGATE) %>% 
+  slice_max(order_by = Intercept,  n = 1, with_ties = F) %>% 
+  ungroup()
+
+all_hits_agg <- lpi_agg %>% 
+  group_by(PrimaryKey, SYMBOL_USDA) %>% 
+  add_count(SYMBOL_USDA, name = 'NIntercepts') %>% 
+  select(PrimaryKey, SYMBOL_USDA, NIntercepts, SYMBOL_AIM, Intercept, FUNCTIONAL_AGGREGATE) %>% 
+  distinct(PrimaryKey, SYMBOL_USDA, .keep_all = T)
+
+all_hits_agg_sum <- all_hits_agg %>% 
+  ungroup() %>% 
+  group_by(PrimaryKey, FUNCTIONAL_AGGREGATE) %>% 
+  summarize(Cover_HB = sum(NIntercepts)) %>% 
+  rename(Variable = FUNCTIONAL_AGGREGATE) %>% 
+  mutate(across(where(is.numeric), ~ (./150)*100))
+
+rm(attributes, native_esd_grps, lpi_agg, all_hits_agg)
+```
+ 
 
 ```{r import benchmarks and join homebrewed ESD groups to Ecological Site Descriptions}
 

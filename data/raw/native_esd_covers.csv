@@ -1,0 +1,9 @@
+FUNCTIONAL_AGGREGATE,FUNCTIONAL
+Forb,NonNoxAnnualForbCover
+Forb,NonNoxPerenForbCover
+Shrub,NonNoxSucculentCover
+Grass,NonNoxAnnualGrassCover
+Grass,NonNoxPerenGrassCover
+Shrub,NonNoxSubShrubCover
+Shrub,NonNoxShrubCover
+Tree,NonNoxTreeCover
