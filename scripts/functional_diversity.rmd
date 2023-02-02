@@ -52,7 +52,9 @@ f <- list.files(praw, pattern = 'csv')
 files <- list.files(ppro, pattern = 'csv')
 
 summary <- read.csv(file.path(praw, 'TerraDatVersionSummary.csv')) %>% 
-  select(PrimaryKey, AH_NonNoxPerenForbCover:FH_NoxTreeCover, Latitude_NAD83:Longitude_NAD83)
+  select(PrimaryKey, starts_with('AH'), Latitude_NAD83:Longitude_NAD83)
+  
+colnames(summary)
 
 lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>% 
   select(PrimaryKey, RecKey, PointLoc:SoilSurface) %>% 
@@ -68,11 +70,12 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
 
 ```{r Calculate Covers based on updated hits}
 
-attributes <- read.csv(file.path(ppro, files[grep('Attribute.*Table', files)]) )
+attributes <- read.csv(file.path(ppro, files[grep('Attribute.*Table-RCB', files)]) )
 lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
   mutate(Intercept = factor(
     Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface'))) %>% 
-  group_by(PrimaryKey, RecKey, PointNbr, FUNCTIONAL) %>% 
+  mutate(FUNCTIONAL2 = if_else(FUNCTIONAL == 'NonNoxSubShrubCover', 'NonNoxShrubCover', FUNCTIONAL)) %>% 
+  group_by(PrimaryKey, RecKey, PointNbr, FUNCTIONAL2) %>% 
   slice_max(order_by = Intercept,  n = 1, with_ties = F) %>% 
   ungroup()
 
@@ -87,7 +90,6 @@ all_hits_sum <- all_hits %>%
   group_by(PrimaryKey, FUNCTIONAL) %>% 
   summarize(Fractional_Cover = sum(NIntercepts)) 
 
-
 indicators <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>% 
   filter(INDICATOR_TYPE == 'MULTIPLE') %>% 
   select(LIFEFORM, FUNCTIONAL) %>% 
@@ -98,37 +100,57 @@ indicators <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>%
 all_hits_w <- all_hits_sum %>% 
   mutate(FUNCTIONAL = str_trim(FUNCTIONAL)) %>% 
   pivot_wider(names_from = FUNCTIONAL, values_from = Fractional_Cover, values_fill = 0) %>% 
-  mutate(NoxSubShrubCover = 0, NoxSucculentCover = 0, NoxTreeCover = 0)
+  mutate(NoxSubShrubCover = 0, NoxSucculentCover = 0, NoxTreeCover = 0)  %>% 
+  mutate(across(where(is.numeric), ~ (./150)*100))
 
-all_hits_w <- all_hits_w %>% 
-  mutate(
-    NonNoxPerenForbGrassCover = NonNoxPerenForbCover + NonNoxPerenGrassCover, # 1
-    NonNoxAnnForbGrassCover = NonNoxAnnForbCover + NonNoxAnnGrassCover, # 2
-    NonNoxCover = NonNoxPerenForbCover + NonNoxPerenGrassCover + 
-      NonNoxAnnForbCover + NonNoxAnnGrassCover + NonNoxShrubCover + 
-      NonNoxSubShrubCover + NonNoxSubShrubCover + NonNoxSucculentCover + 
-      NonNoxTreeCover, # 3
-    NoxPerenForbGrassCover = NonNoxAnnForbCover + NonNoxAnnGrassCover, # 4
-    NoxAnnForbGrassCover = NonNoxAnnForbCover + NonNoxAnnGrassCover, # 5
-    NoxCover = NoxPerenForbCover + NoxPerenGrassCover + NoxAnnForbCover +
-      NoxAnnGrassCover  + NoxShrubCover + NoxSubShrubCover + NoxSubShrubCover
-    + NoxSucculentCover + NoxTreeCover, # 6
-    NonNoxShrubCover = NonNoxShrubCover + NonNoxSubShrubCover # not for everyone
-  ) %>% 
-  select(NonNoxPerenForbCover, NonNoxPerenGrassCover, 
-         NonNoxShrubCover,
-         NonNoxTreeCover, NonNoxSucculentCover) %>% 
-  rename_with(~str_remove(., 'Cover')) %>% 
-  mutate(across(where(is.numeric), ~ (./150)*100)) 
+home_brew <- all_hits_w  %>% 
+  mutate(Forb = sum(NonNoxAnnForbCover, NonNoxPerenForbCover, 
+                             NoxPerenForbCover, NoxAnnForbCover),
+         Grass = sum(NonNoxAnnGrassCover, NonNoxPerenGrassCover, 
+                             NoxPerenGrassCover, NoxAnnGrassCover),
+         PerenGrass = sum(NonNoxPerenGrassCover, NoxPerenGrassCover), 
+         ShrubCover = sum(NonNoxShrubCover, NoxShrubCover, NoxSubShrubCover),
+         PerenForb = sum(NonNoxPerenForbCover, NoxPerenForbCover)
+         ) %>% 
+  rename(Tree = NonNoxTreeCover) %>% 
+  select(PrimaryKey, Forb:PerenForb, Tree) %>% 
+  pivot_longer(!PrimaryKey, names_to = 'Variable', values_to = 'Cover_HB')
 
-rm(attributes)
+rm(attributes, indicators)
 ```
 
 
 
 ```{r Compare our results to AIM db Summary}
 
+terradat_calc <- summary %>% 
+  select(PrimaryKey, starts_with('AH')) %>% 
+  pivot_longer(!PrimaryKey, names_to = 'Variable', values_to = 'Cover_TD') %>% 
+  filter(Variable %in% c('AH_ForbCover', 'AH_GrassCover', 'AH_PerenGrassCover', 
+                         'AH_ShrubCover', 'AH_PerenForbCover', 'AH_NonNoxTreeCover', 
+                         'AH_PerenForbCover') ) %>% 
+  mutate(Variable = str_remove(Variable, "AH_"),
+         Variable = str_remove(Variable, "Cover"), 
+         Variable = str_remove(Variable, "NonNox"))
 
+
+compare <- inner_join(home_brew, terradat_calc, by = c('PrimaryKey', 'Variable')) %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2)))
+
+
+ggplot(data = compare, aes(x = Cover_TD, y = Cover_HB)) +
+  geom_point() +
+  facet_wrap(~Variable) +
+  theme_bw() + 
+  theme(aspect.ratio = 1) +
+  xlim(0,100) + ylim(0,100) +
+  geom_abline(intercept = 0, slope = 1, col = 'red')
+
+off <- compare %>% 
+  rowwise %>% 
+  filter(Cover_HB != Cover_TD) %>% 
+  mutate(difference = abs(Cover_HB - Cover_TD))
+# WE CAN COMPARE THESE VARIABLES TO OUT RESULTS, THEY SHOULD ALL EQUAL OUR RESULTS
 
 ```
 
