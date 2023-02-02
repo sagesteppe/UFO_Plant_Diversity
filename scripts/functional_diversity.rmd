@@ -55,12 +55,12 @@ summary <- read.csv(file.path(praw, 'TerraDatVersionSummary.csv')) %>%
   select(PrimaryKey, AH_NonNoxPerenForbCover:FH_NoxTreeCover, Latitude_NAD83:Longitude_NAD83)
 
 lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>% 
-  select(PrimaryKey, PointLoc:SoilSurface) %>% 
+  select(PrimaryKey, RecKey, PointLoc:SoilSurface) %>% 
   mutate(across(.cols = TopCanopy:SoilSurface, ~ na_if(.x, ""))) %>% 
-  pivot_longer(TopCanopy:SoilSurface, values_to = 'SYMBOL_AIM') %>% 
+  pivot_longer(TopCanopy:SoilSurface, values_to = 'SYMBOL_AIM', names_to = 'Intercept') %>% 
   drop_na(SYMBOL_AIM) %>% 
-  filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4) 
-
+  filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4)
+  
 # what is not in either...
 
 ```
@@ -68,10 +68,67 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
 
 ```{r Calculate Covers based on updated hits}
 
+attributes <- read.csv(file.path(ppro, files[grep('Attribute.*Table', files)]) )
+lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+  mutate(Intercept = factor(
+    Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface'))) %>% 
+  group_by(PrimaryKey, RecKey, PointNbr, FUNCTIONAL) %>% 
+  slice_max(order_by = Intercept,  n = 1, with_ties = F) %>% 
+  ungroup()
+
+all_hits <- lpi %>% 
+  group_by(PrimaryKey, SYMBOL_USDA) %>% 
+  add_count(SYMBOL_USDA, name = 'NIntercepts') %>% 
+  select(PrimaryKey, SYMBOL_USDA, NIntercepts, SYMBOL_AIM, Intercept, FUNCTIONAL) %>% 
+  distinct(PrimaryKey, SYMBOL_USDA, .keep_all = T)
+  
+all_hits_sum <- all_hits %>% 
+  ungroup() %>% 
+  group_by(PrimaryKey, FUNCTIONAL) %>% 
+  summarize(Fractional_Cover = sum(NIntercepts)) 
+
 
 indicators <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>% 
   filter(INDICATOR_TYPE == 'MULTIPLE') %>% 
-  select(LIFEFORM, FUNCTIONAL)
+  select(LIFEFORM, FUNCTIONAL) %>% 
+  mutate(across(.cols = everything(), ~ str_trim(.))) # %>% 
+  #unite('f', FUNCTIONAL:LIFEFORM, sep = "=") %>% 
+  #pull() # tried many variations on quo_expr no go
+
+all_hits_w <- all_hits_sum %>% 
+  mutate(FUNCTIONAL = str_trim(FUNCTIONAL)) %>% 
+  pivot_wider(names_from = FUNCTIONAL, values_from = Fractional_Cover, values_fill = 0) %>% 
+  mutate(NoxSubShrubCover = 0, NoxSucculentCover = 0, NoxTreeCover = 0)
+
+all_hits_w <- all_hits_w %>% 
+  mutate(
+    NonNoxPerenForbGrassCover = NonNoxPerenForbCover + NonNoxPerenGrassCover, # 1
+    NonNoxAnnForbGrassCover = NonNoxAnnForbCover + NonNoxAnnGrassCover, # 2
+    NonNoxCover = NonNoxPerenForbCover + NonNoxPerenGrassCover + 
+      NonNoxAnnForbCover + NonNoxAnnGrassCover + NonNoxShrubCover + 
+      NonNoxSubShrubCover + NonNoxSubShrubCover + NonNoxSucculentCover + 
+      NonNoxTreeCover, # 3
+    NoxPerenForbGrassCover = NonNoxAnnForbCover + NonNoxAnnGrassCover, # 4
+    NoxAnnForbGrassCover = NonNoxAnnForbCover + NonNoxAnnGrassCover, # 5
+    NoxCover = NoxPerenForbCover + NoxPerenGrassCover + NoxAnnForbCover +
+      NoxAnnGrassCover  + NoxShrubCover + NoxSubShrubCover + NoxSubShrubCover
+    + NoxSucculentCover + NoxTreeCover, # 6
+    NonNoxShrubCover = NonNoxShrubCover + NonNoxSubShrubCover # not for everyone
+  ) %>% 
+  select(NonNoxPerenForbCover, NonNoxPerenGrassCover, 
+         NonNoxShrubCover,
+         NonNoxTreeCover, NonNoxSucculentCover) %>% 
+  rename_with(~str_remove(., 'Cover')) %>% 
+  mutate(across(where(is.numeric), ~ (./150)*100)) 
+
+rm(attributes)
+```
+
+
+
+```{r Compare our results to AIM db Summary}
+
+
 
 ```
 
