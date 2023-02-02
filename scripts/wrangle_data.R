@@ -792,17 +792,18 @@ aim_symbs_need <- data.frame(
   SYMBOL_AIM = c('AMUT', 'SPCO', 'YUHA', 'OPFR', 'QUGA', 'VUOC', 'SCLI', 
                  'CETE5', 'ERNA10', 'YUBA', 'MARE11', 'SARAR3', 'PSMO', 
                  'DRCU', 'JUARL', 'ERCO14', 'BAAM4', 'MACA2', 'ALAC4', 
-                 'ECTR', 'ERIN4', 'PESI')
+                 'ECTR', 'ERIN4', 'PESI', 'POPR')
   )
 
 extra <- left_join(aim_symbs_need, ungroup(consensus) %>%  
             select(-SYMBOL_AIM), 
-          by = c('SYMBOL_AIM' = "SYMBOL_USDA"))
+          by = c('SYMBOL_AIM' = "SYMBOL_USDA")) %>% 
+  mutate(SYMBOL_USDA = SYMBOL_AIM) %>% 
+  distinct()
 extra <- extra[-15,]
-
 consensus <- bind_rows(consensus, extra)
 
 write.csv(consensus, file.path(ppro, 'SpeciesAttributeTable.csv'),  row.names = F)
 
 rm(attributes_found, c_vals, consensus, fnct_lkp, genera, got, h, lpi, results_maybe, 
-   spp_attribute_tbl, aim_symbs_need, extra, consensus, conc1)
+   spp_attribute_tbl, aim_symbs_need, extra)

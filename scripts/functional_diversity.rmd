@@ -61,9 +61,6 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
   drop_na(SYMBOL_AIM) %>% 
   filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4) 
 
-lpi_part <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
-  distinct(SYMBOL_AIM, .keep_all = T) 
-
 # what is not in either...
 
 ```
@@ -71,7 +68,23 @@ lpi_part <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>%
 
 ```{r Calculate Covers based on updated hits}
 
+
 attributes <- read.csv( file.path(ppro, files[grep('Attribute.*Table', files)]) )
+
+lpi_part <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+  distinct(SYMBOL_AIM, .keep_all = T) 
+lpi_unks <- lpi_part %>% 
+  filter(str_detect(SYMBOL_AIM, "^[A-Z]{2}\\d"))
+
+unknown_attributes <- read.csv( file.path(praw, 'TerrestrialSpeciesAttributes.csv')) %>% 
+  distinct(Species, .keep_all = T) %>% 
+  select(SYMBOL = Species,  PrimaryKey, GrowthHabit:Duration) %>% 
+  mutate(across(.cols = everything(), ~ na_if(.x, ""))) %>% # there are a number
+  drop_na() %>% 
+  filter(str_detect(SYMBOL, "^[A-Z]{2}\\d"))
+
+left_join(lpi_unks, unknown_attributes, by = c('SYMBOL_AIM' = 'SYMBOL'))
+
 
 indicators <- read.csv( file.path(praw, f[grep('Functional', f)]) ) %>% 
   filter(INDICATOR_TYPE == 'MULTIPLE') %>% 
