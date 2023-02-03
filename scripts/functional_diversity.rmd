@@ -256,10 +256,10 @@ rm(pts, char, esd_class)
 benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)])) %>% 
   select(-X, -RANGE)  %>% 
   mutate(SET = 'ESD')
-#esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
-#  rbind(., data.frame(ESD = 'R036XY315UT',  
-#                      module_name = 'PinyonJuniper', 
-#                      module_number = 1))
+esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
+  rbind(., data.frame(ESD = 'R036XY315UT',  
+                      module_name = 'PinyonJuniper', 
+                      module_number = 1))
 #benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
 
 # repeat for ESG and combine
@@ -287,8 +287,9 @@ esg_cover <- read.csv(file.path(praw, f[grep('EcologicalSiteGroup', f)])) %>%
 
 benchmarks <- esg_cover %>% 
   pivot_longer(cols = Grass:Tree, values_to = 'COVER', names_to = 'COVER_TYPE') %>% 
-  mutate(ESTIMATE = 'LOWER', COVER_RANGE = 'ORIGINAL', MEAN = COVER, SET = 'ESG') %>% 
-  bind_rows(., benchmarks)
+  mutate(ESTIMATE = 'LOWER', COVER_RANGE = 'ORIGINAL', MEAN = as.numeric(COVER), SET = 'ESG') %>% 
+  bind_rows(., benchmarks) %>% 
+  as.data.frame()
 
 # now create full benchmarks
 
@@ -318,7 +319,7 @@ all_hits_forb <- all_hits_nat %>%
   filter(str_detect(ECO.SITE, "[0-9]"), 
          Variable == 'Forb')
 
-forb_bench <- benchmarks %>% 
+benchmarks %>% 
   filter(COVER_TYPE == 'Forb', ECO.SITE %in% all_hits_forb$ECO.SITE) %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
@@ -326,14 +327,15 @@ forb_bench <- benchmarks %>%
   ggplot() +
   geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
               shape = 18, alpha = 0.8, size = 3) + #benchmarks here
-  geom_jitter(data = all_hits_nat, height = 0.2,
+  geom_jitter(data = all_hits_forb, height = 0.2,
               aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
    
 #  geom_pointrange(data = , aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
 #    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
   theme_bw() + # AIM data are here
   
-  scale_color_manual(values = c("ESD" = '#860FAE', "ESG" = "#da008d")) +
+  scale_color_manual('Benchmark', 
+                     values = c("ESD" = '#860FAE', "ESG" = "#da008d")) +
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
@@ -345,11 +347,11 @@ forb_bench <- benchmarks %>%
   scale_x_continuous(NULL, breaks = seq(from = 0, to = 25, by = 5), 
                      labels = paste0(seq(from = 0, to = 25, by = 5), '%'), 
                      limits = c(0,25))
-forb_bench
 
 ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
        path = '../results/benchmarks', filename = 'forb_benchmark.png')
 
+rm(all_hits_forb)
 ```
 
 \begin{wrapfigure}{l}{0.5\textwidth}
@@ -358,7 +360,8 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
   \caption{Benchmarks and Observed Values}
 \end{wrapfigure}
 
-Benchmark forb cover is generally low across all Ecological Sites in the study area, with a maximum expected cover at any site of `r max(benchmarks[benchmarks$COVER_TYPE == 'Forb' & benchmarks$ESTIMATE == 'UPPER','COVER'])`% and the median mean value across all sites being `r median(benchmarks[benchmarks$COVER_TYPE == 'Forb','MEAN'])`%. In general these estimates focus on perennial species, as after they germinate nearly all of these species will retain some above ground biomass across each active growing season of their lives, whereas annual forbs may not germinate in drier years and hence have more across year variation in their abundance. As these values are intended to capture the variation of these Ecological Sites, and these estimates were presumably created within the last 20 years (see SECTION XX on ESD development), we would expect that the covers observed on AIM plots were close to the lower estimates of variability. 
+
+Benchmark forb cover is generally low across all Ecological Sites in the study area, with a maximum expected cover at any site of `r max(benchmarks[benchmarks$COVER_TYPE == 'Forb' & benchmarks$ESTIMATE == 'UPPER','COVER'])`% and the median mean value across all sites being `r median(benchmarks[benchmarks$COVER_TYPE == 'Forb', 'MEAN'])`%. In general these estimates focus on perennial species, as after they germinate nearly all of these species will retain some above ground biomass across each active growing season of their lives, whereas annual forbs may not germinate in drier years and hence have more across year variation in their abundance. As these values are intended to capture the variation of these Ecological Sites, and these estimates were presumably created within the last 20 years (see SECTION XX on ESD development), we would expect that the covers observed on AIM plots were close to the lower estimates of variability. 
 
 While nearly all plants produce less above-ground biomass during drought, additional complications with natural and climate induced mortality and the subsequent lack of recruitment of perennial forbs from the soil seed bank may contribute to sites not meeting benchmarks (@eziz2017drought, @casper1996demographic @munson2022primary ???). The establishment of both long and short lived forbs seems hampered during drought periods, and it may take several years after the cessation of a drought for the cover of perennial forbs to return to pre-drought conditions (@anderson2001landscape). 
 
@@ -386,18 +389,28 @@ Unfortunately in most scenarios, we do not expect that drought is going to have 
 
 ```{r Benchmarks to Realized Shrubs, eval = F}
 
+all_hits_shrub <- all_hits_nat %>% 
+  filter(str_detect(ECO.SITE, "[0-9]"), 
+         Variable == 'Shrub')
+
 benchmarks %>% 
-  filter(COVER_TYPE == 'Shrub') %>% 
+  filter(COVER_TYPE == 'Shrub', ECO.SITE %in% all_hits_shrub$ECO.SITE) %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
   
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
-              shape = 23, fill = '#D4D7DE', alpha = 0.8, size = 2) + #benchmarks here
   
-  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),
+              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
+  geom_jitter(data = all_hits_shrub, height = 0.2,
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
+  
+ # geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
   theme_bw() + # AIM data are here
+  
+  scale_color_manual('Benchmark', 
+                     values = c("ESD" = '#D4D7DE', "ESG" = "#f9f871")) +
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
@@ -412,6 +425,8 @@ benchmarks %>%
 
 ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
        path = '../results/benchmarks', filename = 'shrub_benchmark.png')
+
+rm(all_hits_shrub)
 ```
 
 \begin{wrapfigure}{l}{0.5\textwidth}
@@ -436,18 +451,26 @@ While passive efforts have been made to facilitate the establishment of shrubs a
 
 ```{r Benchmarks to Realized Trees, eval = F}
 
+all_hits_tree <- all_hits_nat %>% 
+  filter(str_detect(ECO.SITE, "[0-9]"), 
+         Variable == 'Tree')
+
 benchmarks %>% 
-  filter(COVER_TYPE == 'Tree') %>% 
+  filter(COVER_TYPE == 'Tree', ECO.SITE %in% all_hits_tree$ECO.SITE) %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
   
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
-              shape = 23, fill = '#DD4513', alpha = 0.8, size = 2) + #benchmarks here
-  
-  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
-  theme_bw() + # AIM data are here
+
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
+              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
+  geom_jitter(data = all_hits_tree, height = 0.2,
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
+#  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  theme_bw() + # AIM data are here 
+  scale_color_manual('Benchmark', 
+                     values = c("ESD" = '#dd4513', "ESG" = "#2f4858")) +
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
@@ -462,6 +485,8 @@ benchmarks %>%
 
 ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
        path = '../results/benchmarks', filename = 'tree_benchmark.png')
+
+rm(all_hits_tree)
 ```
 
 \begin{wrapfigure}{l}{0.5\textwidth}
@@ -482,12 +507,15 @@ Prioritization of sites where treatments will offer the most ecosystem services,
 
 \newpage
 
-
 \begin{center}
 {\section{Perennial Grass Cover}} 
 \end{center}
 
 ```{r Benchmarks to Realized Grass, eval = F}
+
+all_hits_grass <- all_hits_nat %>% 
+  filter(str_detect(ECO.SITE, "[0-9]"), 
+         Variable == 'Grass')
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Grass') %>% 
@@ -495,12 +523,16 @@ benchmarks %>%
   arrange(-MEAN) %>% 
   
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
-              shape = 23, fill = '#30A934', alpha = 0.8, size = 2) + #benchmarks here
-  
-  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
+              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
+  geom_jitter(data = all_hits_grass, height = 0.2,
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
+#  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
   theme_bw() + # AIM data are here
+  
+  scale_color_manual('Benchmark', 
+                     values = c("ESD" = '#30A934', "ESG" = "#2f4858")) +
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
@@ -516,6 +548,7 @@ benchmarks %>%
 ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
        path = '../results/benchmarks', filename = 'grass_benchmark.png')
 
+rm(all_hits_grass)
 ```
 
 \begin{wrapfigure}{l}{0.5\textwidth}
@@ -556,6 +589,25 @@ yn <- data.frame(
   pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING') 
 
 ```
+
+```{r prep real data for overall ESD conditions}
+
+bm_herb <- benchmarks %>% 
+  filter(COVER_TYPE %in% c('Grass', 'Forb'), ESTIMATE == 'LOWER') %>% 
+  select(ECO.SITE, COVER_TYPE, BM =  COVER) 
+
+bm_wd <- benchmarks %>% 
+  filter(COVER_TYPE %in% c('Tree', 'Shrub'), SET == 'ESG') %>% 
+  select(ECO.SITE, COVER_TYPE, BM = COVER) 
+bm_wd <- benchmarks %>% 
+  filter(COVER_TYPE %in% c('Tree', 'Shrub'), SET == 'ESD', ESTIMATE == 'UPPER') %>% 
+  select(ECO.SITE, COVER_TYPE, BM = COVER)  %>% 
+  bind_rows(., bm_wd)
+
+
+
+```
+
 
 ```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=8, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
 
