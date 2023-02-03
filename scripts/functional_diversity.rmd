@@ -92,7 +92,7 @@ all_hits_w <- all_hits_sum %>%
   mutate(NoxSubShrubCover = 0, NoxSucculentCover = 0, NoxTreeCover = 0)  %>% 
   mutate(across(where(is.numeric), ~ (./150)*100))
 
-rm(indicators, all_hits, all_hits_sum, lpi_sub)
+rm(all_hits, all_hits_sum, lpi_sub)
 ```
 
 
@@ -111,7 +111,7 @@ terradat_calc <- summary %>%
 rm(summary)
 ```
 
-```{r Create compound metrics - ensure we are calculating values same as NOC team}
+```{r Create compound metrics - ensure we are calculating values same as NOC team, fig.height=3}
 
 # this calculates CORRECTLY, BUT !!! it seems that some things have
 # not always been shrubs the entire time. 
@@ -142,12 +142,12 @@ all_hits_agg_sum <- all_hits_agg %>%
   mutate(across(where(is.numeric), ~ (./150)*100))
 
 compare_agg <- inner_join(all_hits_agg_sum, terradat_calc, by = c('PrimaryKey', 'Variable')) %>% 
-  mutate(across(where(is.numeric), ~ round(.x, 2)))
+  mutate(across(where(is.numeric), ~ round(.x, 1)))
 
 ggplot(data = compare_agg, aes(x = Cover_TD, y = Cover_HB)) +
   geom_point() +
-  labs(title = 'Validation of Calculations against Standards',
-       x = 'TerrAdat', y = 'In house') +
+  labs(title = 'Validation of Calculations',
+       x = 'TerrAdat (Standards)', y = 'In house') +
   facet_wrap(~ Variable) +
   theme_bw() + 
   theme(aspect.ratio = 1,
@@ -163,6 +163,9 @@ off <- compare_agg %>%
   filter(Cover_HB != Cover_TD) %>% 
   mutate(difference = abs(Cover_HB - Cover_TD))
 
+pairs <- lapply(split(compare_agg, compare_agg$Variable), nrow) |> 
+  data.frame()
+
 all_cor <- lapply(split(compare_agg, compare_agg$Variable), 
        function(x) cor(x$Cover_HB, x$Cover_TD)) |>
   data.frame()
@@ -171,11 +174,21 @@ mismatch_cor <- lapply(split(off, off$Variable),
        function(x) cor(x$Cover_HB, x$Cover_TD)) |>
   data.frame()
 
-rm(agg, lpi_agg, all_hits_agg, all_hits_agg_sum, terradat_calc, off, compare_agg)
+
+rm(agg, lpi_agg, all_hits_agg, all_hits_agg_sum, terradat_calc)
 ```
 
-we need TREE, SHRUB, NATIVE FORB, NATIVE GRASS for ESD's
- 
+As can be seen in figure 1, very good accord existed between both in-house and the official calculations. This plot was fashioned and consulted in an iterative fashion, with manual investigation of the functional classification of plants at Ecological Sites; in other words points falling off the red line were investigated for the species contributing to the mismatch. We than reassigned the desired NOC group functional classification to these species. The discord between the Forb and Shrub functional groups are due to variability within the reference calculations in how at least two species were treated, either as a ford or shrub, over the time period. We did not attempt to emulate this, as these taxa are consistently scored within the ESD references. A total of `r nrow(off) + nrow(compare_agg)` site functional group pairs were utilized for this process. By the end of the process  `r nrow(compare_agg)` of these pairs had identical values when rounded to 1 decimal point (a tenth of a percent), of the remaining `r nrow(off)` records, `r nrow(off[off$difference < 1,])` had less than a one percent difference in cover, and  `r nrow(off[off$difference < 1.5,])` were less than a 1.5% difference. By the end of the process the Pearson correlation coefficient for trees (n = `r pairs[1,'Tree']`, *r* =  `r round(all_cor[1,'Tree'], 5)`) and grass (n = `r pairs[1,'Grass']`, *r* =  `r round(all_cor[1,'Grass'], 5)`) indicated the values were essentially identical, and most likely diverged merely according to rounding during internal computations. 
+
+For the functional groups which diverged more notably, Forbs and Shrubs, these appear to be the result of a discrepancy regarding a single abundant species, *Gutierrezia sarothrae*. Based on a limited re-review of ESD's, most authors considered this a sub-dominant shrub, a group which is combined into their estimates for Shrub Cover. Accordingly, we will utilize this assessment of *Gutierrezia sarothrae* and include it as a shrub in calculations. Largely due to this treatment we have slightly larger discrepancy between our and the Standard estimate of shrub cover (n = `r pairs[1,'Shrub']`, *r* = `r round(all_cor[1,'Shrub'], 5)`). This also leads to a discrepancy associated with estimates of forb covers (n = `r pairs[1,'Forb']`, *r* = `r round(all_cor[1,'Forb'], 5)`). However, a greater number of values diverge between the TerrAdat references and the in house calculated values, of the `r nrow(off)` records which diverge by > 0.1% cover, `r nrow(off[off$Variable=='Shrub',])` of them are associated with Shrubs, and the correlation here is much lower at *r* = `r round(mismatch_cor[1,'Shrub'], 5)`. The `r nrow(off[off$Variable=='Forb',])` records have a correlation of *r* = `r round(mismatch_cor[1,'Forb'], 5)`. 
+
+Further based on the same limited review of ESD's succulents, notably *Opuntia* were also included in Shrub calculations. Given the functional nature of the above ground portions of *Opuntia*, and where it thrives, we include it in our calculations of Shrub cover.  
+
+```{r}
+rm(off, compare_agg, mismatch_cor, all_cor, pairs)
+```
+
+
 ```{r Create the ESD style metrics with only NATIVES}
 
 native_esd_grps <- read.csv( file.path(praw, f[grep('native_esd_covers', f)])) 
@@ -202,21 +215,30 @@ all_hits_nat <- all_hits_nat %>%
   rename(Variable = FUNCTIONAL_AGGREGATE) %>% 
   mutate(across(where(is.numeric), ~ (./150)*100))
 
-rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi, attributes)
+rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi)
+```
+ 
+ 
+```{r join site id to primarykeys}
+
+
+
 ```
  
 
 ```{r import benchmarks and join homebrewed ESD groups to Ecological Site Descriptions}
 
-benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)]))
-# esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
-#  rbind(., data.frame(ESD = 'R036XY315UT',  # we will throw 315 in with PJ 
-#                      module_name = 'PinyonJuniper', 
-#                      module_number = 1))
-
+benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)])) %>% 
+  select(-X, -RANGE, -MEAN) 
+esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
+  rbind(., data.frame(ESD = 'R036XY315UT',  # we will throw 315 in with PJ 
+                      module_name = 'PinyonJuniper', 
+                      module_number = 1))
 benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
 
-# 
+esd <- read.csv(file.path(praw, f[grep('Tracking', f)])) %>% 
+  filter(STATUS == 'SAMPLED') %>% 
+  select(-PANEL, -ECO.SITE.MATCHED, -STATUS)
 
 ```
 

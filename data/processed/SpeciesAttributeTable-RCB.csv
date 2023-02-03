@@ -461,7 +461,7 @@ ORFL2,CRFL5,Cryptantha flava,Oreocarya flava,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,No
 ORFL3,CRFL6,Cryptantha flavoculata,Oreocarya flavoculata,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 BRCO4,BRRA2,Bromus racemosus,Bromus commutatus,NA,GRAMINOID,ANNUAL,NA,TRUE,C3,NA,NoxAnnGrassCover 
 SEMU,SEMUM,Selaginella mutica var. mutica,Selaginella mutica var. mutica,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
-ACGL,ACGLG2,Acer glabrum var. glabrum,Acer glabrum var. glabrum,NA,SHRUB,PERENNIAL,NA,FALSE,NA,NA,NonNoxShrubCover 
+ACGL,ACGLG2,Acer glabrum var. glabrum,Acer glabrum var. glabrum,NA,TREE,PERENNIAL,NA,FALSE,NA,NA,NonNoxTreeCover 
 POSA17,PODOJ2,Polygonum douglasii  ssp. johnstonii ,Polygonum sawatchense ssp. sawatchense,NA,FORB,ANNUAL,NA,FALSE,NA,NA,NonNoxAnnForbCover 
 HAAR2,STARA,Stenotus armerioides var. armerioides,Stenotus armerioides var. armerioides,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
 STAR10,STARA,Stenotus armerioides var. armerioides,Stenotus armerioides var. armerioides,NA,FORB,PERENNIAL,NA,FALSE,NA,NA,NonNoxPerenForbCover 
