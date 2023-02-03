@@ -92,7 +92,7 @@ all_hits_w <- all_hits_sum %>%
   mutate(NoxSubShrubCover = 0, NoxSucculentCover = 0, NoxTreeCover = 0)  %>% 
   mutate(across(where(is.numeric), ~ (./150)*100))
 
-rm(indicators, all_hits, all_hits_summ, lpi_sub)
+rm(indicators, all_hits, all_hits_sum, lpi_sub)
 ```
 
 
@@ -146,10 +146,16 @@ compare_agg <- inner_join(all_hits_agg_sum, terradat_calc, by = c('PrimaryKey', 
 
 ggplot(data = compare_agg, aes(x = Cover_TD, y = Cover_HB)) +
   geom_point() +
+  labs(title = 'Validation of Calculations against Standards',
+       x = 'TerrAdat', y = 'In house') +
   facet_wrap(~ Variable) +
   theme_bw() + 
-  theme(aspect.ratio = 1) +
-  xlim(0,100) + ylim(0,100) +
+  theme(aspect.ratio = 1,
+        panel.grid.minor = element_blank(),
+        axis.text = element_text(color = "grey20", size = 8)) +
+  xlim(0,101) + ylim(0,101) +
+  scale_x_continuous(labels = paste0(seq(from = 0 , to = 100, by = 25), '%')) +
+  scale_y_continuous(labels = paste0(seq(from = 0 , to = 100, by = 25), '%')) +
   geom_abline(intercept = 0, slope = 1, col = 'red')
 
 off <- compare_agg %>% 
@@ -157,11 +163,15 @@ off <- compare_agg %>%
   filter(Cover_HB != Cover_TD) %>% 
   mutate(difference = abs(Cover_HB - Cover_TD))
 
-cor(off[off$Variable=='Shrub','Cover_HB'], 
-    off[off$Variable=='Shrub','Cover_TD'],
-    method = "pearson") # much lower but still 0.97 pearson correlation 
+all_cor <- lapply(split(compare_agg, compare_agg$Variable), 
+       function(x) cor(x$Cover_HB, x$Cover_TD)) |>
+  data.frame()
 
-rm(agg, lpi_agg, all_hits_agg, all_hits_agg_sum, terradat_calc)
+mismatch_cor <- lapply(split(off, off$Variable), 
+       function(x) cor(x$Cover_HB, x$Cover_TD)) |>
+  data.frame()
+
+rm(agg, lpi_agg, all_hits_agg, all_hits_agg_sum, terradat_calc, off, compare_agg)
 ```
 
 we need TREE, SHRUB, NATIVE FORB, NATIVE GRASS for ESD's
@@ -179,32 +189,35 @@ lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM') %>%
   slice_max(order_by = Intercept,  n = 1, with_ties = F) %>% 
   ungroup()
 
-all_hits_agg <- lpi_agg %>% 
+all_hits_nat <- lpi_agg %>% 
   group_by(PrimaryKey, SYMBOL_USDA) %>% 
   add_count(SYMBOL_USDA, name = 'NIntercepts') %>% 
   select(PrimaryKey, SYMBOL_USDA, NIntercepts, SYMBOL_AIM, Intercept, FUNCTIONAL_AGGREGATE) %>% 
   distinct(PrimaryKey, SYMBOL_USDA, .keep_all = T)
 
-all_hits_agg_sum <- all_hits_agg %>% 
+all_hits_nat <- all_hits_nat %>% 
   ungroup() %>% 
   group_by(PrimaryKey, FUNCTIONAL_AGGREGATE) %>% 
   summarize(Cover_HB = sum(NIntercepts)) %>% 
   rename(Variable = FUNCTIONAL_AGGREGATE) %>% 
   mutate(across(where(is.numeric), ~ (./150)*100))
 
-rm(attributes, native_esd_grps, lpi_agg, all_hits_agg)
+rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi, attributes)
 ```
  
 
 ```{r import benchmarks and join homebrewed ESD groups to Ecological Site Descriptions}
 
 benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)]))
-esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
-  rbind(., data.frame(ESD = 'R036XY315UT',  # we will throw 315 in with PJ 
-                      module_name = 'PinyonJuniper', 
-                      module_number = 1))
+# esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
+#  rbind(., data.frame(ESD = 'R036XY315UT',  # we will throw 315 in with PJ 
+#                      module_name = 'PinyonJuniper', 
+#                      module_number = 1))
 
 benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
+
+# 
+
 ```
 
 # Results 
