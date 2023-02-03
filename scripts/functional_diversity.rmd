@@ -254,16 +254,16 @@ rm(pts, char, esd_class)
 ```{r import benchmarks and join homebrewed ESD groups to Ecological Site Descriptions}
 
 benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)])) %>% 
-  select(-X, -RANGE) 
-esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
-  rbind(., data.frame(ESD = 'R036XY315UT',  
-                      module_name = 'PinyonJuniper', 
-                      module_number = 1))
-benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
+  select(-X, -RANGE)  %>% 
+  mutate(SET = 'ESD')
+#esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
+#  rbind(., data.frame(ESD = 'R036XY315UT',  
+#                      module_name = 'PinyonJuniper', 
+#                      module_number = 1))
+#benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
 
 # repeat for ESG and combine
 esg_lkp_tab <- read.csv(file.path(praw, f[grep('ESG-Lookup', f)]))
-
 
 lkp_abb <- data.frame(
   Climate =
@@ -274,8 +274,25 @@ lkp_abb <- data.frame(
 esg_cover <- read.csv(file.path(praw, f[grep('EcologicalSiteGroup', f)])) %>% 
   rowwise() %>% 
   mutate(Grass = sum(C3_Perennial_Grass, C4_Perennial_Grass)) %>% 
-  select(Climate, SoilGeomorphicUnits, Grass, Forb, Shrub, Tree) 
+  select(Climate, SoilGeomorphicUnits, Grass, Forb, Shrub, Tree) %>% 
+  left_join(., lkp_abb) %>% 
+  unite('ESG', c('Abbrev', 'SoilGeomorphicUnits'), sep = '-') %>% 
+  select(-Climate) %>% 
+  mutate(ESG = str_remove(ESG, '^-'), 
+         ESG = str_replace(ESG, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
+                           'SAW-Sandy_Uplands_and_Loamy_Uplands') ) %>% 
+  right_join(., esg_lkp_tab)
 
+# make long
+
+benchmarks <- esg_cover %>% 
+  pivot_longer(cols = Grass:Tree, values_to = 'COVER', names_to = 'COVER_TYPE') %>% 
+  mutate(ESTIMATE = 'LOWER', COVER_RANGE = 'ORIGINAL', MEAN = COVER, SET = 'ESG') %>% 
+  bind_rows(., benchmarks)
+
+# now create full benchmarks
+
+rm(lkp_abb, esg_lkp_tab)
 ```
 
 
@@ -297,37 +314,26 @@ all_hits_nat <- inner_join(site_esd, all_hits_nat)
 
 ```{r Benchmarks to Realized Forbs, eval = F}
 
-# dummy data here
-v <- runif(n = 250, min = 0, max = 20)
-v <- data.frame(mean = v,
-                lower = v - runif(n = 250, min = 0, max = 5), 
-                upper =  v + runif(n = 250, min = 0, max = 5),
-                ECO.SITE = sample(benchmarks$ECO.SITE, size = 250, replace = T))
-v$lower <- ifelse(v$lower < 0, 0, v$lower)
-
-
-all_hits_nat <- all_hits_nat %>% 
+all_hits_forb <- all_hits_nat %>% 
   filter(str_detect(ECO.SITE, "[0-9]"), 
          Variable == 'Forb')
-# end dummy data here
-
-
-# we will need to add the MEDIAN value to all ESD's missing the real estimates. 
-# and then we drop unused ESD levels, and plot from there. 
 
 forb_bench <- benchmarks %>% 
-  filter(COVER_TYPE == 'Forb') %>% 
+  filter(COVER_TYPE == 'Forb', ECO.SITE %in% all_hits_forb$ECO.SITE) %>% 
   group_by(ECO.SITE) %>% 
   arrange(-MEAN) %>% 
   
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
-              shape = 23, fill = '#860FAE', alpha = 0.8, size = 2) + #benchmarks here
-  geom_point(data = all_hits_nat, aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
+              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
+  geom_jitter(data = all_hits_nat, height = 0.2,
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
    
 #  geom_pointrange(data = , aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
 #    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
   theme_bw() + # AIM data are here
+  
+  scale_color_manual(values = c("ESD" = '#860FAE', "ESG" = "#da008d")) +
   
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
