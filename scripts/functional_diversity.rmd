@@ -221,26 +221,73 @@ rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi)
  
 ```{r join site id to primarykeys}
 
+pts <- st_read(
+  '/media/sagesteppe/ExternalHD/aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+                quiet = T) %>% 
+  st_transform(26913) %>% 
+  st_buffer(55) %>% 
+  select(PLOTID, STRATUM) 
 
+char <- read.csv(file.path(praw, f[grep('Characterization', f)] ) ) %>% 
+  st_as_sf( coords = c('Longitude', 'Latitude'), crs = 4269) %>% 
+  filter(str_detect(PrimaryKey, negate = T,
+                    'Fuels|Bull-Draw|CO-NWD|_Tres_Rios|Grand_Junction|Gunnison|Moab|TRFO'),
+         str_detect(PlotID, '[A-Z]{2,3}-[0-9]{2,3}')) %>% 
+  st_transform(26913) %>% 
+  select(PrimaryKey) 
+  
+esd_class <- read.csv( file.path(praw, f[grep('Tracking', f)]) ) %>% 
+  filter(STATUS == 'SAMPLED') %>% 
+  mutate(ECO.SITE = if_else(ECO.SITE.MATCHED == F, 'UNKNOWN', ECO.SITE)) %>% 
+  select(PLOTID = PLOT.ID, ECO.SITE)
 
+site_esd <- st_join(pts, char) %>% 
+  drop_na(PrimaryKey) %>% 
+  left_join(., esd_class, by = 'PLOTID') %>% 
+  mutate(ECO.SITE = if_else(PLOTID == 'GR-035', 'R036XY114CO', ECO.SITE),
+         PLOTID = if_else(PLOTID == 'GR-035', 'GR-025', PLOTID)) 
+
+rm(pts, char, esd_class)
 ```
- 
+
 
 ```{r import benchmarks and join homebrewed ESD groups to Ecological Site Descriptions}
 
 benchmarks <- read.csv(file.path(praw, f[grep('Benchmark', f)])) %>% 
-  select(-X, -RANGE, -MEAN) 
+  select(-X, -RANGE) 
 esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>% 
-  rbind(., data.frame(ESD = 'R036XY315UT',  # we will throw 315 in with PJ 
+  rbind(., data.frame(ESD = 'R036XY315UT',  
                       module_name = 'PinyonJuniper', 
                       module_number = 1))
 benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
 
-esd <- read.csv(file.path(praw, f[grep('Tracking', f)])) %>% 
-  filter(STATUS == 'SAMPLED') %>% 
-  select(-PANEL, -ECO.SITE.MATCHED, -STATUS)
+# repeat for ESG and combine
+esg_lkp_tab <- read.csv(file.path(praw, f[grep('ESG-Lookup', f)]))
+
+
+lkp_abb <- data.frame(
+  Climate =
+    c('Arid_Warm', 'Semiarid_Cool',  'Semiarid_warm', 'No_Climate_Group'),
+  Abbrev = c('AW', 'SAC', 'SAW', "")
+)
+
+esg_cover <- read.csv(file.path(praw, f[grep('EcologicalSiteGroup', f)])) %>% 
+  rowwise() %>% 
+  mutate(Grass = sum(C3_Perennial_Grass, C4_Perennial_Grass)) %>% 
+  select(Climate, SoilGeomorphicUnits, Grass, Forb, Shrub, Tree) 
 
 ```
+
+
+```{r combine dataset for comparisions}
+
+all_hits_nat <- filter(all_hits_nat, PrimaryKey %in% site_esd$PrimaryKey) %>% 
+  drop_na(Variable)
+
+all_hits_nat <- inner_join(site_esd, all_hits_nat)
+
+```
+
 
 # Results 
 
@@ -257,7 +304,16 @@ v <- data.frame(mean = v,
                 upper =  v + runif(n = 250, min = 0, max = 5),
                 ECO.SITE = sample(benchmarks$ECO.SITE, size = 250, replace = T))
 v$lower <- ifelse(v$lower < 0, 0, v$lower)
+
+
+all_hits_nat <- all_hits_nat %>% 
+  filter(str_detect(ECO.SITE, "[0-9]"), 
+         Variable == 'Forb')
 # end dummy data here
+
+
+# we will need to add the MEDIAN value to all ESD's missing the real estimates. 
+# and then we drop unused ESD levels, and plot from there. 
 
 forb_bench <- benchmarks %>% 
   filter(COVER_TYPE == 'Forb') %>% 
@@ -267,9 +323,10 @@ forb_bench <- benchmarks %>%
   ggplot() +
   geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN)), color = 'grey20', 
               shape = 23, fill = '#860FAE', alpha = 0.8, size = 2) + #benchmarks here
-  
-  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+  geom_point(data = all_hits_nat, aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
+   
+#  geom_pointrange(data = , aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
+#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
   theme_bw() + # AIM data are here
   
   theme(plot.title = element_text(hjust = 0.5),
@@ -282,6 +339,7 @@ forb_bench <- benchmarks %>%
   scale_x_continuous(NULL, breaks = seq(from = 0, to = 25, by = 5), 
                      labels = paste0(seq(from = 0, to = 25, by = 5), '%'), 
                      limits = c(0,25))
+forb_bench
 
 ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
        path = '../results/benchmarks', filename = 'forb_benchmark.png')
