@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.27)  3 FEB 2023 14:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.27)  6 FEB 2023 12:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -444,39 +444,38 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/home/sagesteppe/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf, id=86, 179.67125pt x 206.7725pt>
+<functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf, id=86, 179.67125pt x 134.5025pt>
 File: functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf>
 Package pdftex.def Info: functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf  used on input line 188.
-(pdftex.def)             Requested size: 179.67627pt x 206.77829pt.
-[2 <./functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf>]
-<../results/benchmarks/forb_benchmark.png, id=100, 353.4003pt x 576.7146pt>
+(pdftex.def)             Requested size: 179.67352pt x 134.5042pt.
+<../results/benchmarks/forb_benchmark.png, id=87, 352.9185pt x 576.7146pt>
 File: ../results/benchmarks/forb_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/forb_benchmark.png>
 Package pdftex.def Info: ../results/benchmarks/forb_benchmark.png  used on input line 242.
-(pdftex.def)             Requested size: 234.87881pt x 383.2992pt.
-[3 <../results/benchmarks/forb_benchmark.png>] [4]
+(pdftex.def)             Requested size: 234.88171pt x 383.82718pt.
+[2 <./functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf>] [3 <../results/benchmarks/forb_benchmark.png>]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10> on input line 325.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 325.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 325.
-[5]
-<../results/benchmarks/shrub_benchmark.png, id=146, 353.4003pt x 576.7146pt>
+[4]
+<../results/benchmarks/shrub_benchmark.png, id=142, 352.9185pt x 576.7146pt>
 File: ../results/benchmarks/shrub_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/shrub_benchmark.png>
 Package pdftex.def Info: ../results/benchmarks/shrub_benchmark.png  used on input line 362.
-(pdftex.def)             Requested size: 234.87881pt x 383.2992pt.
-[6 <../results/benchmarks/shrub_benchmark.png>]
+(pdftex.def)             Requested size: 234.88171pt x 383.82718pt.
+[5 <../results/benchmarks/shrub_benchmark.png>]
 
 Package wrapfig Warning: Collision between wrapping environments on input line 401.
 
-<../results/benchmarks/tree_benchmark.png, id=152, 353.4003pt x 576.4737pt>
+<../results/benchmarks/tree_benchmark.png, id=148, 352.9185pt x 576.4737pt>
 File: ../results/benchmarks/tree_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/tree_benchmark.png>
 Package pdftex.def Info: ../results/benchmarks/tree_benchmark.png  used on input line 403.
-(pdftex.def)             Requested size: 234.87881pt x 383.13907pt.
+(pdftex.def)             Requested size: 234.88171pt x 383.66685pt.
 
 Package wrapfig Warning: Stationary wrapfigure forced to float on input line 407.
 
@@ -485,55 +484,55 @@ Underfull \hbox (badness 2334) in paragraph at lines 421--440
 []\T1/lmr/m/n/10 Currently three tra-jec-to-ries for Pinyon-Juniper
  []
 
-[7 <../results/benchmarks/tree_benchmark.png>]
-<../results/benchmarks/grass_benchmark.png, id=169, 353.4003pt x 576.4737pt>
+[6 <../results/benchmarks/tree_benchmark.png>]
+<../results/benchmarks/grass_benchmark.png, id=164, 352.9185pt x 576.4737pt>
 File: ../results/benchmarks/grass_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/grass_benchmark.png>
 Package pdftex.def Info: ../results/benchmarks/grass_benchmark.png  used on input line 460.
-(pdftex.def)             Requested size: 234.87881pt x 383.13907pt.
+(pdftex.def)             Requested size: 234.88171pt x 383.66685pt.
 
-Underfull \hbox (badness 1163) in paragraph at lines 490--513
+Underfull \hbox (badness 1163) in paragraph at lines 490--523
 []\T1/lmr/m/n/10 Compared to peren-nial forb du-ra-tion peren-nial
  []
 
-[8 <../results/benchmarks/grass_benchmark.png>]
+[7 <../results/benchmarks/grass_benchmark.png>]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 529.
+(hyperref)                than one, level fixed on input line 527.
 
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=203, 470.75874pt x 546.04pt>
+<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=199, 470.75874pt x 546.04pt>
 File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 539.
+Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 541.
 (pdftex.def)             Requested size: 469.75912pt x 544.88052pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 539--540
+Underfull \hbox (badness 10000) in paragraph at lines 541--542
 
  []
 
-[9] [10 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>]
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf, id=222, 284.06125pt x 237.88875pt>
+[8] [9 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>]
+<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf, id=218, 284.06125pt x 237.88875pt>
 File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf  used on input line 553.
+Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf  used on input line 555.
 (pdftex.def)             Requested size: 284.07353pt x 237.89903pt.
-[11 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>] [12] [13] [14] (./functional_diversity.aux)
+[10 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>] [11] [12] [13] (./functional_diversity.aux)
 Package rerunfilecheck Info: File `functional_diversity.out' has not changed.
 (rerunfilecheck)             Checksum: 202DBB322196BF5AE1EB34B6F9BA534E;1235.
  ) 
 Here is how much of TeX's memory you used:
- 12051 strings out of 478025
- 196107 string characters out of 5839811
+ 12050 strings out of 478025
+ 196100 string characters out of 5839811
  1865305 words of memory out of 5000000
  31940 multiletter control sequences out of 15000+600000
  561829 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,6n,76p,332b,504s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,76p,332b,489s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
-Output written on functional_diversity.pdf (14 pages, 1450744 bytes).
+Output written on functional_diversity.pdf (13 pages, 1629879 bytes).
 PDF statistics:
- 303 PDF objects out of 1000 (max. 8388607)
- 258 compressed objects within 3 object streams
- 79 named destinations out of 1000 (max. 500000)
+ 298 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
+ 78 named destinations out of 1000 (max. 500000)
  116 words of extra memory for PDF output out of 10000 (max. 10000000)
 
