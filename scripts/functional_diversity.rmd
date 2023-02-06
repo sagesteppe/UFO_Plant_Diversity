@@ -303,7 +303,7 @@ benchmarks <- benchmarks_known_esd %>%
   bind_rows(., benchmarks) %>% 
   as.data.frame() 
 
-benchmarks <- drop_na(benchmarks, ECO.SITE) %>% 
+benchmarks <- drop_na(benchmarks, ECO.SITE) 
 
 rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd)
 ```
@@ -325,7 +325,8 @@ site_esg <- site_esd %>%
 site_esd <- site_esd %>% 
   filter(!PLOTID %in% site_esg$PLOTID) %>% 
   bind_rows(site_esg, .) %>% 
-  distinct()
+  distinct() %>% 
+  st_drop_geometry()
 
 all_hits_nat <- filter(all_hits_nat, PrimaryKey %in% site_esd$PrimaryKey) %>% 
   drop_na(Variable)
@@ -335,14 +336,22 @@ all_hits_nat <- inner_join(site_esd, all_hits_nat) %>%
          ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
                                 'SAW_Sandy_&_Loamy'),
           ECO.SITE = str_replace(ECO.SITE, 'SAW-Shallow_and_Deep_Rocky', 
-                                'SAW_Shallow_&_Rocky'))
+                                'SAW_Shallow_&_Rocky'), 
+         ECO.SITE = str_replace(ECO.SITE, 'AW-Shallow', 
+                           'AW-Very_Shallow')
+         )
 
 benchmarks <- benchmarks %>% 
   mutate(ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands',
                                  'SAW_Sandy_&_Loamy'), 
-          ECO.SITE = str_replace(ECO.SITE, 'SAW-Shallow_and_Deep_Rocky', 
-                                'SAW_Shallow_&_Rocky')) %>% 
+         ECO.SITE = str_replace(ECO.SITE, 'SAW-Shallow_and_Deep_Rocky', 
+                                'SAW_Shallow_&_Rocky'),
+         ECO.SITE = str_replace(ECO.SITE, 'AW-Saline_Bottoms_and_Bottoms', 
+                                'AW_Bottoms')
+         ) %>%
   distinct(.keep_all = T)
+
+rm(site_esd, site_esg, esg_plots)
 ```
 
 
@@ -367,17 +376,21 @@ bmf <- benchmarks %>%
   slice_min(COVER_RANGE, n = 1)
 all_hits_forb <- left_join(all_hits_forb, bmf, by = 'ECO.SITE')
 
-what_wrong <- all_hits_forb %>% 
-  group_by(PLOTID) %>% 
-  filter(n() > 1)
+# which points are assigned where??
 
-forb_meeting <- all_hits_forb %>%  
+all_hits_forb <- read.csv( file.path(praw, f[grep('Interence', f)])) %>% 
+  select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
+  right_join(., all_hits_forb) %>% 
   rowwise() %>% 
-  mutate(Meeting = if_else(Cover_HB >= TARGET, T, F), .before = 'geometry') 
+  mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-'),
+         Meeting = if_else(Cover_HB >= TARGET, T, F)) %>% 
+  left_join(., wghts, by = c('STRATUM','AoInference'))  %>% 
+  st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269)
 
+all_hits_forb <- drop_na(all_hits_forb)
 
-noxious_presence_analysis <- cat_analysis(
-  dframe = inv_plots, siteID = 'PLOTID', vars = 'Meeting',
+noxious_presence_analysis <- spsurvey::cat_analysis(
+  dframe = all_hits_forb, siteID = 'PLOTID', vars = 'Meeting',
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 rm(bmf)
