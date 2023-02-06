@@ -219,7 +219,19 @@ all_hits_nat <- all_hits_nat %>%
 
 rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi)
 ```
- 
+
+
+```{r add 0 for functional groups missing from sites}
+
+all_hits_nat <- all_hits_nat %>% 
+  drop_na() %>% 
+  group_by(PrimaryKey) %>% 
+  filter(n() <= 3) %>% 
+  pivot_wider(names_from = 'Variable', values_from = 'Cover_HB', values_fill = 0) %>% 
+  pivot_longer(!PrimaryKey, names_to = 'Variable', values_to = 'Cover_HB')
+
+```
+
  
 ```{r join site id to primarykeys}
 
@@ -354,42 +366,45 @@ benchmarks <- benchmarks %>%
 rm(site_esd, site_esg, esg_plots)
 ```
 
-
 # Results 
 
 \begin{center}
 {\section{Forb Cover}}
 \end{center}
 
-```{r calculate land meeting benchmark forb results}
 
-all_hits_forb <- all_hits_nat %>% 
-  filter(Variable == 'Forb')
+```{r add weights to each functional group and plot owernship combo}
 
 wghts <- read.csv( file.path(praw, f[grep('Weights', f)])) %>% 
   select(WghtPerPlot, STRATUM = Stratum, AoInference = Area)
 
-bmf <- benchmarks %>% 
-  filter(COVER_TYPE == 'Forb', ESTIMATE == 'LOWER') %>%
-  rename('TARGET' = COVER) %>% 
-  group_by(ECO.SITE) %>% 
-  slice_min(COVER_RANGE, n = 1)
-all_hits_forb <- left_join(all_hits_forb, bmf, by = 'ECO.SITE')
-
-# which points are assigned where??
-
-all_hits_forb <- read.csv( file.path(praw, f[grep('Interence', f)])) %>% 
+all_hits_nat <- read.csv( file.path(praw, f[grep('Interence', f)])) %>% 
   select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
-  right_join(., all_hits_forb) %>% 
+  right_join(., all_hits_nat) %>% 
   rowwise() %>% 
-  mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-'),
-         Meeting = if_else(Cover_HB >= TARGET, T, F)) %>% 
+  mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
   left_join(., wghts, by = c('STRATUM','AoInference'))  %>% 
   st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269)
 
-all_hits_forb <- drop_na(all_hits_forb)
+rm(wghts)
+```
 
-noxious_presence_analysis <- spsurvey::cat_analysis(
+
+```{r calculate land meeting benchmark forb results}
+
+
+# need to add MEAN to everything to rearrange axis on plots
+all_hits_forb <- all_hits_nat %>% 
+  filter(Variable == 'Forb')
+
+bmf <- benchmarks %>% 
+  filter(COVER_TYPE == 'Forb', ESTIMATE == 'LOWER') %>%
+  rename('TARGET' = COVER) 
+
+all_hits_forb <- left_join(all_hits_forb, bmf, by = 'ECO.SITE') %>% 
+  mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
+
+forb <- spsurvey::cat_analysis(
   dframe = all_hits_forb, siteID = 'PLOTID', vars = 'Meeting',
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
@@ -465,10 +480,27 @@ Unfortunately in most scenarios, we do not expect that drought is going to have 
 {\section{Shrub Cover}}
 \end{center}
 
-```{r Benchmarks to Realized Shrubs, eval = F}
+```{r calculate land meeting benchmark shrubs results}
 
 all_hits_shrub <- all_hits_nat %>% 
   filter(Variable == 'Shrub')
+
+bmf <- benchmarks %>% 
+  filter(COVER_TYPE == 'Shrub', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
+  rename('TARGET' = COVER) 
+
+all_hits_shrub <- left_join(all_hits_shrub, bmf, by = 'ECO.SITE') %>% 
+  mutate(Meeting = if_else(Cover_HB <= TARGET, T, F))
+
+shrub <- spsurvey::cat_analysis(
+  dframe = all_hits_shrub, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+rm(bmf)
+```
+
+
+```{r Benchmarks to Realized Shrubs, eval = F}
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Shrub', ECO.SITE %in% all_hits_shrub$ECO.SITE) %>% 
@@ -525,6 +557,25 @@ While passive efforts have been made to facilitate the establishment of shrubs a
 \begin{center}
 {\section{Tree Cover}}
 \end{center}
+```{r calculate land meeting benchmark shrubs results}
+
+all_hits_tree <- all_hits_nat %>% 
+  filter(Variable == 'Tree')
+
+bmf <- benchmarks %>% 
+  filter(COVER_TYPE == 'Tree', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
+  rename('TARGET' = COVER) 
+
+all_hits_tree <- left_join(all_hits_tree, bmf, by = 'ECO.SITE') %>% 
+  mutate(Meeting = if_else(Cover_HB <= TARGET, T, F))
+
+tree <- spsurvey::cat_analysis(
+  dframe = all_hits_tree, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+rm(bmf)
+```
+
 
 ```{r Benchmarks to Realized Trees, eval = F}
 
@@ -532,8 +583,7 @@ all_hits_tree <- all_hits_nat %>%
   filter(Variable == 'Tree')
 
 benchmarks %>% 
-  filter(COVER_TYPE == 'Tree', ECO.SITE %in% all_hits_tree$ECO.SITE) %>% 
-  group_by(ECO.SITE) %>% 
+  filter(COVER_TYPE == 'Tree', ECO.SITE %in% all_hits_tree$ECO.SITE) %>%
   arrange(-MEAN) %>% 
   
   ggplot() +
@@ -541,9 +591,7 @@ benchmarks %>%
   geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
               shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   geom_jitter(data = all_hits_tree, height = 0.2,
-              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
-#  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, MEAN)), alpha = 0.4) +
   theme_bw() + # AIM data are here 
   scale_color_manual('Benchmark', 
                      values = c("ESD" = '#dd4513', "ESG" = "#2f4858")) +
