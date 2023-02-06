@@ -224,7 +224,7 @@ rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi)
 ```{r add 0 for functional groups missing from sites}
 
 all_hits_nat <- all_hits_nat %>% 
-  drop_na() %>% 
+  drop_na(Variable) %>% 
   group_by(PrimaryKey) %>% 
   filter(n() <= 3) %>% 
   pivot_wider(names_from = 'Variable', values_from = 'Cover_HB', values_fill = 0) %>% 
@@ -328,7 +328,7 @@ esg_plots <- read.csv(file.path(praw, f[grep('ESG_unverified_plots', f)]) ) %>%
   rename(PLOTID = 'PLOT.ID')
 
 # we have to detect plots which were not correlated to an ESD, and need to
-# use the ESG for. 
+# use the ESG as a stand in for ecological site 
 site_esg <- site_esd %>% 
   filter(ECO.SITE == 'UNKNOWN') %>% 
   select(-ECO.SITE) %>% 
@@ -337,13 +337,11 @@ site_esg <- site_esd %>%
 site_esd <- site_esd %>% 
   filter(!PLOTID %in% site_esg$PLOTID) %>% 
   bind_rows(site_esg, .) %>% 
-  distinct() %>% 
   st_drop_geometry()
 
-all_hits_nat <- filter(all_hits_nat, PrimaryKey %in% site_esd$PrimaryKey) %>% 
-  drop_na(Variable)
+# this inner join is killing me, missing many GR- why ? leading 0's  ?
 
-all_hits_nat <- inner_join(site_esd, all_hits_nat) %>% 
+all_hits_nat <- left_join(site_esd, all_hits_nat, by = 'PrimaryKey') %>% 
   mutate(ECO.SITE = str_replace(ECO.SITE, 'SAC-Loamy_Uplands', 'SAC-Finer_Uplands'),
          ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
                                 'SAW_Sandy_&_Loamy'),
@@ -363,6 +361,7 @@ benchmarks <- benchmarks %>%
          ) %>%
   distinct(.keep_all = T)
 
+
 rm(site_esd, site_esg, esg_plots)
 ```
 
@@ -378,13 +377,21 @@ rm(site_esd, site_esg, esg_plots)
 wghts <- read.csv( file.path(praw, f[grep('Weights', f)])) %>% 
   select(WghtPerPlot, STRATUM = Stratum, AoInference = Area)
 
-all_hits_nat <- read.csv( file.path(praw, f[grep('Interence', f)])) %>% 
+all_hits_nat <- read.csv(file.path(praw, f[grep('Interence', f)])) %>% 
   select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
   right_join(., all_hits_nat) %>% 
   rowwise() %>% 
   mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
   left_join(., wghts, by = c('STRATUM','AoInference'))  %>% 
-  st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269)
+  rename(COVER_TYPE = Variable) %>% 
+  st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269) 
+
+# also add the MEAN for plotting purposes
+
+#all_hits_nat <- benchmarks %>% 
+#  select(ECO.SITE, COVER_TYPE, MEAN) %>% 
+#  right_join(., all_hits_nat, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+#  st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269) 
 
 rm(wghts)
 ```
@@ -392,16 +399,15 @@ rm(wghts)
 
 ```{r calculate land meeting benchmark forb results}
 
-
 # need to add MEAN to everything to rearrange axis on plots
 all_hits_forb <- all_hits_nat %>% 
-  filter(Variable == 'Forb')
+  filter(COVER_TYPE == 'Forb')
 
 bmf <- benchmarks %>% 
   filter(COVER_TYPE == 'Forb', ESTIMATE == 'LOWER') %>%
   rename('TARGET' = COVER) 
 
-all_hits_forb <- left_join(all_hits_forb, bmf, by = 'ECO.SITE') %>% 
+all_hits_forb <- left_join(all_hits_forb, bmf, by = 'ECO.SITE', 'COVER_TYPE') %>% 
   mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
 
 forb <- spsurvey::cat_analysis(
@@ -415,17 +421,12 @@ rm(bmf)
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Forb', ECO.SITE %in% all_hits_forb$ECO.SITE) %>% 
-  group_by(ECO.SITE) %>% 
-  arrange(-MEAN) %>% 
   
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
-              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   geom_jitter(data = all_hits_forb, height = 0.2,
-              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
-   
-#  geom_pointrange(data = , aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, MEAN)), alpha = 0.4) +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET), 
+            shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   theme_bw() + # AIM data are here
   
   scale_color_manual('Benchmark', 
@@ -483,7 +484,7 @@ Unfortunately in most scenarios, we do not expect that drought is going to have 
 ```{r calculate land meeting benchmark shrubs results}
 
 all_hits_shrub <- all_hits_nat %>% 
-  filter(Variable == 'Shrub')
+  filter(COVER_TYPE == 'Shrub')
 
 bmf <- benchmarks %>% 
   filter(COVER_TYPE == 'Shrub', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
@@ -504,23 +505,16 @@ rm(bmf)
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Shrub', ECO.SITE %in% all_hits_shrub$ECO.SITE) %>% 
-  group_by(ECO.SITE) %>% 
-  arrange(-MEAN) %>% 
-  
+
   ggplot() +
-  
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),
-              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   geom_jitter(data = all_hits_shrub, height = 0.2,
-              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
-  
- # geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, MEAN)), alpha = 0.4) +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET), 
+            shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   theme_bw() + # AIM data are here
   
   scale_color_manual('Benchmark', 
                      values = c("ESD" = '#D4D7DE', "ESG" = "#f9f871")) +
-  
   theme(plot.title = element_text(hjust = 0.5),
         panel.grid.major.y =  element_blank(),
         axis.text.y = element_text(size = 7, angle = 45), 
@@ -557,10 +551,10 @@ While passive efforts have been made to facilitate the establishment of shrubs a
 \begin{center}
 {\section{Tree Cover}}
 \end{center}
-```{r calculate land meeting benchmark shrubs results}
+```{r calculate land meeting benchmark tree results}
 
 all_hits_tree <- all_hits_nat %>% 
-  filter(Variable == 'Tree')
+  filter(COVER_TYPE == 'Tree')
 
 bmf <- benchmarks %>% 
   filter(COVER_TYPE == 'Tree', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
@@ -579,19 +573,14 @@ rm(bmf)
 
 ```{r Benchmarks to Realized Trees, eval = F}
 
-all_hits_tree <- all_hits_nat %>% 
-  filter(Variable == 'Tree')
-
 benchmarks %>% 
   filter(COVER_TYPE == 'Tree', ECO.SITE %in% all_hits_tree$ECO.SITE) %>%
-  arrange(-MEAN) %>% 
   
   ggplot() +
-
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
-              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   geom_jitter(data = all_hits_tree, height = 0.2,
               aes(x = Cover_HB, y = fct_reorder(ECO.SITE, MEAN)), alpha = 0.4) +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET), 
+            shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   theme_bw() + # AIM data are here 
   scale_color_manual('Benchmark', 
                      values = c("ESD" = '#dd4513', "ESG" = "#2f4858")) +
@@ -635,23 +624,35 @@ Prioritization of sites where treatments will offer the most ecosystem services,
 {\section{Perennial Grass Cover}} 
 \end{center}
 
-```{r Benchmarks to Realized Grass, eval = F}
+```{r calculate land meeting benchmark grass results}
 
-all_hits_grass <- all_hits_nat %>% 
-  filter(Variable == 'Grass')
+all_hits_tree <- all_hits_nat %>% 
+  filter(COVER_TYPE == 'Grass')
+
+bmf <- benchmarks %>% 
+  filter(COVER_TYPE == 'Grass', ESTIMATE == 'LOWER' | SET == 'ESG') %>%
+  rename('TARGET' = COVER) 
+
+all_hits_grass <- left_join(all_hits_tree, bmf, by = 'ECO.SITE') %>% 
+  mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
+
+grass <- spsurvey::cat_analysis(
+  dframe = all_hits_grass, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+rm(bmf)
+```
+
+```{r Benchmarks to Realized Grass, eval = F}
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Grass', ECO.SITE %in% all_hits_grass$ECO.SITE) %>% 
-  group_by(ECO.SITE) %>% 
-  arrange(-MEAN) %>% 
   
   ggplot() +
-  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET),# color = 'grey20', 
-              shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   geom_jitter(data = all_hits_grass, height = 0.2,
-              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, Cover_HB)), alpha = 0.4) +
-#  geom_pointrange(data = v, aes(xmin = lower, xmax = upper, x= mean, y = ECO.SITE),
-#    position = position_dodge2(width = 0.5), size = 0.2, alpha = 0.4, linetype = 'dotted')  +
+              aes(x = Cover_HB, y = fct_reorder(ECO.SITE, MEAN)), alpha = 0.4) +
+  geom_point(aes(x = COVER, y = fct_reorder(ECO.SITE, MEAN), color  = SET), 
+            shape = 18, alpha = 0.8, size = 3) + #benchmarks here
   theme_bw() + # AIM data are here
   
   scale_color_manual('Benchmark', 
@@ -712,7 +713,7 @@ yn <- data.frame(
 
 ```
 
-```{r prep real data for overall ESD conditions}
+```{r prep real data for overall ESD conditions, eval = F}
 
 bm_herb <- benchmarks %>% 
   filter(COVER_TYPE %in% c('Grass', 'Forb') & ESTIMATE == 'LOWER' 
