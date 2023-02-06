@@ -260,7 +260,6 @@ esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>%
   rbind(., data.frame(ESD = 'R036XY315UT',  
                       module_name = 'PinyonJuniper', 
                       module_number = 1))
-#benchmarks <- left_join(benchmarks, esdM, by = c('ECO.SITE' = 'ESD')) 
 
 # repeat for ESG and combine
 esg_lkp_tab <- read.csv(file.path(praw, f[grep('ESG-Lookup', f)]))
@@ -280,24 +279,50 @@ esg_cover <- read.csv(file.path(praw, f[grep('EcologicalSiteGroup', f)])) %>%
   select(-Climate) %>% 
   mutate(ESG = str_remove(ESG, '^-'), 
          ESG = str_replace(ESG, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
-                           'SAW-Sandy_Uplands_and_Loamy_Uplands') ) %>% 
-  right_join(., esg_lkp_tab)
+                           'SAW-Sandy_Uplands_and_Loamy_Uplands'),
+         ESG = str_replace(ESG, 'SAC-Saline_Sandy_Loamy_Finer_Uplands', 
+                           'SAC-Finer_Uplands')
+         ) %>% 
+  
+  left_join(., esg_lkp_tab)
 
-# make long
+# make long to bind together, combine both esd names and esg names
 
-benchmarks <- esg_cover %>% 
-  pivot_longer(cols = Grass:Tree, values_to = 'COVER', names_to = 'COVER_TYPE') %>% 
-  mutate(ESTIMATE = 'LOWER', COVER_RANGE = 'ORIGINAL', MEAN = as.numeric(COVER), SET = 'ESG') %>% 
+benchmarks_known_esd <- esg_cover %>% 
+  pivot_longer(cols = Grass:Tree, values_to = 'COVER', names_to = 'COVER_TYPE') 
+
+benchmarks <- benchmarks_known_esd %>% 
+  select(-ECO.SITE) %>% 
+  rename(ECO.SITE = ESG) %>% 
+  bind_rows(., benchmarks_known_esd) %>% 
+  select(-ESG) %>% 
+  mutate(ESTIMATE = 'LOWER', COVER_RANGE = 'ORIGINAL', 
+         MEAN = as.numeric(COVER), SET = 'ESG')  %>% 
   bind_rows(., benchmarks) %>% 
   as.data.frame()
 
-# now create full benchmarks
 
-rm(lkp_abb, esg_lkp_tab)
+rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd)
 ```
 
 
 ```{r combine dataset for comparisions}
+
+esg_plots <- read.csv(file.path(praw, f[grep('ESG_unverified_plots', f)]) ) %>% 
+  mutate(ESG = str_replace(ESG, '_-_', '-')) %>% 
+  rename(PLOTID = 'PLOT.ID')
+
+# we have to detect plots which were not correlated to an ESD, and need to
+# use the ESG for. 
+site_esg <- site_esd %>% 
+  filter(ECO.SITE == 'UNKNOWN') %>% 
+  select(-ECO.SITE) %>% 
+  left_join(., esg_plots, by = 'PLOTID') %>% 
+  rename(ECO.SITE = ESG) 
+site_esd <- site_esd %>% 
+  filter(!PLOTID %in% site_esg$PLOTID) %>% 
+  bind_rows(site_esg, .) %>% 
+  distinct()
 
 all_hits_nat <- filter(all_hits_nat, PrimaryKey %in% site_esd$PrimaryKey) %>% 
   drop_na(Variable)
@@ -316,8 +341,7 @@ all_hits_nat <- inner_join(site_esd, all_hits_nat)
 ```{r Benchmarks to Realized Forbs, eval = F}
 
 all_hits_forb <- all_hits_nat %>% 
-  filter(str_detect(ECO.SITE, "[0-9]"), 
-         Variable == 'Forb')
+  filter(Variable == 'Forb')
 
 benchmarks %>% 
   filter(COVER_TYPE == 'Forb', ECO.SITE %in% all_hits_forb$ECO.SITE) %>% 
@@ -346,7 +370,7 @@ benchmarks %>%
        y = NULL, x = 'Percent') +
   scale_x_continuous(NULL, breaks = seq(from = 0, to = 25, by = 5), 
                      labels = paste0(seq(from = 0, to = 25, by = 5), '%'), 
-                     limits = c(0,25))
+                     limits = c(0,30))
 
 ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm', 
        path = '../results/benchmarks', filename = 'forb_benchmark.png')
@@ -614,9 +638,11 @@ bm <- benchmarks %>%
 
 w <- left_join(all_hits_nat, bm, by = c('ECO.SITE', 'Variable'))
 
-
 rm(bm_herb, bm_wd)
 ```
+
+The feature engineered cover of forb is used across all plots. 
+for sites in salt desert they alone are likely to not have enough SHRUB cover, sites in ASPEN/MMC stratum are automatically PASS for any cover of TREE. 
 
 
 ```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=8, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
