@@ -404,12 +404,16 @@ bmf <- benchmarks %>%
   filter(COVER_TYPE == 'Forb', ESTIMATE == 'LOWER') %>%
   rename('TARGET' = COVER) 
 
-all_hits_forb <- left_join(all_hits_forb, bmf, by = 'ECO.SITE', 'COVER_TYPE') %>% 
+all_hits_forb <- left_join(all_hits_forb, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
   mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
 
 forb <- spsurvey::cat_analysis(
   dframe = all_hits_forb, siteID = 'PLOTID', vars = 'Meeting',
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+ahf <- select(all_hits_forb, 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+  st_drop_geometry()
 
 rm(bmf)
 ```
@@ -487,12 +491,16 @@ bmf <- benchmarks %>%
   filter(COVER_TYPE == 'Shrub', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
   rename('TARGET' = COVER) 
 
-all_hits_shrub <- left_join(all_hits_shrub, bmf, by = 'ECO.SITE') %>% 
+all_hits_shrub <- left_join(all_hits_shrub, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
   mutate(Meeting = if_else(Cover_HB <= TARGET, T, F))
 
 shrub <- spsurvey::cat_analysis(
   dframe = all_hits_shrub, siteID = 'PLOTID', vars = 'Meeting',
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+ahs <- select(all_hits_shrub, 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+  st_drop_geometry()
 
 rm(bmf)
 ```
@@ -557,12 +565,16 @@ bmf <- benchmarks %>%
   filter(COVER_TYPE == 'Tree', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
   rename('TARGET' = COVER) 
 
-all_hits_tree <- left_join(all_hits_tree, bmf, by = 'ECO.SITE') %>% 
+all_hits_tree <- left_join(all_hits_tree, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
   mutate(Meeting = if_else(Cover_HB <= TARGET, T, F))
 
 tree <- spsurvey::cat_analysis(
   dframe = all_hits_tree, siteID = 'PLOTID', vars = 'Meeting',
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+aht <- select(all_hits_tree, 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+  st_drop_geometry()
 
 rm(bmf)
 ```
@@ -623,19 +635,23 @@ Prioritization of sites where treatments will offer the most ecosystem services,
 
 ```{r calculate land meeting benchmark grass results}
 
-all_hits_tree <- all_hits_nat %>% 
+all_hits_grass <- all_hits_nat %>% 
   filter(COVER_TYPE == 'Grass')
 
 bmf <- benchmarks %>% 
   filter(COVER_TYPE == 'Grass', ESTIMATE == 'LOWER' | SET == 'ESG') %>%
   rename('TARGET' = COVER) 
 
-all_hits_grass <- left_join(all_hits_tree, bmf, by = 'ECO.SITE') %>% 
+all_hits_grass <- left_join(all_hits_grass, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
   mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
 
 grass <- spsurvey::cat_analysis(
   dframe = all_hits_grass, siteID = 'PLOTID', vars = 'Meeting',
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
+
+ahg <- select(all_hits_grass, 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+  st_drop_geometry()
 
 rm(bmf)
 ```
@@ -683,6 +699,12 @@ It is difficult to determine the extent to which grasses of the Colorado Plateau
 Compared to perennial forb duration perennial grasses in general appear to live for considerable longer, many from 4-7 decades (@lauenroth2008demography, @treshow1974longevity) but purportedly many of the local grasses only persist 1-1.5 decades (WHERE WAS THIS?!?!?! - USGS local). Many clonal grass species, such as some species of *Bouteloua* appear much less likely to undergo mortality of the whole plant or many clones (@de2010longevity) relative to bunch-grasses (but see @winkler2019shrub).  Mortality due to drought is expected to reduce cover measurements of grasses more than reductions in above ground biomass. While grasses tend to have deeper roots than forbs, soil textures and depths (@chamrad1965drought, @griffin2012mortality) still mediate drought effects. A manipulative experiment which sought to determine the effect of drought on five grass species in the Colorado Plateau observed mortality of roughly 25% of all individuals under the ambient treatment (similar conditions to what the UFO experienced), largely attributed to Indian Rice Grass (*Achnatherum hymenoides*), tracked in ambient conditions over the time period 2011-2018 (@winkler2019shrub). 
 Similar to forbs, we expect little to none recruitment of new grass individuals from the soil seed bank. However suspect it is unlikely that has considerably high a proportion of the members of this functional group would have died off over this period, independent of drought induced mortality (@morris2008longevity, @winkler2019shrub) as perennial forbs, and given their average rooting depths relative to forbs should be more drought tolerant (@sala199711). Accordingly we expect estimates of grass cover to be at the lowest end of the benchmarks. 
 
+```{r remove some writing variables}
+rm(all_hits_grass, all_hits_forb, all_hits_shrub, all_hits_nat, all_hits_tree, 
+   all_hits_w, esdM, esg_cover, benchmarks)
+```
+
+
 
 ```{sh, crop the images, eval = F}
 cd ../results/benchmarks
@@ -695,7 +717,7 @@ mogrify -trim *.png
 
 The condition of many Ecological Sites varied, and which benchmarks were being achieved, and at how many plots differed. Certain benchmarks were achieved more often than others (Figure 5)... Clearly the cover of tree was meet at many sites, given the aforementioned inability of them to grow in many habitats. 
 
-```{r prep data for overall ESD conditions}
+```{r prep data for overall ESD conditions, eval = F}
 
 yn <- data.frame(
   'ECO.SITE' = sample(esdM$ESD, size = 250, replace = T),
@@ -710,39 +732,25 @@ yn <- data.frame(
 
 ```
 
-```{r prep real data for overall ESD conditions, eval = F}
+```{r prep real data for overall ESD conditions}
 
-bm_herb <- benchmarks %>% 
-  filter(COVER_TYPE %in% c('Grass', 'Forb') & ESTIMATE == 'LOWER' 
-         & SET == 'ESD') %>% 
-  select(ECO.SITE, COVER_TYPE, BM =  COVER) 
-bm_herb_extra <- benchmarks %>% 
-  filter(COVER_TYPE %in% c('Grass', 'Forb') & ESTIMATE == 'LOWER' 
-         & SET == 'ESG') %>% 
-  filter(!ECO.SITE %in% bm_herb$ECO.SITE) %>% 
-  select(ECO.SITE, COVER_TYPE, BM =  COVER)
+achieving <- bind_rows(ahf, ahs, aht, ahg) %>% 
+  group_by(ECO.SITE) %>% 
+  add_count(name = 'SAMPLE') %>% 
+  mutate(SAMPLE = SAMPLE/4) %>% 
+  rename('LIFEFORM' =  COVER_TYPE) %>% 
+  mutate(ACHIEVING = if_else(Meeting == T, 'Y', 'N'))
 
-bm_wd <- benchmarks %>% 
-  filter(COVER_TYPE %in% c('Tree', 'Shrub'), SET == 'ESD', ESTIMATE == 'UPPER') %>% 
-  select(ECO.SITE, COVER_TYPE, BM = COVER) 
-
-bm <- benchmarks %>% 
-  filter(COVER_TYPE %in% c('Tree', 'Shrub'), SET == 'ESG') %>% 
-  select(ECO.SITE, COVER_TYPE, BM = COVER)  %>% 
-  filter(!ECO.SITE %in% bm_wd$ECO.SITE) %>% 
-  bind_rows(., bm_herb_extra, bm_wd, bm_herb) %>% 
-  rename(Variable = COVER_TYPE)
-
-w <- left_join(all_hits_nat, bm, by = c('ECO.SITE', 'Variable'))
-
-rm(bm_herb, bm_wd)
+rm(ahf, ahs, aht, ahg)
 ```
 
 The feature engineered cover of forb is used across all plots. 
 for sites in salt desert they alone are likely to not have enough SHRUB cover, sites in ASPEN/MMC stratum are automatically PASS for any cover of TREE. 
 
 
-```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=8, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
+```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=6, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
+
+yn <- achieving
 
 yn <- yn %>% 
   add_count(ACHIEVING, name = 'dummy')  %>% 
@@ -754,13 +762,14 @@ yn_levls <- yn %>%
 yn <- yn %>% 
   mutate(ECO.SITE = factor(ECO.SITE, levels = yn_levls))
 
+
 sfm <- c('Y' = 'Yes', 'N' = 'No')
 sfm_values = c('Y' = '#1FE032', 'N' = '#E0321F')
 new_labels <- c('FORB' = 'Forb', 'GRASS' =  'Grass', 'SHRUB' =  'Shrub', 'TREE' =  'Tree')
 
 p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
-  facet_wrap(~LIFEFORM, nrow = 1, 
-             labeller = as_labeller(new_labels)) +
+  facet_wrap(~LIFEFORM, nrow = 1) + #, 
+           #  labeller = as_labeller(new_labels)) +
   geom_bar(position = "fill", width = 1) +
   scale_fill_manual('Achieving', labels = sfm,
                     values = sfm_values) +
@@ -822,7 +831,8 @@ title <- ggdraw() +
 
 cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
 
-rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, new_labels, yn_levls)
+rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, sfm, sfm_values,
+   new_labels, yn_levls)
 ```
 
 \newpage
