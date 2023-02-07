@@ -113,10 +113,7 @@ terradat_calc <- summary %>%
 rm(summary)
 ```
 
-```{r Create compound metrics - ensure we are calculating values same as NOC team, fig.height=2}
-
-# this calculates CORRECTLY, BUT !!! it seems that some things have
-# not always been shrubs the entire time. 
+```{r Create compound metrics - ensure we are calculating values same as NOC team, fig.height=3}
 
 agg <- read.csv(file.path(praw, f[grep('Func_', f)]) ) %>% 
   filter(!FUNCTIONAL_AGGREGATE %in% c('PerenForb', 'PerenGrass'))
@@ -147,14 +144,14 @@ compare_agg <- inner_join(all_hits_agg_sum, terradat_calc, by = c('PrimaryKey', 
   mutate(across(where(is.numeric), ~ round(.x, 1)))
 
 ggplot(data = compare_agg, aes(x = Cover_TD, y = Cover_HB)) +
-  geom_point() +
+  geom_point(shape = 1, color = "grey20") +
   labs(title = 'Validation of Calculations',
        x = 'TerrAdat (Standards)', y = 'In house') +
   facet_wrap(~ Variable) +
   theme_bw() + 
   theme(aspect.ratio = 1,
         panel.grid.minor = element_blank(),
-        axis.text = element_text(color = "grey20", size = 8)) +
+        axis.text = element_text(color = "grey20", size = 6)) +
   xlim(0,101) + ylim(0,101) +
   scale_x_continuous(labels = paste0(seq(from = 0 , to = 100, by = 25), '%')) +
   scale_y_continuous(labels = paste0(seq(from = 0 , to = 100, by = 25), '%')) +
@@ -226,7 +223,6 @@ rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi)
 all_hits_nat <- all_hits_nat %>% 
   drop_na(Variable) %>% 
   group_by(PrimaryKey) %>% 
-  filter(n() <= 3) %>% 
   pivot_wider(names_from = 'Variable', values_from = 'Cover_HB', values_fill = 0) %>% 
   pivot_longer(!PrimaryKey, names_to = 'Variable', values_to = 'Cover_HB')
 
@@ -341,7 +337,7 @@ site_esd <- site_esd %>%
 
 # this inner join is killing me, missing many GR- why ? leading 0's  ?
 
-all_hits_nat <- left_join(site_esd, all_hits_nat, by = 'PrimaryKey') %>% 
+all_hits_nat <- full_join(site_esd, all_hits_nat, by = 'PrimaryKey') %>% 
   mutate(ECO.SITE = str_replace(ECO.SITE, 'SAC-Loamy_Uplands', 'SAC-Finer_Uplands'),
          ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
                                 'SAW_Sandy_&_Loamy'),
@@ -349,7 +345,8 @@ all_hits_nat <- left_join(site_esd, all_hits_nat, by = 'PrimaryKey') %>%
                                 'SAW_Shallow_&_Rocky'), 
          ECO.SITE = str_replace(ECO.SITE, 'AW-Shallow', 
                            'AW-Very_Shallow')
-         )
+         ) %>% 
+  drop_na()
 
 benchmarks <- benchmarks %>% 
   mutate(ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands',
