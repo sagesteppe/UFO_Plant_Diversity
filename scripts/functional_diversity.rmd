@@ -315,9 +315,6 @@ benchmarks <- drop_na(benchmarks, ECO.SITE)
 rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd)
 ```
 
-
-# AW_Bottoms -  what is wrong with you?
-
 ```{r combine dataset for comparisions}
 
 esg_plots <- read.csv(file.path(praw, f[grep('ESG_unverified_plots', f)]) ) %>% 
@@ -413,7 +410,7 @@ forb <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 ahf <- select(all_hits_forb, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot ) %>% 
   st_drop_geometry()
 
 rm(bmf)
@@ -500,7 +497,7 @@ shrub <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 ahs <- select(all_hits_shrub, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
   st_drop_geometry()
 
 rm(bmf)
@@ -574,7 +571,7 @@ tree <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 aht <- select(all_hits_tree, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
   st_drop_geometry()
 
 rm(bmf)
@@ -651,7 +648,7 @@ grass <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 ahg <- select(all_hits_grass, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE ) %>% 
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
   st_drop_geometry()
 
 rm(bmf)
@@ -749,6 +746,19 @@ The feature engineered cover of forb is used across all plots.
 for sites in salt desert they alone are likely to not have enough SHRUB cover, sites in ASPEN/MMC stratum are automatically PASS for any cover of TREE. 
 
 
+```{r write out results of whether meeting benchmarks or not, eval=FALSE}
+
+achieving %>% 
+  select(PLOTID, AoInference, Meeting, CATEGORY = LIFEFORM, ECO.SITE) %>% 
+  mutate(INDICATOR = 'FUNCTIONAL DIVERSITY', .before = 'CATEGORY') %>% 
+  rename_with(toupper) %>% 
+  mutate(across(.cols = everything(), toupper)) %>% 
+  write.csv(., row.names = F, 
+          '../data/processed/functional_diveristy_meeting_benchmarks.csv')
+
+```
+
+
 ```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=6, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
 
 yn <- achieving
@@ -840,12 +850,11 @@ rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, sfm, sfm_values,
 
 We can combine the number of plots, and their weight acres, within each stratum which had all four major functional groups within reference to develop a sense of how well the RMP objectives are being meet (Figure 6). 
 
-```{r Overall Vegetation Benchmarks By Major Stratum, fig.height = 3.5, fig.width = 4, fig.cap = 'Total area of each stratum and the overall status of benchmarks'}
+```{r calculate areas meeting standards by STRATUM}
 
 lc_lkp <- read.csv(file.path(praw, f[grep('landcover', f)]) ) 
-
 r <- terra::rast('../../plot_post_stratification/data/processed/PredictedVegClass.tif')
-results <- expanse(r, byValue = T, unit = 'ha', transform = T)
+
 pts <- st_read(
   '../../aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
                 quiet = T)  %>% 
@@ -859,28 +868,80 @@ reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>%
          PLOTID %in% c('PJ-143', 'PJ-153') ~ 4, 
          PLOTID %in% c('AS-002', 'AS-004') ~ 3, 
          PLOTID == 'MC-068' ~ 2,
-         TRUE ~ lyr1)) %>% 
-  st_drop_geometry()
+         TRUE ~ lyr1)) #%>% 
+#  st_drop_geometry()
          
 achieving <- left_join(achieving, reclass, by = 'PLOTID') %>% 
   left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
-  select(-lyr1)
+  select(-lyr1) %>% 
+  st_as_sf()
 
 rm(r, pts, reclass, lc_lkp)
+
+ach_forb <- filter(achieving, LIFEFORM == 'Forb')
+ach_forb <- spsurvey::cat_analysis(
+  dframe = ach_forb, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'stratum',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)  %>% 
+  filter(Category == 'TRUE') %>% select(Subpopulation, Estimate.P)
+
+ach_shrub <- filter(achieving, LIFEFORM == 'Shrub')
+ach_shrub <- spsurvey::cat_analysis(
+  dframe = ach_shrub, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'stratum',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)  %>% 
+  filter(Category == 'TRUE') %>% 
+  select(Subpopulation, Estimate.P)
+
+ach_tree <- filter(achieving, LIFEFORM == 'Tree')
+ach_tree <- spsurvey::cat_analysis(
+  dframe = ach_tree, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'stratum',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)  %>% 
+  filter(Category == 'TRUE') %>% 
+  select(Subpopulation, Estimate.P)
+
+ach_grass <- filter(achieving, LIFEFORM == 'Grass')
+ach_grass <- spsurvey::cat_analysis(
+  dframe = ach_grass, siteID = 'PLOTID', vars = 'Meeting',
+  subpops = 'stratum',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80) %>% 
+  filter(Category == 'TRUE') %>%
+  select(Subpopulation, Estimate.P)
+
+
+bind_rows(ach_forb, ach_shrub, ach_tree, ach_grass) %>% 
+  mutate(Estimate.P =  round(Estimate.P, 0)) %>% 
+  split(., .$Subpopulation) %>% 
+  map(., . %>% arrange(Estimate.P) %>% 
+        mutate(estimate = c('Four', 'Three', 'Two', 'One'))) %>% 
+  bind_rows()
+
+```
+
+
+```{r Overall Vegetation Benchmarks By Major Stratum, fig.height = 3.5, fig.width = 4, fig.cap = 'Total area of each stratum and the overall status of benchmarks'}
+
+
+lkp <- data.frame(
+  old = c('Sage_Brush', 'Salt_Desert', 'Mixed_Mountain_Shrub', 'Pinon_Juniper',
+          'Aspen'), 
+  Stratum = c('Sagebrush', 'Salt Desert', 'Mtn. Shrub',  'Pinon-Juniper', 'Aspen'),
+  Prop_area = c(9, 18, 11, 61, 1)
+)
 
 waff_dat2 <- achieving %>% 
   group_by(PLOTID) %>% 
   mutate(estimate = sum(str_detect(ACHIEVING, 'Y'))) %>% 
-  distinct(PLOTID, .keep_all = T) %>% 
-  mutate(Estimate = case_when(
-    estimate == 0 ~ 'None',
-    estimate == 1 ~ 'One', 
-    estimate == 2 ~ 'Two',
-    estimate == 3 ~ 'Three', 
-    estimate == 4 ~ 'Four'
-  )) %>% 
-  select(PLOTID, Estimate, stratum) 
-
+  distinct(PLOTID, .keep_all = T) %>%
+  mutate(
+    Estimate = case_when(
+      estimate == 0 ~ 'None',
+      estimate == 1 ~ 'One',
+      estimate == 2 ~ 'Two',
+      estimate == 3 ~ 'Three',
+      estimate == 4 ~ 'Four'
+    ),
+    stratum = str_trim(stratum),
+  ) %>%
+  left_join(., lkp, by = c('stratum' = 'old')) %>% 
+  select(PLOTID, Estimate, Stratum, Prop_area) 
 
 waff_dat <- data.frame(
   Stratum = c('Sagebrush', 'Salt Desert', 'Mtn. Shrub', 'Pinon-Juniper'),
@@ -891,7 +952,7 @@ waff_dat <- data.frame(
   Three = c(30, 26, 33, 10),
   Four = c(20, 22, 10, 30)
 ) %>% 
-  pivot_longer(cols = None:Four, names_to = 'Estimate', values_to = 'Percent') %>% 
+  pivot_longer(cols = None:Four, names_to = 'Estimate', values_to = 'Percent') #%>% 
   mutate(n = (Percent * Prop_area) / 10, 
          Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
                                                'Salt Desert', 'Pinon-Juniper')),

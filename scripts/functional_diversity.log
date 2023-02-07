@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.27)  7 FEB 2023 09:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.27)  7 FEB 2023 13:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -501,39 +501,33 @@ Underfull \hbox (badness 1163) in paragraph at lines 490--523
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 527.
 
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=203, 470.75874pt x 415.5525pt>
+<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=203, 470.75874pt x 414.54875pt>
 File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>
 Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 541.
-(pdftex.def)             Requested size: 469.75912pt x 414.6701pt.
+(pdftex.def)             Requested size: 469.75912pt x 413.66847pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 541--542
 
  []
 
-[9 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>]
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf, id=218, 284.06125pt x 237.88875pt>
-File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf Graphic file (type pdf)
-<use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf  used on input line 555.
-(pdftex.def)             Requested size: 284.07353pt x 237.89903pt.
-[10 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>] [11] [12] [13] (./functional_diversity.aux)
+[9 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>] [10] [11] [12] [13] (./functional_diversity.aux)
 Package rerunfilecheck Info: File `functional_diversity.out' has not changed.
-(rerunfilecheck)             Checksum: 202DBB322196BF5AE1EB34B6F9BA534E;1235.
+(rerunfilecheck)             Checksum: 695D0DA941D50FCB2CB796D8BDE38096;1235.
  ) 
 Here is how much of TeX's memory you used:
- 12050 strings out of 478025
- 196100 string characters out of 5839811
+ 12039 strings out of 478025
+ 195182 string characters out of 5839811
  1865305 words of memory out of 5000000
- 31940 multiletter control sequences out of 15000+600000
+ 31931 multiletter control sequences out of 15000+600000
  561829 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,6n,76p,332b,504s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
-Output written on functional_diversity.pdf (13 pages, 1719938 bytes).
+Output written on functional_diversity.pdf (13 pages, 1694615 bytes).
 PDF statistics:
- 298 PDF objects out of 1000 (max. 8388607)
- 254 compressed objects within 3 object streams
- 78 named destinations out of 1000 (max. 500000)
- 116 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 288 PDF objects out of 1000 (max. 8388607)
+ 247 compressed objects within 3 object streams
+ 77 named destinations out of 1000 (max. 500000)
+ 111 words of extra memory for PDF output out of 10000 (max. 10000000)
 
