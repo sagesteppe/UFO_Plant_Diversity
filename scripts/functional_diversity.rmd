@@ -232,7 +232,7 @@ all_hits_nat <- all_hits_nat %>%
 ```{r join site id to primarykeys}
 
 pts <- st_read(
-  '/media/sagesteppe/ExternalHD/aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+  '../../aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
                 quiet = T) %>% 
   st_transform(26913) %>% 
   st_buffer(55) %>% 
@@ -288,8 +288,7 @@ esg_cover <- read.csv(file.path(praw, f[grep('EcologicalSiteGroup', f)])) %>%
   unite('ESG', c('Abbrev', 'SoilGeomorphicUnits'), sep = '-') %>% 
   select(-Climate) %>% 
   mutate(ESG = str_remove(ESG, '^-'), 
-         ESG = str_replace(ESG, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
-                           'SAW-Sandy_Uplands_and_Loamy_Uplands'),
+         ESG = str_replace(ESG, 'AW-Sandy_Bottoms', 'AW-Bottoms'),
          ESG = str_replace(ESG, 'SAC-Saline_Sandy_Loamy_Finer_Uplands', 
                            'SAC-Finer_Uplands')
          ) %>% 
@@ -316,6 +315,8 @@ benchmarks <- drop_na(benchmarks, ECO.SITE)
 rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd)
 ```
 
+
+# AW_Bottoms -  what is wrong with you?
 
 ```{r combine dataset for comparisions}
 
@@ -841,7 +842,45 @@ We can combine the number of plots, and their weight acres, within each stratum 
 
 ```{r Overall Vegetation Benchmarks By Major Stratum, fig.height = 3.5, fig.width = 4, fig.cap = 'Total area of each stratum and the overall status of benchmarks'}
 
-options(scipen = 999)
+lc_lkp <- read.csv(file.path(praw, f[grep('landcover', f)]) ) 
+
+r <- terra::rast('../../plot_post_stratification/data/processed/PredictedVegClass.tif')
+results <- expanse(r, byValue = T, unit = 'ha', transform = T)
+pts <- st_read(
+  '../../aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+                quiet = T)  %>% 
+  select(PLOTID) %>% 
+  terra::vect() %>% 
+  terra::project(crs(r))
+
+reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>% 
+  st_as_sf() %>% 
+  mutate(lyr1 = case_when(
+         PLOTID %in% c('PJ-143', 'PJ-153') ~ 4, 
+         PLOTID %in% c('AS-002', 'AS-004') ~ 3, 
+         PLOTID == 'MC-068' ~ 2,
+         TRUE ~ lyr1)) %>% 
+  st_drop_geometry()
+         
+achieving <- left_join(achieving, reclass, by = 'PLOTID') %>% 
+  left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
+  select(-lyr1)
+
+rm(r, pts, reclass, lc_lkp)
+
+waff_dat2 <- achieving %>% 
+  group_by(PLOTID) %>% 
+  mutate(estimate = sum(str_detect(ACHIEVING, 'Y'))) %>% 
+  distinct(PLOTID, .keep_all = T) %>% 
+  mutate(Estimate = case_when(
+    estimate == 0 ~ 'None',
+    estimate == 1 ~ 'One', 
+    estimate == 2 ~ 'Two',
+    estimate == 3 ~ 'Three', 
+    estimate == 4 ~ 'Four'
+  )) %>% 
+  select(PLOTID, Estimate, stratum) 
+
 
 waff_dat <- data.frame(
   Stratum = c('Sagebrush', 'Salt Desert', 'Mtn. Shrub', 'Pinon-Juniper'),
