@@ -860,7 +860,7 @@ pts <- st_read(
                 quiet = T)  %>% 
   select(PLOTID) %>% 
   terra::vect() %>% 
-  terra::project(crs(r))
+  terra::project(terra::crs(r))
 
 reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>% 
   st_as_sf() %>% 
@@ -905,14 +905,23 @@ ach_grass <- spsurvey::cat_analysis(
   filter(Category == 'TRUE') %>%
   select(Subpopulation, Estimate.P)
 
-
 bind_rows(ach_forb, ach_shrub, ach_tree, ach_grass) %>% 
   mutate(Estimate.P =  round(Estimate.P, 0)) %>% 
   split(., .$Subpopulation) %>% 
-  map(., . %>% arrange(Estimate.P) %>% 
-        mutate(estimate = c('Four', 'Three', 'Two', 'One'))) %>% 
+  map(., . %>% arrange(-Estimate.P) %>% 
+        mutate(estimate = factor(c('One', 'Two', 'Three', 'Four'))) %>% 
+        arrange(-Estimate.P, -estimate) %>% 
+        group_by(Estimate.P) %>%
+        slice(1) %>% 
+        ungroup() %>% 
+        bind_rows(., 
+                  data.frame(Subpopulation = NA, 
+                             estimate = 'None', 
+                             Estimate.P = 100 - max(.$Estimate.P))
+        ) %>% 
+        fill(Subpopulation, .direction = 'down' )
+        ) %>%
   bind_rows()
-
 ```
 
 
