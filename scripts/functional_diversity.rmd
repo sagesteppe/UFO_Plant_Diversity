@@ -28,6 +28,10 @@ While the major functional groups are capable of capturing considerable variatio
 
 # Methods
 
+
+WANT TO ADD SEDGES INTO GRAMINOIDS - NONE OF THE REMOTE SENSING CAN DISTINGUISH THESE WHILE UPLAND
+
+
 Due to certain inconsistencies in the assignment of plant species to functional groups in historic AIM analyses by the National Operations Center, these vegetation indicators were re-run locally using the cleaned field data. 
 
 ```{r setup, include=FALSE}
@@ -214,7 +218,7 @@ all_hits_nat <- all_hits_nat %>%
   rename(Variable = FUNCTIONAL_AGGREGATE) %>% 
   mutate(across(where(is.numeric), ~ (./150)*100))
 
-rm(attributes, native_esd_grps, lpi_agg, all_hits_agg, lpi)
+rm(attributes, native_esd_grps, lpi_agg, lpi)
 ```
 
 
@@ -758,8 +762,9 @@ achieving %>%
 
 ```
 
+Each individual Ecological Site, or Ecological Group, varies in the proportion of all plots located in them which are within reference condition. Once a greater number of replicate plots are sampled per Ecological Site (see Figure XX, panel 5 *(right most)*), and combined with digitized management records, these data may form an approach towards understanding the resilience of different Ecological Sites in the UFO to management actions. The Ecological Sites are arranged via descending order of the total proportion of 
 
-```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=6, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
+```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=4.5, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
 
 yn <- achieving
 
@@ -905,29 +910,51 @@ ach_grass <- spsurvey::cat_analysis(
   filter(Category == 'TRUE') %>%
   select(Subpopulation, Estimate.P)
 
-bind_rows(ach_forb, ach_shrub, ach_tree, ach_grass) %>% 
+waff_dat2 <- bind_rows(ach_forb, ach_shrub, ach_tree, ach_grass) %>% 
   mutate(Estimate.P =  round(Estimate.P, 0)) %>% 
   split(., .$Subpopulation) %>% 
   map(., . %>% arrange(-Estimate.P) %>% 
         mutate(estimate = factor(c('One', 'Two', 'Three', 'Four'))) %>% 
-        arrange(-Estimate.P, -estimate) %>% 
+        
+        # remove rows where the estimate is the same
+        arrange(-Estimate.P, estimate) %>% 
         group_by(Estimate.P) %>%
         slice(1) %>% 
         ungroup() %>% 
-        bind_rows(., 
-                  data.frame(Subpopulation = NA, 
-                             estimate = 'None', 
-                             Estimate.P = 100 - max(.$Estimate.P))
-        ) %>% 
-        fill(Subpopulation, .direction = 'down' )
+        
+        # create data regarding the number of land meeting no benchmarks
+        bind_rows(., data.frame(
+          Subpopulation = NA, 
+          estimate = 'None', 
+          Estimate.P = 100) 
+          ) %>% 
+        
+       # arrange(estimate) %>% 
+        mutate(diff = Estimate.P - lag(Estimate.P, default = first(Estimate.P))) %>% 
+        mutate(estimate = factor(estimate, c('Four', 'Three', 'Two', 'One', 'None'))) %>% 
+        fill(Subpopulation, .direction = 'down')
         ) %>%
-  bind_rows()
+  bind_rows() %>% 
+  group_by(Subpopulation) %>% 
+  arrange(estimate) 
+
+waff_dat2 <- waff_dat2 %>%
+  slice(1) %>% 
+  mutate(diff = Estimate.P) %>% 
+  bind_rows(., waff_dat2 ) %>% 
+  group_by(Subpopulation, estimate) %>% 
+  arrange(-diff) %>% 
+  slice(1)
+
+
+rm(ach_forb, ach_shrub, ach_tree, ach_grass)
 ```
+
 
 
 ```{r Overall Vegetation Benchmarks By Major Stratum, fig.height = 3.5, fig.width = 4, fig.cap = 'Total area of each stratum and the overall status of benchmarks'}
 
-
+options(scipen = 999)
 lkp <- data.frame(
   old = c('Sage_Brush', 'Salt_Desert', 'Mixed_Mountain_Shrub', 'Pinon_Juniper',
           'Aspen'), 
@@ -935,68 +962,88 @@ lkp <- data.frame(
   Prop_area = c(9, 18, 11, 61, 1)
 )
 
-waff_dat2 <- achieving %>% 
-  group_by(PLOTID) %>% 
-  mutate(estimate = sum(str_detect(ACHIEVING, 'Y'))) %>% 
-  distinct(PLOTID, .keep_all = T) %>%
-  mutate(
-    Estimate = case_when(
-      estimate == 0 ~ 'None',
-      estimate == 1 ~ 'One',
-      estimate == 2 ~ 'Two',
-      estimate == 3 ~ 'Three',
-      estimate == 4 ~ 'Four'
-    ),
-    stratum = str_trim(stratum),
-  ) %>%
-  left_join(., lkp, by = c('stratum' = 'old')) %>% 
-  select(PLOTID, Estimate, Stratum, Prop_area) 
+waff_dat2 <- waff_dat2 %>% 
+  mutate(Subpopulation = str_trim(Subpopulation) ) %>%
+  left_join(., lkp, by = c('Subpopulation' = 'old')) %>% 
+  filter(Stratum != 'Aspen') %>% 
+  mutate(Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
+                                               'Salt Desert', 'Pinon-Juniper'))) %>% 
+  select(Stratum, Estimate = estimate, Percent = diff, Prop_area) %>% 
+  mutate(n = (Percent * Prop_area) / 10)
 
-waff_dat <- data.frame(
-  Stratum = c('Sagebrush', 'Salt Desert', 'Mtn. Shrub', 'Pinon-Juniper'),
-  Prop_area = c(12, 20, 13, 55),
-  None = c(12, 15, 17, 20),
-  One = c(8, 9, 12, 18),
-  Two = c(30, 28, 27, 22),
-  Three = c(30, 26, 33, 10),
-  Four = c(20, 22, 10, 30)
-) %>% 
-  pivot_longer(cols = None:Four, names_to = 'Estimate', values_to = 'Percent') #%>% 
-  mutate(n = (Percent * Prop_area) / 10, 
-         Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
-                                               'Salt Desert', 'Pinon-Juniper')),
-         Estimate = factor(Estimate, levels = c('Four', 'Three', 'Two', 'One', 'None')))
-waff_dat <- data.table::setorder(waff_dat, Estimate)
-
+waff_dat2 <- data.table::setorder(waff_dat2, Estimate)
 
 zerofourPal <- c('None' = '#d7191c', 'One +' = '#fdae61', 'Two +' = '#ffffbf', 
                 'Three +' = '#a6d96a', 'Four' = '#1a9641')
-ggplot(waff_dat, aes(fill = Estimate, values = n)) +
+zerofourVal <- c('None' = '#d7191c', 'One' = '#fdae61', 'Two' = '#ffffbf', 
+                'Three' = '#a6d96a', 'Four' = '#1a9641')
+
+ggplot(waff_dat2, aes(fill = Estimate, values = n)) +
   geom_waffle(color = "white", size = .25, 
               flip = TRUE ) +
   facet_wrap(~ Stratum, nrow = 1, strip.position = "bottom") +
   
-  scale_fill_manual('Condition:', values = c('None' = '#d7191c', 'One' = '#fdae61', 'Two' = '#ffffbf', 
-                'Three' = '#a6d96a', 'Four' = '#1a9641'),
+  scale_fill_manual('Condition:', values = zerofourVal,
                 labels = c('Four', 'Three +', "Two +", 'One +', 'None')) +
   scale_x_discrete()  +
   scale_y_continuous(labels = function(x) x * 10000, # make this multiplyer the same as n_rows
                      expand = c(0,0))  +
   
   theme(
+    axis.text.y = element_text(angle = 45, size = 8), 
     legend.position="bottom",
     plot.title = element_text(hjust = 0.5, size = 11, face = 'bold'),
     panel.spacing = unit(0.01, "lines"), 
     strip.background =element_rect(fill="white"), 
-    panel.background = element_blank())  +
+    panel.background = element_blank(),
+    legend.key.height = unit(1, 'lines'), #change legend key height
+    legend.key.width = unit(0.5, 'lines'),
+    legend.title = element_text(size=10),
+    legend.text = element_text(size=8)
+    )  +
   
    labs(title = "Areas meeting Functional Cover Benchmarks", 
         y = 'Acres')
 
+rm(lkp, waff_dat2, zerofourPal, zerofourVal)
 ```
 
 
-```{r Total Area Meeting Benchmarks}
+```{r Total Area Meeting Benchmarks by Management Unit Table}
+
+r <- bind_rows(
+  cbind(Functional = 'Forb', forb),
+  cbind(Functional = 'Grass', grass),
+  cbind(Functional = 'Shrub', shrub),
+  cbind(Functional = 'Tree', tree)
+) %>% 
+  group_by(Subpopulation, Functional) %>% 
+  mutate(Plots = max(nResp)) %>% 
+  filter(Category == TRUE) %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 1)))  %>% 
+  arrange(Subpopulation, Functional) %>% 
+  mutate(Land_Meeting = paste0('(', LCB80Pct.P, '-) ', 
+                                  Estimate.P, '% (-', UCB80Pct.P, ")"), 
+         Goal = rep()) %>% 
+  select(Management = Subpopulation, Plots, Functional, Land_Meeting) 
+```
+
+\newpage
+
+
+```{r}
+
+library(kableExtra)
+
+bind_cols(r, Goal = 
+            c(
+              paste0(rep(80, times = 12), '%'), paste0(rep(70, times = 4), '%')
+              )) %>%  
+  relocate(Goal, .before = Management) %>% 
+  knitr::kable(., align = c("c", "c", "c", "l", "c"),
+               booktabs = TRUE, linesep = "") %>% 
+  kableExtra::kable_styling(position = "float_right") %>% 
+  collapse_rows()
 
 ```
 
