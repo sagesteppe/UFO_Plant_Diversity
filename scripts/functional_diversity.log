@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.27)  8 FEB 2023 14:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.27)  8 FEB 2023 16:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -586,370 +586,374 @@ File: functional_diversity_files/figure-latex/Create compound metrics - ensure w
 Package pdftex.def Info: functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf  used on input line 205.
 (pdftex.def)             Requested size: 175.66116pt x 206.77829pt.
 [2 <./functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf>]
-<../results/benchmarks/forb_benchmark.png, id=100, 352.9185pt x 576.7146pt>
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 264.
+(/home/sagesteppe/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+<../results/benchmarks/forb_benchmark.png, id=99, 352.9185pt x 576.7146pt>
 File: ../results/benchmarks/forb_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/forb_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/forb_benchmark.png  used on input line 259.
+Package pdftex.def Info: ../results/benchmarks/forb_benchmark.png  used on input line 272.
 (pdftex.def)             Requested size: 234.88171pt x 383.82718pt.
 [3 <../results/benchmarks/forb_benchmark.png>] [4]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 342.
+(Font)              <10> on input line 355.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 342.
+(Font)              <7> on input line 355.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 342.
+(Font)              <5> on input line 355.
 [5]
-<../results/benchmarks/shrub_benchmark.png, id=146, 352.9185pt x 576.7146pt>
+<../results/benchmarks/shrub_benchmark.png, id=147, 352.9185pt x 576.7146pt>
 File: ../results/benchmarks/shrub_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/shrub_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/shrub_benchmark.png  used on input line 379.
+Package pdftex.def Info: ../results/benchmarks/shrub_benchmark.png  used on input line 392.
 (pdftex.def)             Requested size: 234.88171pt x 383.82718pt.
 [6 <../results/benchmarks/shrub_benchmark.png>]
 
-Package wrapfig Warning: Collision between wrapping environments on input line 418.
+Package wrapfig Warning: Collision between wrapping environments on input line 431.
 
-<../results/benchmarks/tree_benchmark.png, id=152, 352.9185pt x 576.4737pt>
+<../results/benchmarks/tree_benchmark.png, id=153, 352.9185pt x 576.4737pt>
 File: ../results/benchmarks/tree_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/tree_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/tree_benchmark.png  used on input line 420.
+Package pdftex.def Info: ../results/benchmarks/tree_benchmark.png  used on input line 433.
 (pdftex.def)             Requested size: 234.88171pt x 383.66685pt.
 
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 424.
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 437.
 
 
-Underfull \hbox (badness 2334) in paragraph at lines 438--457
+Underfull \hbox (badness 2334) in paragraph at lines 451--470
 []\T1/lmr/m/n/10 Currently three tra-jec-to-ries for Pinyon-Juniper
  []
 
 [7 <../results/benchmarks/tree_benchmark.png>]
-<../results/benchmarks/grass_benchmark.png, id=169, 352.9185pt x 576.4737pt>
+<../results/benchmarks/grass_benchmark.png, id=170, 352.9185pt x 576.4737pt>
 File: ../results/benchmarks/grass_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/grass_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/grass_benchmark.png  used on input line 477.
+Package pdftex.def Info: ../results/benchmarks/grass_benchmark.png  used on input line 490.
 (pdftex.def)             Requested size: 234.88171pt x 383.66685pt.
 
-Underfull \hbox (badness 1163) in paragraph at lines 507--540
+Underfull \hbox (badness 1163) in paragraph at lines 520--553
 []\T1/lmr/m/n/10 Compared to peren-nial forb du-ra-tion peren-nial
  []
 
 [8 <../results/benchmarks/grass_benchmark.png>]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 544.
+(hyperref)                than one, level fixed on input line 557.
 
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=203, 470.75874pt x 316.18124pt>
+<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=204, 470.75874pt x 316.18124pt>
 File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 558.
+Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 586.
 (pdftex.def)             Requested size: 469.75912pt x 315.50984pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 558--559
+Underfull \hbox (badness 10000) in paragraph at lines 586--587
 
  []
 
 [9 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>]
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf, id=218, 280.04625pt x 237.88875pt>
+<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf, id=219, 280.04625pt x 237.88875pt>
 File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf  used on input line 572.
+Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf  used on input line 606.
 (pdftex.def)             Requested size: 280.05836pt x 237.89903pt.
 [10 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks By Major Stratum-1.pdf>]
-Underfull \hbox (badness 1540) in paragraph at lines 622--622
+Underfull \hbox (badness 1540) in paragraph at lines 656--656
 [][][]\T1/lmr/bx/n/10 Geographic Trends in Con-di-
  []
 
 [11]
-Underfull \hbox (badness 1661) in paragraph at lines 635--640
+Underfull \hbox (badness 1661) in paragraph at lines 669--674
 \T1/lmr/m/n/10 fect of woody-plant en-croach-ment
  []
 
 
-Underfull \hbox (badness 2547) in paragraph at lines 635--640
+Underfull \hbox (badness 2547) in paragraph at lines 669--674
 \T1/lmr/m/n/10 on live-stock pro-duc-tion in north
  []
 
 
-Underfull \hbox (badness 1320) in paragraph at lines 646--652
+Underfull \hbox (badness 1320) in paragraph at lines 680--686
 []\T1/lmr/m/n/10 Archer, S. R., An-der-sen, E. M.,
  []
 
 
-Underfull \hbox (badness 2035) in paragraph at lines 646--652
+Underfull \hbox (badness 2035) in paragraph at lines 680--686
 \T1/lmr/m/n/10 plant en-croach-ment: Causes and
  []
 
 
-Underfull \hbox (badness 4303) in paragraph at lines 646--652
+Underfull \hbox (badness 4303) in paragraph at lines 680--686
 \T1/lmr/m/n/10 Springer In-ter-na-tional Pub-lish-ing.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 646--652
+Underfull \hbox (badness 10000) in paragraph at lines 680--686
 []$\T1/lmr/m/n/10 https : / / doi . org / 10 . 1007 / 978 -[] 3 -[] 319 -[]
  []
 
 
-Underfull \hbox (badness 1360) in paragraph at lines 653--658
+Underfull \hbox (badness 1360) in paragraph at lines 687--692
 []\T1/lmr/m/n/10 Archer, S. R., & Predick, K. I.
  []
 
 
-Underfull \hbox (badness 4303) in paragraph at lines 653--658
+Underfull \hbox (badness 4303) in paragraph at lines 687--692
 \T1/lmr/m/n/10 (2014). An ecosys-tem ser-vices
  []
 
 
-Underfull \hbox (badness 3128) in paragraph at lines 653--658
+Underfull \hbox (badness 3128) in paragraph at lines 687--692
 \T1/lmr/m/n/10 Re-search pri-or-i-ties for com-pet-ing
  []
 
 
-Underfull \hbox (badness 3291) in paragraph at lines 653--658
+Underfull \hbox (badness 3291) in paragraph at lines 687--692
 \T1/lmr/m/n/10 land-use ob-jec-tives. \T1/lmr/m/it/10 Jour-nal of
  []
 
 
-Underfull \hbox (badness 4913) in paragraph at lines 665--670
+Underfull \hbox (badness 4913) in paragraph at lines 699--704
 []\T1/lmr/m/n/10 Bestelmeyer, B. T., Pe-ters, D.
  []
 
 
-Underfull \hbox (badness 1394) in paragraph at lines 665--670
+Underfull \hbox (badness 1394) in paragraph at lines 699--704
 \T1/lmr/m/n/10 P., Archer, S. R., Brown-ing, D.
  []
 
 
-Underfull \hbox (badness 3724) in paragraph at lines 665--670
+Underfull \hbox (badness 3724) in paragraph at lines 699--704
 \T1/lmr/m/n/10 M., Okin, G. S., Schoo-ley, R.
  []
 
 
-Underfull \hbox (badness 5908) in paragraph at lines 677--681
+Underfull \hbox (badness 5908) in paragraph at lines 711--715
 \T1/lmr/m/n/10 con-se-quences of drought in the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 677--681
+Underfull \hbox (badness 10000) in paragraph at lines 711--715
 \T1/lmr/m/n/10 herba-ceous peren-nial cryptan-tha
  []
 
 
-Underfull \hbox (badness 1082) in paragraph at lines 677--681
+Underfull \hbox (badness 1082) in paragraph at lines 711--715
 \T1/lmr/m/n/10 flava: Ef-fects of den-sity, as-so-ci-a-
  []
 
 [12]
-Underfull \hbox (badness 1629) in paragraph at lines 686--690
+Underfull \hbox (badness 1629) in paragraph at lines 720--724
 []\T1/lmr/m/n/10 Corbin, J. D., & D'Antonio, C.
  []
 
 
-Underfull \hbox (badness 2486) in paragraph at lines 691--695
+Underfull \hbox (badness 2486) in paragraph at lines 725--729
 \T1/lmr/m/n/10 vari-abil-ity? \T1/lmr/m/it/10 Jour-nal of Ecol-ogy\T1/lmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 2269) in paragraph at lines 696--701
+Underfull \hbox (badness 2269) in paragraph at lines 730--735
 \T1/lmr/m/n/10 grass-land species: Stochas-tic life
  []
 
 
-Underfull \hbox (badness 1117) in paragraph at lines 702--706
+Underfull \hbox (badness 1117) in paragraph at lines 736--740
 []\T1/lmr/m/n/10 De Witte, L. C., & Stock-lin, J.
  []
 
 
-Underfull \hbox (badness 1168) in paragraph at lines 707--712
+Underfull \hbox (badness 1168) in paragraph at lines 741--746
 \T1/lmr/m/n/10 (2007). Plant trait re-sponses to
  []
 
 
-Underfull \hbox (badness 1107) in paragraph at lines 713--717
+Underfull \hbox (badness 1107) in paragraph at lines 747--751
 []\T1/lmr/m/n/10 Ding, J., & El-dridge, D. (2022).
  []
 
 
-Underfull \hbox (badness 3657) in paragraph at lines 718--723
+Underfull \hbox (badness 3657) in paragraph at lines 752--757
 []\T1/lmr/m/n/10 Eldridge, D. J., Poore, A. G.,
  []
 
 
-Underfull \hbox (badness 2635) in paragraph at lines 718--723
+Underfull \hbox (badness 2635) in paragraph at lines 752--757
 \T1/lmr/m/n/10 Ruiz-Colmenero, M., Let-nic, M.,
  []
 
 
-Underfull \hbox (badness 2564) in paragraph at lines 718--723
+Underfull \hbox (badness 2564) in paragraph at lines 752--757
 \T1/lmr/m/n/10 by live-stock graz-ing. \T1/lmr/m/it/10 Eco-log-i-cal
  []
 
 
-Underfull \hbox (badness 2932) in paragraph at lines 724--728
+Underfull \hbox (badness 2932) in paragraph at lines 758--762
 \T1/lmr/m/n/10 Drought ef-fect on plant biomass
  []
 
 [13]
-Underfull \hbox (badness 1527) in paragraph at lines 736--741
+Underfull \hbox (badness 1527) in paragraph at lines 770--775
 []\T1/lmr/m/n/10 Gherardi, L. A., & Sala, O. E.
  []
 
 
-Underfull \hbox (badness 3138) in paragraph at lines 742--747
+Underfull \hbox (badness 3138) in paragraph at lines 776--781
 \T1/lmr/m/n/10 (2012). Mor-tal-ity of aus-tralian
  []
 
 
-Underfull \hbox (badness 1721) in paragraph at lines 742--747
+Underfull \hbox (badness 1721) in paragraph at lines 776--781
 \T1/lmr/m/n/10 alpine grasses (poa spp.) Af-ter
  []
 
 
-Underfull \hbox (badness 2635) in paragraph at lines 742--747
+Underfull \hbox (badness 2635) in paragraph at lines 776--781
 \T1/lmr/m/n/10 drought: Species dif-fer-ences and
  []
 
 
-Underfull \hbox (badness 1383) in paragraph at lines 748--753
+Underfull \hbox (badness 1383) in paragraph at lines 782--787
 \T1/lmr/m/n/10 of soil moisture--plant in-ter-ac-tions
  []
 
 
-Underfull \hbox (badness 1609) in paragraph at lines 759--765
+Underfull \hbox (badness 1609) in paragraph at lines 793--799
 \T1/lmr/m/n/10 J. H. C., Gar-nier, E., Har-ri-son,
  []
 
 
-Underfull \hbox (badness 3449) in paragraph at lines 759--765
+Underfull \hbox (badness 3449) in paragraph at lines 793--799
 \T1/lmr/m/n/10 Perez-Harguindeguy, N., Roumet,
  []
 
 
-Underfull \hbox (badness 1199) in paragraph at lines 759--765
+Underfull \hbox (badness 1199) in paragraph at lines 793--799
 \T1/lmr/m/n/10 func-tional types: Are we get-ting
  []
 
 
-Underfull \hbox (badness 1527) in paragraph at lines 766--772
+Underfull \hbox (badness 1527) in paragraph at lines 800--806
 []\T1/lmr/m/n/10 Maestre, F. T., El-dridge, D. J.,
  []
 
 
-Underfull \hbox (badness 2809) in paragraph at lines 766--772
+Underfull \hbox (badness 2809) in paragraph at lines 800--806
 \T1/lmr/m/n/10 So-liveres, S., Kefi, S., Delgado-
  []
 
 
-Underfull \hbox (badness 3679) in paragraph at lines 766--772
+Underfull \hbox (badness 3679) in paragraph at lines 800--806
 \T1/lmr/m/n/10 Baquerizo, M., Bowker, M. A.,
  []
 
 
-Underfull \hbox (badness 6559) in paragraph at lines 766--772
+Underfull \hbox (badness 6559) in paragraph at lines 800--806
 \T1/lmr/m/n/10 Garcia-Palacios, P., Gai-tan, J.,
  []
 
 
-Underfull \hbox (badness 1810) in paragraph at lines 766--772
+Underfull \hbox (badness 1810) in paragraph at lines 800--806
 \T1/lmr/m/n/10 Gal-lardo, A., Lazaro, R., et al.
  []
 
 [14]
-Underfull \hbox (badness 1005) in paragraph at lines 791--796
+Underfull \hbox (badness 1005) in paragraph at lines 825--830
 \T1/lmr/m/n/10 sion to climate-induced veg-e-ta-tion
  []
 
 
-Underfull \hbox (badness 1874) in paragraph at lines 791--796
+Underfull \hbox (badness 1874) in paragraph at lines 825--830
 \T1/lmr/m/n/10 changes on the col-orado plateau.
  []
 
 
-Underfull \hbox (badness 1072) in paragraph at lines 797--803
+Underfull \hbox (badness 1072) in paragraph at lines 831--837
 []\T1/lmr/m/n/10 Munson, S. M., Brad-ford, J. B.,
  []
 
 
-Underfull \hbox (badness 1270) in paragraph at lines 797--803
+Underfull \hbox (badness 1270) in paragraph at lines 831--837
 \T1/lmr/m/n/10 But-ter-field, B. J., & Gre-mer, J.
  []
 
 
-Underfull \hbox (badness 1412) in paragraph at lines 797--803
+Underfull \hbox (badness 1412) in paragraph at lines 831--837
 \T1/lmr/m/n/10 by el-e-va-tion and plant func-tional
  []
 
 
-Underfull \hbox (badness 2828) in paragraph at lines 804--809
+Underfull \hbox (badness 2828) in paragraph at lines 838--843
 \T1/lmr/m/n/10 A., Till-Bottraud, I., & Ehrlen,
  []
 
 
-Underfull \hbox (badness 1028) in paragraph at lines 804--809
+Underfull \hbox (badness 1028) in paragraph at lines 838--843
 \T1/lmr/m/n/10 J. (2011). In-ter-de-pen-dent ef-fects
  []
 
 
-Underfull \hbox (badness 2293) in paragraph at lines 810--815
+Underfull \hbox (badness 2293) in paragraph at lines 844--849
 \T1/lmr/m/n/10 Palmquist, K. A., & Lauen-roth,
  []
 
 
-Underfull \hbox (badness 6725) in paragraph at lines 810--815
+Underfull \hbox (badness 6725) in paragraph at lines 844--849
 \T1/lmr/m/n/10 sage-grouse, and the oc-cur-rence
  []
 
 
-Underfull \hbox (badness 1852) in paragraph at lines 816--820
+Underfull \hbox (badness 1852) in paragraph at lines 850--854
 \T1/lmr/m/n/10 range-lands in the great basin of
  []
 
 [15]
-Underfull \hbox (badness 7099) in paragraph at lines 826--831
+Underfull \hbox (badness 7099) in paragraph at lines 860--865
 \T1/lmr/m/n/10 fluc-tu-a-tions on pri-mary pro-duc-
  []
 
 
-Underfull \hbox (badness 4353) in paragraph at lines 826--831
+Underfull \hbox (badness 4353) in paragraph at lines 860--865
 \T1/lmr/m/it/10 Philo-soph-i-cal Trans-ac-tions of the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 838--843
+Underfull \hbox (badness 10000) in paragraph at lines 872--877
 \T1/lmr/m/n/10 (tae-niatherum caput-medusae).
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 844--848
+Underfull \hbox (badness 10000) in paragraph at lines 878--882
 []\T1/lmr/m/n/10 Staver, A. C., Wigley-Coetsee,
  []
 
 
-Underfull \hbox (badness 1533) in paragraph at lines 844--848
+Underfull \hbox (badness 1533) in paragraph at lines 878--882
 \T1/lmr/m/n/10 dur-ing drought in an african sa-
  []
 
 
-Underfull \hbox (badness 2088) in paragraph at lines 854--857
+Underfull \hbox (badness 2088) in paragraph at lines 888--891
 \T1/lmr/m/n/10 Longevity of peren-nial forbs and
  []
 
 
-Underfull \hbox (badness 1281) in paragraph at lines 858--863
+Underfull \hbox (badness 1281) in paragraph at lines 892--897
 \T1/lmr/m/n/10 Long-term in-ter-ac-tions of cli-mate,
  []
 
 
-Underfull \hbox (badness 1281) in paragraph at lines 864--870
+Underfull \hbox (badness 1281) in paragraph at lines 898--904
 \T1/lmr/m/n/10 M., Hall, S., Jamiyan-sharav, K.,
  []
 
 
-Underfull \hbox (badness 1383) in paragraph at lines 864--870
+Underfull \hbox (badness 1383) in paragraph at lines 898--904
 \T1/lmr/m/n/10 on eco-log-i-cal drought in semi-arid
  []
 
 
-Underfull \hbox (badness 1789) in paragraph at lines 864--870
+Underfull \hbox (badness 1789) in paragraph at lines 898--904
 \T1/lmr/m/it/10 Re-search: Bio-geo-sciences\T1/lmr/m/n/10 , \T1/lmr/m/it/10 123\T1/lmr/m/n/10 (3),
  []
 
@@ -958,18 +962,18 @@ Package rerunfilecheck Info: File `functional_diversity.out' has not changed.
 (rerunfilecheck)             Checksum: E04B35A78A50247BD1188E6494763241;1235.
  ) 
 Here is how much of TeX's memory you used:
- 13764 strings out of 478025
- 225633 string characters out of 5839811
+ 13807 strings out of 478025
+ 226321 string characters out of 5839811
  1866305 words of memory out of 5000000
- 33584 multiletter control sequences out of 15000+600000
- 561935 words of font info for 72 fonts, out of 8000000 for 9000
+ 33623 multiletter control sequences out of 15000+600000
+ 562254 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,10n,76p,332b,504s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
-Output written on functional_diversity.pdf (17 pages, 1724987 bytes).
+ 75i,10n,76p,332b,489s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on functional_diversity.pdf (17 pages, 1752247 bytes).
 PDF statistics:
- 316 PDF objects out of 1000 (max. 8388607)
- 268 compressed objects within 3 object streams
+ 321 PDF objects out of 1000 (max. 8388607)
+ 271 compressed objects within 3 object streams
  83 named destinations out of 1000 (max. 500000)
  116 words of extra memory for PDF output out of 10000 (max. 10000000)
 

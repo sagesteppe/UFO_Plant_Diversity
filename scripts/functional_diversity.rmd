@@ -185,7 +185,7 @@ As can be seen in figure 1, very good accord existed between both in-house and t
 
 For the functional groups which diverged more notably, Forbs and Shrubs, these appear to be the result of a discrepancy regarding a single abundant species, *Gutierrezia sarothrae*. Based on a limited re-review of ESD's, most authors considered this a sub-dominant shrub, a group which is combined into their estimates for Shrub Cover. Accordingly, we will utilize this assessment of *Gutierrezia sarothrae* and include it as a shrub in calculations. Largely due to this treatment we have slightly larger discrepancy between our and the Standard estimate of shrub cover (n = `r pairs[1,'Shrub']`, *r* = `r round(all_cor[1,'Shrub'], 5)`). This also leads to a discrepancy associated with estimates of forb covers (n = `r pairs[1,'Forb']`, *r* = `r round(all_cor[1,'Forb'], 5)`). However, a greater number of values diverge between the TerrAdat references and the in house calculated values, of the `r nrow(off)` records which diverge by > 0.1% cover, `r nrow(off[off$Variable=='Shrub',])` of them are associated with Shrubs, and the correlation here is much lower at *r* = `r round(mismatch_cor[1,'Shrub'], 5)`. The `r nrow(off[off$Variable=='Forb',])` records have a correlation of *r* = `r round(mismatch_cor[1,'Forb'], 5)`. 
 
-Further based on the same limited review of ESD's succulents, notably *Opuntia* were also included in Shrub calculations. Given the functional nature of the above ground portions of *Opuntia*, and where it thrives, we include it in our calculations of Shrub cover.  
+Further based on the same limited review of ESD's succulents, notably *Opuntia* were also included in Shrub calculations. Given the functional nature of the above ground portions of *Opuntia*, and where it thrives, we include it in our calculations of Shrub cover.  We further added the groups of Sedges (Cyperaceae), and Rushes (Juncaceae), into our calculations of grass cover. This is important as they are included in Interpreting Indicators of Rangeland Health (IIRH), and hence the ESD cover estimates, and are likely to be included in the ESG estimates. They are likely to make a notable difference in higher elevations sites, Mixed-Mountain Shrub & Aspen, where Elk Sedge (*Carex geyeri*) may be abundant. 
 
 ```{r}
 rm(off, compare_agg, mismatch_cor, all_cor, pairs)
@@ -275,6 +275,12 @@ esdM <- read.csv(file.path(praw, f[grep('modules', f)])) %>%
                       module_name = 'PinyonJuniper', 
                       module_number = 1))
 
+# impute the value of lower benchmark for use with the ESG
+bench_4for_besg <- benchmarks %>% # mean Estimate of ESD  
+  filter(COVER_TYPE == 'Forb' & ESTIMATE == 'LOWER') %>% 
+  summarize(mean = round(mean(COVER), 1)) %>% 
+  as.numeric()
+
 # repeat for ESG and combine
 esg_lkp_tab <- read.csv(file.path(praw, f[grep('ESG-Lookup', f)]))
 
@@ -315,6 +321,13 @@ benchmarks <- benchmarks_known_esd %>%
   as.data.frame() 
 
 benchmarks <- drop_na(benchmarks, ECO.SITE) 
+
+# add in imputed forb value
+
+benchmarks <- benchmarks %>% 
+  filter(SET == 'ESG', COVER_TYPE == 'Forb') %>% 
+  mutate(COVER = bench_4for_besg)  %>% 
+  bind_rows(., benchmarks)
 
 rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd)
 ```
@@ -419,6 +432,9 @@ ahf <- select(all_hits_forb,
 
 rm(bmf)
 ```
+
+
+## need to now put the single lower estimate in for the ESG FORBS for displaying in plot
 
 ```{r Benchmarks to Realized Forbs, eval = F}
 
@@ -746,7 +762,8 @@ achieving <- bind_rows(ahf, ahs, aht, ahg) %>%
 rm(ahf, ahs, aht, ahg)
 ```
 
-The feature engineered cover of forb is used across all plots. 
+The feature engineered cover of a lower forb benchmarks are used across all plots in lieu of the mean values from ESG's, which we felt was too high of a alue relative to the other forb benchmark values. 
+
 for sites in salt desert they alone are likely to not have enough SHRUB cover, sites in ASPEN/MMC stratum are automatically PASS for any cover of TREE. 
 
 
@@ -762,7 +779,7 @@ achieving %>%
 
 ```
 
-Each individual Ecological Site, or Ecological Group, varies in the proportion of all plots located in them which are within reference condition. Once a greater number of replicate plots are sampled per Ecological Site (see Figure XX, panel 5 *(right most)*), and combined with digitized management records, these data may form an approach towards understanding the resilience of different Ecological Sites in the UFO to management actions. The Ecological Sites are arranged via descending order of the total proportion of 
+Each individual Ecological Site, or Ecological Group, varies in the proportion of all plots located in them which are within reference condition. Once a greater number of replicate plots are sampled per Ecological Site (see Figure XX, panel 5 *(right most)*), and combined with digitized management records, these data may form an approach towards understanding the resilience of different Ecological Sites in the UFO to management actions. The Ecological Sites are arranged via descending order of the total proportion of vegetation types and plots which are achieving benchmarks. These results currently largely reflect the 
 
 ```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=4.5, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
 
