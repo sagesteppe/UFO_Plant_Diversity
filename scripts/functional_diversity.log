@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.13)  14 FEB 2023 15:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.13)  14 FEB 2023 17:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -580,94 +580,99 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/home/sagesteppe/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf, id=82, 175.65625pt x 206.7725pt>
-File: functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf Graphic file (type pdf)
-<use functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf  used on input line 205.
-(pdftex.def)             Requested size: 175.66116pt x 206.77829pt.
-[2 <./functional_diversity_files/figure-latex/Create compound metrics - ensure we are calculating values same as NOC team-1.pdf>]
-<../results/benchmarks/forb_benchmark.png, id=95, 352.9185pt x 576.7146pt>
+<../plots/graphics/regression.png, id=82, 204.2832pt x 244.5135pt>
+File: ../plots/graphics/regression.png Graphic file (type png)
+<use ../plots/graphics/regression.png>
+Package pdftex.def Info: ../plots/graphics/regression.png  used on input line 204.
+(pdftex.def)             Requested size: 140.92749pt x 168.68091pt.
+<../results/benchmarks/forb_benchmark.png, id=83, 352.9185pt x 576.7146pt>
 File: ../results/benchmarks/forb_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/forb_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/forb_benchmark.png  used on input line 266.
+Package pdftex.def Info: ../results/benchmarks/forb_benchmark.png  used on input line 267.
 (pdftex.def)             Requested size: 234.88171pt x 383.82718pt.
-[3 <../results/benchmarks/forb_benchmark.png>] [4]
+[2 <../plots/graphics/regression.png>] [3 <../results/benchmarks/forb_benchmark.png>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 349.
+(Font)              <10> on input line 350.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 349.
+(Font)              <7> on input line 350.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 349.
-[5]
-<../results/benchmarks/shrub_benchmark.png, id=142, 359.6637pt x 576.7146pt>
+(Font)              <5> on input line 350.
+[4]
+<../results/benchmarks/shrub_benchmark.png, id=132, 359.6637pt x 576.7146pt>
 File: ../results/benchmarks/shrub_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/shrub_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/shrub_benchmark.png  used on input line 386.
+Package pdftex.def Info: ../results/benchmarks/shrub_benchmark.png  used on input line 387.
 (pdftex.def)             Requested size: 234.88171pt x 376.62883pt.
-[6 <../results/benchmarks/shrub_benchmark.png>]
-<../results/benchmarks/tree_benchmark.png, id=148, 359.6637pt x 576.4737pt>
+[5 <../results/benchmarks/shrub_benchmark.png>]
+<../results/benchmarks/tree_benchmark.png, id=138, 359.6637pt x 576.4737pt>
 File: ../results/benchmarks/tree_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/tree_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/tree_benchmark.png  used on input line 436.
+Package pdftex.def Info: ../results/benchmarks/tree_benchmark.png  used on input line 437.
 (pdftex.def)             Requested size: 234.88171pt x 376.4715pt.
 
-Underfull \hbox (badness 2334) in paragraph at lines 454--473
+Underfull \hbox (badness 2334) in paragraph at lines 455--474
 []\T1/lmr/m/n/10 Currently three tra-jec-to-ries for Pinyon-Juniper
  []
 
-[7 <../results/benchmarks/tree_benchmark.png>]
-<../results/benchmarks/grass_benchmark.png, id=165, 359.6637pt x 576.4737pt>
+[6 <../results/benchmarks/tree_benchmark.png>]
+<../results/benchmarks/grass_benchmark.png, id=154, 359.6637pt x 576.4737pt>
 File: ../results/benchmarks/grass_benchmark.png Graphic file (type png)
 <use ../results/benchmarks/grass_benchmark.png>
-Package pdftex.def Info: ../results/benchmarks/grass_benchmark.png  used on input line 493.
+Package pdftex.def Info: ../results/benchmarks/grass_benchmark.png  used on input line 494.
 (pdftex.def)             Requested size: 234.88171pt x 376.4715pt.
 
-Underfull \hbox (badness 1163) in paragraph at lines 523--556
+Underfull \hbox (badness 1163) in paragraph at lines 524--557
 []\T1/lmr/m/n/10 Compared to peren-nial forb du-ra-tion peren-nial
  []
 
-[8 <../results/benchmarks/grass_benchmark.png>]
+[7 <../results/benchmarks/grass_benchmark.png>]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 560.
+(hyperref)                than one, level fixed on input line 561.
 
-<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=199, 470.75874pt x 281.05pt>
+<functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf, id=189, 470.75874pt x 281.05pt>
 File: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf Graphic file (type pdf)
 <use functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>
-Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 595.
+Package pdftex.def Info: functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf  used on input line 596.
 (pdftex.def)             Requested size: 469.75912pt x 280.4532pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 595--596
+Underfull \hbox (badness 10000) in paragraph at lines 596--597
 
  []
 
-[9 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>]
-<../plots/graphics/benchmark_areas.png, id=214, 341.3553pt x 284.5029pt>
+[8 <./functional_diversity_files/figure-latex/Overall Vegetation Benchmarks Chart Broken Down to ESD-1.pdf>]
+<../plots/graphics/benchmark_areas.png, id=204, 326.6604pt x 268.3626pt>
 File: ../plots/graphics/benchmark_areas.png Graphic file (type png)
 <use ../plots/graphics/benchmark_areas.png>
-Package pdftex.def Info: ../plots/graphics/benchmark_areas.png  used on input line 609.
-(pdftex.def)             Requested size: 234.88431pt x 195.76456pt.
-[10]
+Package pdftex.def Info: ../plots/graphics/benchmark_areas.png  used on input line 610.
+(pdftex.def)             Requested size: 234.8763pt x 192.95885pt.
 
-Package wrapfig Warning: Collision between wrapping environments on input line 615.
+Package wrapfig Warning: Collision between wrapping environments on input line 614.
 
-[11 <../plots/graphics/benchmark_areas.png>] [12] [13] [14] (./functional_diversity.aux)
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 653.
+(/home/sagesteppe/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+Package wrapfig Warning: Stationary wraptable forced to float on input line 655.
+
+[9 <../plots/graphics/benchmark_areas.png>] [10] [11] [12] (./functional_diversity.aux)
 Package rerunfilecheck Info: File `functional_diversity.out' has not changed.
-(rerunfilecheck)             Checksum: DD482C68C2949971C20C0EDF1D4502B5;1014.
+(rerunfilecheck)             Checksum: FE48016D62D4A8E1A84A658EF16B18A7;1014.
  ) 
 Here is how much of TeX's memory you used:
- 13758 strings out of 477989
- 225089 string characters out of 5838955
- 1869346 words of memory out of 5000000
- 33618 multiletter control sequences out of 15000+600000
- 561935 words of font info for 72 fonts, out of 8000000 for 9000
+ 13798 strings out of 477989
+ 224907 string characters out of 5838955
+ 1872346 words of memory out of 5000000
+ 33655 multiletter control sequences out of 15000+600000
+ 562254 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,10n,76p,332b,489s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
-Output written on functional_diversity.pdf (14 pages, 2032433 bytes).
+ 75i,10n,76p,325b,489s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on functional_diversity.pdf (12 pages, 2094856 bytes).
 PDF statistics:
- 290 PDF objects out of 1000 (max. 8388607)
- 247 compressed objects within 3 object streams
- 78 named destinations out of 1000 (max. 500000)
+ 280 PDF objects out of 1000 (max. 8388607)
+ 239 compressed objects within 3 object streams
+ 77 named destinations out of 1000 (max. 500000)
  108 words of extra memory for PDF output out of 10000 (max. 10000000)
 
