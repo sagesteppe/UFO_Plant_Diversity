@@ -49,6 +49,7 @@ library(ggthemes)
 library(hrbrthemes)
 library(waffle)
 library(sf)
+library(kableExtra)
 ```
 
 ```{r Import AIM LPI Data}
@@ -147,6 +148,9 @@ all_hits_agg_sum <- all_hits_agg %>%
 compare_agg <- inner_join(all_hits_agg_sum, terradat_calc, by = c('PrimaryKey', 'Variable')) %>% 
   mutate(across(where(is.numeric), ~ round(.x, 1)))
 
+#FIX <- compare_agg %>% filter(Cover_HB != Cover_TD) %>% 
+#  mutate(diff = abs(Cover_HB - Cover_TD))
+
 ggplot(data = compare_agg, aes(x = Cover_TD, y = Cover_HB)) +
   geom_point(shape = 1, color = "grey20") +
   labs(title = 'Validation of Calculations',
@@ -176,7 +180,6 @@ all_cor <- lapply(split(compare_agg, compare_agg$Variable),
 mismatch_cor <- lapply(split(off, off$Variable), 
        function(x) cor(x$Cover_HB, x$Cover_TD)) |>
   data.frame()
-
 
 rm(agg, lpi_agg, all_hits_agg, all_hits_agg_sum, terradat_calc)
 ```
@@ -320,16 +323,18 @@ benchmarks <- benchmarks_known_esd %>%
   bind_rows(., benchmarks) %>% 
   as.data.frame() 
 
-benchmarks <- drop_na(benchmarks, ECO.SITE) 
-
+benchmarks <- drop_na(benchmarks, ECO.SITE) %>% distinct()
 # add in imputed forb value
+
+esg_others <- benchmarks %>% filter(SET == 'ESG' & COVER_TYPE != 'Forb')
+esd <- benchmarks %>%  filter(SET == 'ESD')
 
 benchmarks <- benchmarks %>% 
   filter(SET == 'ESG', COVER_TYPE == 'Forb') %>% 
   mutate(COVER = bench_4for_besg)  %>% 
-  bind_rows(., benchmarks)
+  bind_rows(., esg_others, esd)
 
-rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd)
+rm(lkp_abb, esg_lkp_tab, benchmarks_known_esd, esg_others, esd, bench_4for_besg)
 ```
 
 ```{r combine dataset for comparisions}
@@ -356,10 +361,11 @@ all_hits_nat <- full_join(site_esd, all_hits_nat, by = 'PrimaryKey') %>%
   mutate(ECO.SITE = str_replace(ECO.SITE, 'SAC-Loamy_Uplands', 'SAC-Finer_Uplands'),
          ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
                                 'SAW_Sandy_&_Loamy'),
-          ECO.SITE = str_replace(ECO.SITE, 'SAW-Shallow_and_Deep_Rocky', 
+         ECO.SITE = str_replace(ECO.SITE, 'SAW-Shallow_and_Deep_Rocky', 
                                 'SAW_Shallow_&_Rocky'), 
-         ECO.SITE = str_replace(ECO.SITE, 'AW-Shallow', 
-                           'AW-Very_Shallow')
+         ECO.SITE = str_replace(ECO.SITE, 'AW-Shallow',  'AW-Very_Shallow'),
+         ECO.SITE = str_replace(ECO.SITE, 'SAW-Bottoms_and_Bottoms', 
+                                'SAW-Bottoms_&_Bottoms')
          ) %>% 
   drop_na()
 
@@ -369,10 +375,11 @@ benchmarks <- benchmarks %>%
          ECO.SITE = str_replace(ECO.SITE, 'SAW-Shallow_and_Deep_Rocky', 
                                 'SAW_Shallow_&_Rocky'),
          ECO.SITE = str_replace(ECO.SITE, 'AW-Saline_Bottoms_and_Bottoms', 
-                                'AW_Bottoms')
+                                'AW_Bottoms'),
+         ECO.SITE = str_replace(ECO.SITE, 'SAW-Bottoms_and_Bottoms', 
+                                'SAW-Bottoms_&_Bottoms')
          ) %>%
   distinct(.keep_all = T)
-
 
 rm(site_esd, site_esg, esg_plots)
 ```
@@ -396,7 +403,10 @@ all_hits_nat <- read.csv(file.path(praw, f[grep('Interence', f)])) %>%
   mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
   left_join(., wghts, by = c('STRATUM','AoInference'))  %>% 
   rename(COVER_TYPE = Variable) %>% 
-  st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269) 
+  st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269) %>% 
+  drop_na() %>% 
+  mutate(ECO.SITE = str_replace(ECO.SITE, 'SAW-Outcrops', 'Outcrops'),
+         ECO.SITE = str_replace(ECO.SITE, 'SAW-Bottoms', 'SAW-Bottoms_&_Bottoms')) 
 
 # also add the MEAN for plotting purposes
 
@@ -416,6 +426,7 @@ all_hits_forb <- all_hits_nat %>%
   filter(COVER_TYPE == 'Forb')
 
 bmf <- benchmarks %>% 
+  distinct() %>% 
   filter(COVER_TYPE == 'Forb', ESTIMATE == 'LOWER') %>%
   rename('TARGET' = COVER) 
 
@@ -433,8 +444,6 @@ ahf <- select(all_hits_forb,
 rm(bmf)
 ```
 
-
-## need to now put the single lower estimate in for the ESG FORBS for displaying in plot
 
 ```{r Benchmarks to Realized Forbs, eval = F}
 
@@ -723,7 +732,6 @@ rm(all_hits_grass, all_hits_forb, all_hits_shrub, all_hits_nat, all_hits_tree,
 ```
 
 
-
 ```{sh, crop the images, eval = F}
 cd ../results/benchmarks
 mogrify -trim *.png
@@ -765,7 +773,6 @@ rm(ahf, ahs, aht, ahg)
 The feature engineered cover of a lower forb benchmarks are used across all plots in lieu of the mean values from ESG's, which we felt was too high of a alue relative to the other forb benchmark values. 
 
 for sites in salt desert they alone are likely to not have enough SHRUB cover, sites in ASPEN/MMC stratum are automatically PASS for any cover of TREE. 
-
 
 ```{r write out results of whether meeting benchmarks or not, eval=FALSE}
 
@@ -1050,8 +1057,6 @@ r <- bind_rows(
 
 ```{r}
 
-library(kableExtra)
-
 bind_cols(r, Goal = 
             c(
               paste0(rep(80, times = 12), '%'), paste0(rep(70, times = 4), '%')
@@ -1062,6 +1067,7 @@ bind_cols(r, Goal =
   kableExtra::kable_styling(position = "float_right") %>% 
   collapse_rows()
 
+rm(r)
 ```
 
 
@@ -1075,7 +1081,9 @@ Certain areas throughout the Field Office differ in regards to meeting their ben
 \newpage
 
 
+```{r}
 
+```
 
 
 

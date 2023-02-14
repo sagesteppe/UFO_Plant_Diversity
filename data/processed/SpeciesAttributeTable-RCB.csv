@@ -656,3 +656,12 @@ ECTR,ECTR,Echinocereus triglochidiatus,Echinocereus triglochidiatus,WOODY,SUCCUL
 ERIN4,ERIN4,Eriogonum inflatum,Eriogonum inflatum,NONWOODY,FORB,ANNUAL,NA,FALSE,NA,NA,NonNoxAnnForbCover 
 PESI,PESI,Pediocactus simpsonii,Pediocactus simpsonii,WOODY,SUCCULENT,PERENNIAL,NA,FALSE,NA,NA,NonNoxSucculentCover 
 POPR,POPR,Poa pratensis,Poa pratensis,NONWOODY,GRAMINOID,PERENNIAL,NA,TRUE,C3,NA,NoxPerenGrassCover 
+BRPU3,BRINP5,Bromus inermis ssp. pumpellianus,Bromus inermis ssp. pumpellianus,NONWOODY,GRAMINOID,PERENNIAL,NA,FALSE,C3,NA,NonNoxPerenGrassCover 
+VUOCO,VUOC,Vulpia octoflora,Vulpia octoflora,NONWOODY,GRAMINOID,ANNUAL,NA,FALSE,C3,NA,NonNoxAnnGrassCover 
+POCO,POCO,Poa compressa,Poa compressa,NONWOODY,GRAMINOID,ANNUAL,NA,TRUE,C3,NA,NoxAnnGrassCover 
+SPAI,SPAI,Sporobolous airoides,Sporobolus airoides,NONWOODY,GRAMINOID,PERENNIAL,NA,FALSE,C4,NA,NonNoxPerenGrassCover 
+POFEF,POFEF,Poa fendleriana ssp. Fendleriana,Poa fendleriana ssp. Fendleriana,NONWOODY,GRAMINOID,PERENNIAL,NA,FALSE,C3,NA,NonNoxPerenGrassCover 
+"BRPO2
+",BRPO2,Bromus porteri,Bromus porteri,NONWOODY,GRAMINOID,PERENNIAL,NA,FALSE,C3,NA,NonNoxPerenGrassCover 
+CARO5,CARO5,Carex rossii,Carex rossii,NONWOODY,SEDGE,PERENNIAL,NA,FALSE,C3,NA,NonNoxPereenSedgeCover
+FESA,FESA,Festuca saximontana,Festuca saximontana,NONWOODY,GRAMINOID,PERENNIAL,NA,FALSE,C3,NA,NonNoxPerenGrassCover 
