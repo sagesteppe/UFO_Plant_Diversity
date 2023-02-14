@@ -419,6 +419,35 @@ all_hits_nat <- read.csv(file.path(praw, f[grep('Interence', f)])) %>%
 rm(wghts)
 ```
 
+```{r add strata to points for evaluating shrub cover}
+
+lc_lkp <- read.csv(file.path(praw, f[grep('landcover', f)]) ) 
+r <- terra::rast('../../plot_post_stratification/data/processed/PredictedVegClass.tif')
+
+pts <- all_hits_nat %>% 
+  distinct(PLOTID, .keep_all = T) %>% 
+  select(PLOTID) %>% 
+  terra::vect() %>% 
+  terra::project(terra::crs(r))
+
+reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>% 
+ as.data.frame() %>% 
+  mutate(lyr1 = case_when(
+         PLOTID %in% c('PJ-143', 'PJ-153') ~ 4, 
+         PLOTID %in% c('AS-002', 'AS-004') ~ 3, 
+         PLOTID == 'MC-068' ~ 2,
+         TRUE ~ lyr1))
+         
+all_hits_nat <- left_join(all_hits_nat, reclass, by = 'PLOTID') %>% 
+  left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
+  select(-lyr1) %>% 
+  relocate(stratum, .before = geometry) %>% 
+  st_as_sf() 
+
+rm(r, pts, reclass, lc_lkp)
+```
+
+
 
 ```{r calculate land meeting benchmark forb results}
 
@@ -515,12 +544,28 @@ Unfortunately in most scenarios, we do not expect that drought is going to have 
 all_hits_shrub <- all_hits_nat %>% 
   filter(COVER_TYPE == 'Shrub')
 
+
+# restart here need to SPLIT THESE OUT INTO TWO DIFFERENT DATA FRAMES. WE NEED THE LOWER
+# FOR THE SALT DESERT SITES !!!!!!!!!!!!!!!!!! UPPER FOR THE OTHER SITES!!!!!!!!
+
+
 bmf <- benchmarks %>% 
   filter(COVER_TYPE == 'Shrub', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
   rename('TARGET' = COVER) 
 
 all_hits_shrub <- left_join(all_hits_shrub, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
-  mutate(Meeting = if_else(Cover_HB <= TARGET, T, F))
+  mutate(Meeting_SD = if_else(stratum ==  'Salt_Desert' & Cover_HB <= TARGET,  T, F))
+
+
+
+
+
+
+
+
+
+
+
 
 shrub <- spsurvey::cat_analysis(
   dframe = all_hits_shrub, siteID = 'PLOTID', vars = 'Meeting',
@@ -1070,6 +1115,7 @@ rm(r)
 
 \newpage
 
+Results by management areas in general do not differ significantly. From a broad perspective, roughly a quarter of land across the entire field office is either meeting standards for forb or grass cover, with the exception of Gunnison Gorge National Conservation Area which has no land meeting objectives for forb cover. While their were relatively few plots sampled at Gunnison Gorge NCA, `r sum`, that each individual plot failed this benchmark is unlikely to be due to chance, as is reflected by the Areas of Critical Environmental Concern. No areas are meeting the benchmarks for Tree cover either, although most management areas have roughly one half of their land achieving. This indicates the need to explore Tree thinning operations in certain areas, as funding permits and needs require, to benefit wildlife via modification of habitat or to decrease the threats of wildfires to adjacent human population base. Given the historic reductions in fire cycle this is an issue which requires a great many decades before coming back into resolution, but given the current awareness of the problem, management actions are now underway which will do so. Shrub cover is being achieved in several areas
 
 ```{r}
 
@@ -1079,6 +1125,7 @@ achieving %>%
   mutate(INDICATOR = 'FUNCTIONAL DIVERSITY', .before = CATEGORY) %>% 
   rename_with(toupper) %>% 
   mutate(across(.cols = everything(), toupper))  %>% 
+  arrange(PLOTID) %>% 
   write.csv(., row.names = F, 
           '../data/processed/functional_diversity_meeting_benchmarks.csv')
 
