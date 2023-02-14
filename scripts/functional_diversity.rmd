@@ -402,6 +402,7 @@ all_hits_nat <- read.csv(file.path(praw, f[grep('Interence', f)])) %>%
   rowwise() %>% 
   mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
   left_join(., wghts, by = c('STRATUM','AoInference'))  %>% 
+  mutate(AoInference = str_replace(AoInference, '-NM', '-NCA')) %>% 
   rename(COVER_TYPE = Variable) %>% 
   st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269) %>% 
   drop_na() %>% 
@@ -741,7 +742,7 @@ mogrify -trim *.png
 
 ### Metrics Combined
 
-The condition of many Ecological Sites varied, and which benchmarks were being achieved, and at how many plots differed. Certain benchmarks were achieved more often than others (Figure 5)... Clearly the cover of tree was meet at many sites, given the aforementioned inability of them to grow in many habitats. 
+Few clear trends emerge regarding which Ecological Sites are failing to meet certain benchmarks, and the relationships between the functional diversity benchmarks which they are no t meeting. It is evident that few plots in few Ecological Sites are meeting either forb of grass cover benchmarks, and the only Ecological Sites which appear notably different here are those with only a single plot which was sampled in them. In general most ecological sites were achieving benchmark goals for shrub and tree cover, with the few exceptions being ecological sites which lacked replicates. This illustrating a notion that woody encroachment is not a large issue in the area of analysis, but rather that the loss of non-woody species within the remaining inter-spatial areas is concerning. 
 
 ```{r prep data for overall ESD conditions, eval = F}
 
@@ -770,9 +771,7 @@ achieving <- bind_rows(ahf, ahs, aht, ahg) %>%
 rm(ahf, ahs, aht, ahg)
 ```
 
-The feature engineered cover of a lower forb benchmarks are used across all plots in lieu of the mean values from ESG's, which we felt was too high of a alue relative to the other forb benchmark values. 
-
-for sites in salt desert they alone are likely to not have enough SHRUB cover, sites in ASPEN/MMC stratum are automatically PASS for any cover of TREE. 
+The feature engineered cover of a lower forb benchmarks are used across all plots in lieu of the mean values from ESG's, which we felt was too high of a value relative to the other forb benchmark values included in the Ecological Sites Descriptions. The use of the median value means that more plots are passing benchmark conditions, than were under the pure ESG schema (original results not pictured here).
 
 ```{r write out results of whether meeting benchmarks or not, eval=FALSE}
 
@@ -970,7 +969,6 @@ waff_dat2 <- waff_dat2 %>%
   arrange(-diff) %>% 
   slice(1)
 
-
 rm(ach_forb, ach_shrub, ach_tree, ach_grass)
 ```
 
@@ -1054,7 +1052,6 @@ r <- bind_rows(
 
 \newpage
 
-
 ```{r}
 
 bind_cols(r, Goal = 
@@ -1073,15 +1070,17 @@ rm(r)
 
 \newpage
 
-### Geographic Trends in Conditions
-
-Certain areas throughout the Field Office differ in regards to meeting their benchmarks. Areas which...
-
-
-\newpage
-
 
 ```{r}
+
+achieving %>% 
+  st_drop_geometry() %>% 
+  select(PLOTID, AoInference, Meeting, CATEGORY = LIFEFORM, ECO.SITE) %>% 
+  mutate(INDICATOR = 'FUNCTIONAL DIVERSITY', .before = CATEGORY) %>% 
+  rename_with(toupper) %>% 
+  mutate(across(.cols = everything(), toupper))  %>% 
+  write.csv(., row.names = F, 
+          '../data/processed/functional_diversity_meeting_benchmarks.csv')
 
 ```
 
