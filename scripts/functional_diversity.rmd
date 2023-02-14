@@ -442,7 +442,8 @@ all_hits_nat <- left_join(all_hits_nat, reclass, by = 'PLOTID') %>%
   left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
   select(-lyr1) %>% 
   relocate(stratum, .before = geometry) %>% 
-  st_as_sf() 
+  st_as_sf() %>% 
+  mutate(stratum = str_trim(stratum))
 
 rm(r, pts, reclass, lc_lkp)
 ```
@@ -542,30 +543,29 @@ Unfortunately in most scenarios, we do not expect that drought is going to have 
 ```{r calculate land meeting benchmark shrubs results}
 
 all_hits_shrub <- all_hits_nat %>% 
-  filter(COVER_TYPE == 'Shrub')
-
+  filter(COVER_TYPE == 'Shrub') 
 
 # restart here need to SPLIT THESE OUT INTO TWO DIFFERENT DATA FRAMES. WE NEED THE LOWER
 # FOR THE SALT DESERT SITES !!!!!!!!!!!!!!!!!! UPPER FOR THE OTHER SITES!!!!!!!!
 
+bm_sd <- benchmarks %>% 
+  filter(COVER_TYPE == 'Shrub', ESTIMATE == 'LOWER')
+  
+salt_des_shrub <- all_hits_shrub %>% 
+  filter(stratum ==  'Salt_Desert') %>% 
+  left_join(., bm_sd, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+  mutate(Meeting = if_else(stratum ==  'Salt_Desert' & Cover_HB >= COVER,  T, F))
 
 bmf <- benchmarks %>% 
-  filter(COVER_TYPE == 'Shrub', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
+  filter(COVER_TYPE == 'Shrub', ESTIMATE == 'UPPER' | SET == 'ESG') 
+
+all_hits_shrub <- all_hits_shrub %>% 
+  filter((stratum != "Salt_Desert")
+         %>% replace_na(TRUE)) %>% 
+  left_join(., bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+  mutate(Meeting = if_else(Cover_HB <= COVER,  T, F)) %>% 
+  bind_rows(., salt_des_shrub) %>% 
   rename('TARGET' = COVER) 
-
-all_hits_shrub <- left_join(all_hits_shrub, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
-  mutate(Meeting_SD = if_else(stratum ==  'Salt_Desert' & Cover_HB <= TARGET,  T, F))
-
-
-
-
-
-
-
-
-
-
-
 
 shrub <- spsurvey::cat_analysis(
   dframe = all_hits_shrub, siteID = 'PLOTID', vars = 'Meeting',
@@ -575,7 +575,7 @@ ahs <- select(all_hits_shrub,
        PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
   st_drop_geometry()
 
-rm(bmf)
+rm(bmf, salt_des_shrub, bm_sd)
 ```
 
 
@@ -620,9 +620,9 @@ We expect that except for Salt Desert areas, nearly all plots across all Ecologi
 
 Reductions in shrubby plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and varies considerably by ecological site (CITE). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return...
 
-Whereas shrubs are expected to be greatly reduced in the Salt Desert, especially areas which have historically been composed primarily of shadscale (saltbush) (*Atriplex* spp.). Cover of most palatable species of shrubs, especially winterfat (*Krascheninnikovia*) & sages (*Artemisia*), in these areas was greatly reduced by improper livestock utilization upwards of a century ago (CITE).
-While passive efforts have been made to facilitate the establishment of shrubs at these sites, the very slow re-generative process, combined with climate and seasonal effects on usage, have not always shown the desired results (@, @, @).
+This is the sole functional diversity metric which is computed in two manners. For sites which are in the Salt Desert Stratum, per the spatial product created in section XX, we consider plots to be failing if they do not have cover of shrubs meeting the lower benchmark boundaries, and do not penalize sites which may have cover's exceeding the upper benchmark value. For sites outside of the salt desert stratum, they are considered to be out of reference only if there observed covers exceed the upper benchmarks. 
 
+Whereas shrubs are expected to be greatly reduced in the Salt Desert, especially areas which have historically been composed primarily of shadscale (saltbush) (*Atriplex* spp.). Cover of most palatable species of shrubs, especially winterfat (*Krascheninnikovia*) & sages (*Artemisia*), in these areas was greatly reduced by improper livestock utilization upwards of a century ago (CITE). While passive efforts have been made to facilitate the establishment of shrubs at these sites, the very slow re-generative process, combined with climate and seasonal effects on usage, have not always shown the desired results (@, @, @).
 
 \newpage
 
@@ -789,20 +789,6 @@ mogrify -trim *.png
 
 Few clear trends emerge regarding which Ecological Sites are failing to meet certain benchmarks, and the relationships between the functional diversity benchmarks which they are no t meeting. It is evident that few plots in few Ecological Sites are meeting either forb of grass cover benchmarks, and the only Ecological Sites which appear notably different here are those with only a single plot which was sampled in them. In general most ecological sites were achieving benchmark goals for shrub and tree cover, with the few exceptions being ecological sites which lacked replicates. This illustrating a notion that woody encroachment is not a large issue in the area of analysis, but rather that the loss of non-woody species within the remaining inter-spatial areas is concerning. 
 
-```{r prep data for overall ESD conditions, eval = F}
-
-yn <- data.frame(
-  'ECO.SITE' = sample(esdM$ESD, size = 250, replace = T),
-  'FORB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.65, 0.35)),
-  'GRASS' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.2, 0.8)),
-  'SHRUB' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.45, 0.55)),
-  'TREE' = sample(c('Y', 'N'), size = 250, replace = T, prob = c(0.8, 0.2))
-) %>% 
-  group_by(ECO.SITE) %>% 
-  add_count(name = 'SAMPLE') %>% 
-  pivot_longer(cols = FORB:TREE, names_to = 'LIFEFORM', values_to = 'ACHIEVING') 
-
-```
 
 ```{r prep real data for overall ESD conditions}
 
@@ -832,7 +818,7 @@ achieving %>%
 
 Each individual Ecological Site, or Ecological Group, varies in the proportion of all plots located in them which are within reference condition. Once a greater number of replicate plots are sampled per Ecological Site (see Figure XX, panel 5 *(right most)*), and combined with digitized management records, these data may form an approach towards understanding the resilience of different Ecological Sites in the UFO to management actions. The Ecological Sites are arranged via descending order of the total proportion of vegetation types and plots which are achieving benchmarks. These results currently largely reflect the 
 
-```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=4.5, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
+```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=4, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
 
 yn <- achieving
 
@@ -859,7 +845,7 @@ p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) +
                     values = sfm_values) +
   theme_bw() + 
   theme(legend.position= 'none', 
-        axis.text.y = element_text(color = "grey20", size = 6),
+        axis.text.y = element_text(color = "grey20", size = 5),
         panel.spacing = unit(0, "lines"), 
         plot.margin=grid::unit(c(0,0,0,0), "lines"),
         panel.border = element_rect(fill = NA, colour = NA)) +
@@ -873,8 +859,8 @@ l1 <- cowplot::get_legend( ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) +
                     values = sfm_values) +
   theme(
     legend.position= 'bottom', 
-    axis.text.y = element_text(color = "grey20", size = 4),
-    legend.text=element_text(size = 10), 
+    axis.text.y = element_text(color = "grey20", size = 3),
+    legend.text=element_text(size = 8), 
     panel.spacing = unit(0, "lines"), 
     plot.margin=grid::unit(c(0,0,0,0), "lines"),
     panel.border = element_rect(fill = NA, colour = NA)) +
@@ -892,7 +878,7 @@ p2 <- ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) +
   theme(
     legend.position="none", 
     plot.title = element_text(hjust = 0.5),
-    legend.text = element_text(size = 10), 
+    legend.text = element_text(size = 8), 
     plot.margin = grid::unit(c(0,0,0,-0.2), "lines"),
     axis.text.x = element_text(color = 'white'), #remove x axis labels
     axis.text.y = element_blank(),  #remove y axis labels
@@ -903,7 +889,8 @@ l2 <- cowplot::get_legend ( ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) 
   facet_grid(. ~ title) +
   geom_tile() +
   scale_fill_continuous('n', low="#8ecae6", high="#321FE0") +
-  theme(legend.position="bottom") )
+  theme(legend.position="bottom", 
+        legend.text = element_text(size = 8)))
 
 combineLegend <- plot_grid(l1, l2, nrow = 1, rel_widths = c(0.5, 0.5),
                                     rel_heights = c(0.6, 0.4))
@@ -911,7 +898,7 @@ plots <- plot_grid(p1, p2, rel_widths = c(0.81, 0.19))
 plotLeg <- plot_grid(plots, combineLegend, rel_heights = c(0.9, 0.1), nrow = 2)
 
 title <- ggdraw() + 
-  draw_label("Proportion of Plots Meeting Benchmarks", size = 14)
+  draw_label("Proportion of Plots Meeting Benchmark", size = 12)
 
 cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
 
@@ -1018,10 +1005,9 @@ rm(ach_forb, ach_shrub, ach_tree, ach_grass)
 ```
 
 
+```{r Overall Vegetation Benchmarks By Major Stratum, eval = F}
 
-```{r Overall Vegetation Benchmarks By Major Stratum, fig.height = 3.5, fig.width = 4, fig.cap = 'Total area of each stratum and the overall status of benchmarks'}
 
-options(scipen = 999)
 lkp <- data.frame(
   old = c('Sage_Brush', 'Salt_Desert', 'Mixed_Mountain_Shrub', 'Pinon_Juniper',
           'Aspen'), 
@@ -1058,6 +1044,7 @@ ggplot(waff_dat2, aes(fill = Estimate, values = n)) +
   
   theme(
     axis.text.y = element_text(angle = 45, size = 8), 
+    axis.text.x = element_text(size = 8), 
     legend.position="bottom",
     plot.title = element_text(hjust = 0.5, size = 11, face = 'bold'),
     panel.spacing = unit(0.01, "lines"), 
@@ -1065,16 +1052,24 @@ ggplot(waff_dat2, aes(fill = Estimate, values = n)) +
     panel.background = element_blank(),
     legend.key.height = unit(1, 'lines'), #change legend key height
     legend.key.width = unit(0.5, 'lines'),
-    legend.title = element_text(size=10),
-    legend.text = element_text(size=8)
+    legend.title = element_text(size=9),
+    legend.text = element_text(size=7)
     )  +
   
-   labs(title = "Areas meeting Functional Cover Benchmarks", 
+   labs(title = "Areas meeting\nFunctional Cover Benchmarks", 
         y = 'Acres')
+
+ggsave(plot = last_plot(), filename = '../plots/graphics/benchmark_areas.png', 
+       width = 12, height = 10, units = "cm")
 
 rm(lkp, waff_dat2, zerofourPal, zerofourVal)
 ```
 
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../plots/graphics/benchmark_areas.png}
+  \caption{Total area of each stratum and the overall status of benchmarks}
+\end{wrapfigure}
 
 ```{r Total Area Meeting Benchmarks by Management Unit Table}
 
@@ -1115,7 +1110,8 @@ rm(r)
 
 \newpage
 
-Results by management areas in general do not differ significantly. From a broad perspective, roughly a quarter of land across the entire field office is either meeting standards for forb or grass cover, with the exception of Gunnison Gorge National Conservation Area which has no land meeting objectives for forb cover. While their were relatively few plots sampled at Gunnison Gorge NCA, `r sum`, that each individual plot failed this benchmark is unlikely to be due to chance, as is reflected by the Areas of Critical Environmental Concern. No areas are meeting the benchmarks for Tree cover either, although most management areas have roughly one half of their land achieving. This indicates the need to explore Tree thinning operations in certain areas, as funding permits and needs require, to benefit wildlife via modification of habitat or to decrease the threats of wildfires to adjacent human population base. Given the historic reductions in fire cycle this is an issue which requires a great many decades before coming back into resolution, but given the current awareness of the problem, management actions are now underway which will do so. Shrub cover is being achieved in several areas
+Results by management areas in general do not differ significantly. From a broad perspective, roughly a quarter of land across the entire field office is either meeting standards for forb or grass cover, with the exception of Gunnison Gorge National Conservation Area which has no land meeting objectives for forb cover. While their were relatively few plots sampled at Gunnison Gorge NCA, , that each individual plot failed this benchmark is unlikely to be due to chance, as is reflected by the Areas of Critical Environmental Concern. No areas are meeting the benchmarks for Tree cover either, although most management areas have roughly one half of their land achieving. This indicates the need to explore Tree thinning operations in certain areas, as funding permits and needs require, to benefit wildlife via modification of habitat or to decrease the threats of wildfires to adjacent human population base. Given the historic reductions in fire cycle this is an issue which requires a great many decades before coming back into resolution, but given the current awareness of the problem, management actions are now underway which will do so. Roughly half to two-thirds of land are achieving Shrub cover objectives, and two areas have confidence intervals which do, of very nearly do, include the land cover targets. 
+
 
 ```{r}
 
@@ -1132,5 +1128,6 @@ achieving %>%
 ```
 
 
+\newpage
 
 # References 
