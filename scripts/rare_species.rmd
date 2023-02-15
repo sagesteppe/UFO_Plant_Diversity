@@ -208,6 +208,8 @@ spp_richness <- st_intersection(pts, char)  %>%
   left_join(., spp_richness, by = 'PrimaryKey') %>% 
   rename(SYMBOL_AIM = SpeciesList) 
 
+no_records_full <- nrow(spp_richness)
+
 rm(pts, char, spp_r_header, plots)
 ```
 
@@ -217,8 +219,7 @@ rm(pts, char, spp_r_header, plots)
 # remove unknowns here, only 118 records total across 5 years, pretty impressive!
 unks <- spp_richness %>% 
   filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+')) %>%
-  nrow() 
-unks <- (unks / nrow(spp_richness)) * 100 # 1.5 %
+  nrow()
 
 spp_richness <- spp_richness %>% 
   filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+', negate = T))
@@ -229,25 +230,31 @@ attributes <- read.csv(
   select(SYMBOL_AIM, SYMBOL_USDA) %>% 
   distinct() # one duplicate in here somewhere!
 
-sp_clean <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM') 
+spp_clean <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM') 
   
 # join all CNHP to ensure all of our records are a clean map
 CO_plants <- read.csv(file.path(ppro, files[grep('Native', files)]))
 
-sp_clean_1 <- sp_clean %>% 
+spp_clean_1 <- spp_clean %>% 
   filter(is.na(SYMBOL_USDA)) %>% 
   left_join(., CO_plants, by = c('SYMBOL_AIM' = 'SYMBOL')) %>% 
   mutate(SYMBOL_USDA = SYMBOL_AIM)
 
-sp_dirty <- sp_clean_1  %>% 
+spp_dirty <- spp_clean_1  %>% 
   filter(is.na(BINOMIAL_NAT)) %>% 
   filter(str_detect(SYMBOL_AIM, 'UN.*', negate = T)) %>% 
   count(SYMBOL_AIM) #  we now know how many records we lost to analysis here
 
-sp_clean <- bind_rows(drop_na(sp_clean, SYMBOL_USDA), sp_clean_1) 
+spp_clean <- bind_rows(drop_na(spp_clean, SYMBOL_USDA), spp_clean_1) 
 # we will use this dataset going foward,
 
-rm(sp_clean_1, CO_plants, attributes)
+n_w_syn <- nrow(spp_clean)
+
+spp_clean <- spp_clean %>%  # NO SYNONYMS
+  group_by(PLOTID, SYMBOL_USDA) %>% 
+  distinct()
+
+rm(spp_clean_1, CO_plants, attributes)
 ```
 
 ```{r Import tracked Plants}
@@ -259,7 +266,7 @@ tracked <- read.csv(file.path(ppro, files[grep('Rare_Plants_BLM', files)]))
 ```{r Endangered Species Act}
 esa <- tracked %>% drop_na(USESA)
 
-fws_esa <- sp_clean %>% filter(SYMBOL_USDA %in% esa$National_USDASymbol)
+fws_esa <- spp_clean %>% filter(SYMBOL_USDA %in% esa$National_USDASymbol)
 # NO FALSE POSITIVES ALL CLEAN
 ```
 
@@ -274,7 +281,7 @@ blm <- tracked %>%
   ))
 
 ## POSSIBLE  FALSE POSITIVE Astragalus musiniensis 
-blm_ss <- sp_clean %>% filter(SYMBOL_USDA %in% blm$National_USDASymbol)
+blm_ss <- spp_clean %>% filter(SYMBOL_USDA %in% blm$National_USDASymbol)
 ```
 
 
@@ -286,7 +293,7 @@ fed <- c(blm$GNAME, esa$GNAME)
 global <- tracked %>% filter(str_detect(GRANK, 'G1|G2|G3'))
 global_sub <- filter(global, !GNAME %in% fed)
 
-global_aim <- sp_clean %>% filter(SYMBOL_USDA %in% global_sub$National_USDASymbol)
+global_aim <- spp_clean %>% filter(SYMBOL_USDA %in% global_sub$National_USDASymbol)
 
 # FALSE POSITIVES # PHBE2
 # WARRANT FURTHER STUDY Erigeron nematophyllus, Draba rectrifructa, Polypodium saximontanum, 
@@ -299,12 +306,24 @@ state <- tracked %>% filter(str_detect(SRANK, 'S1|S2|S3'))
 state_sub <- filter(state, !GNAME %in% fed)
 state_sub1 <- filter(state_sub, !GNAME %in% global_sub$GNAME)
 
-state_aim <- sp_clean %>% filter(SYMBOL_USDA %in% state_sub$National_USDASymbol)
+state_aim <- spp_clean %>% filter(SYMBOL_USDA %in% state_sub$National_USDASymbol)
 ```
 
-```{r Mentzelia Gyposphila}
+```{r Mentzelia gyposphila}
+
+m_gyp <- spp_clean %>% 
+  filter(PLOTID == 'OT-126' & SYMBOL_AIM == 'METH') %>% 
+  mutate(SYMBOL_AIM = 'Mentzelia gypsophila',
+         SYMBOL_USDA = 'Mentzelia gypsophila') 
+meth <- spp_clean %>% 
+  filter(SYMBOL_AIM == 'METH' & PLOTID != 'OT-126' ) 
+
+spp_clean <- spp_clean %>% 
+  filter(SYMBOL_AIM != 'METH') %>% 
+  bind_rows(m_gyp, meth, .)
 
 
+rm(m_gyp, meth)
 ```
 
 
@@ -327,7 +346,7 @@ To identify the number of rare plants under Gastons quantile...
 
 ### Identification of Singletons
 
-#Rabinowitz Though Experiment
+# Rabinowitz Though Experiment
 
 To identify rare plants via the aggregated Rabinowitz method... the concepts of the Rare7 package were used, but implemented entirely seperately.
 
@@ -337,7 +356,7 @@ occurrences <- BIEN::BIEN_occurrence_species(spp_v)
 write.csv( file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
 ```
 
-```{r}
+```{r, eval = F}
 occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
   mutate(date_collected = as.Date(date_collected)) %>% 
   filter(date_collected > '1900-01-01')
@@ -404,17 +423,33 @@ the correlation of geographic range to habitat range was checked with linear reg
 ```
 
 ```{r plot all aim species}
-
+  
 ```
 
 
 # Results 
 
-The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r nrow(tracked)`, different organizations and agencies have different criteria for interpreting and classifying susceptibility of a species to extinction and loss of populations. The most rigorous and selective conditions are enforced the United States Fish and Wildlife Service (USFWS), whom maintain the only official registries and implement the evaluation procedures for 'Threatened' and 'Endangered' species. These categories represent species of the highest concern regarding their continued existence, with Endangered Species being the more severe category of the two. Colorado contains `r nrow(esa)` species tracked by the USFWS, `r nrow(esa[esa$USESA=='LT',])` of these species are threatened with extinction, and `r nrow(esa[esa$USESA=='LE',])` are immediately endangered. 
+The original AIM Species Richness data set contained `r no_records_full` plot based observations from `r length(unique(spp_richness$PLOTID))` plots. After removing `r unks` morphotypes which were not identified (`r paste0(round(((unks/no_records_full) * 100),2), '%')` of all records), dropping the `r nrow(spp_dirty)` records which were not identified beyond genus (`r paste0(round(((nrow(spp_dirty)/no_records_full) * 100),2), '%')` of all records), and removing `r (n_w_syn - nrow(spp_clean))` synonymous taxa at the same plot (`r paste0(round(((n_w_syn - nrow(spp_clean)) / nrow(spp_clean) * 100), 2), '%')`), `r nrow(spp_clean)` records were left. These records represented `r length(unique(spp_richness$SYMBOL_AIM))` distinct terminal taxa, i.e. final taxonomic units - species were not double-counted with infra species, which are more or less in accord with the states most current Floristic treatments, and the USDA. 
 
-The Bureau of Land Management officially tracks plants which are of conservation concern on their lands, and which may be petitioned to be elevated to the more stringent categories implemented by the Fish and Wildlife Service, but which are mostly undergoing further assessment. As the BLM is contained within the government, these tracked taxa do not contain any redundancies with the Endangered Species Act list. BLM Colorado has `r nrow(blm)` sensitive species. 
 
-Several Non-Governmental Organizations (NGO's) also maintain their own information on species of concern, utilizing different methods and assessments than Government Agencies. A large portion of there goals are to form networks which are global in scale, rather than restricted to state actors, allowing for more comprehensive views of biological ranges and processes. Accordingly, they have a more integrated global perspective on species, and then make assessments of susceptibility to extinction at administrative units to assist local planners. One such agency is NatureServe. NatureServe uses a tiered ranking system, from 5-1, with lower values indicating susceptibility of a taxon to extinction at a either a Global or State level. Values '3' and below are taxa that warrant conservation considerations. The number of low value species, are greater at lower administrative levels, oftentimes due to species ranges crossing multiple administrative units. The number of S3 ('S' short for 'State') or lower (S2, S1) species in Colorado is `r nrow(state)`, and the subset of these which are globally tracked species with G3 ('G' short for 'Global')  or lower ranks is `r nrow(global)`. These two lists are not independent of the government data, for example the State list contains `r sum(state$GNAME %in% esa$GNAME)` of `r nrow(esa)` FWS species, while the global list contains `r sum(global$GNAME %in% esa$GNAME)` of them. In addition, the state list contains `r sum(state$GNAME %in% blm$GNAME)` or the `r nrow(blm)` BLM Sensitive Species, while the global list contains `r sum(global$GNAME %in% blm$GNAME)`. We subtract these species from these two lists and end up with a total of `r nrow(state_sub)` species on the state and `r nrow(global_sub)` species on the global lists to avoid confusion in reporting. We further remove the species present in the state list from the global list reducing the state list to `r nrow(state_sub1)`,  which maintains the global list at `r nrow(global_sub)`
+
+The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r nrow(tracked)`, different organizations and agencies have different criteria for interpreting and classifying susceptibility of a species to extinction and loss of populations. The most rigorous and selective conditions are enforced the United States Fish and Wildlife Service (USFWS), whom maintain the only official registries and implement the evaluation procedures for 'Threatened' and 'Endangered' species. These categories represent species of the highest concern regarding their continued existence, with Endangered Species being the more severe category of the two. Colorado contains `r nrow(esa)` species tracked by the USFWS, `r nrow(esa[esa$USESA=='LT',])` of these species are threatened with extinction, and `r nrow(esa[esa$USESA=='LE',])` are immediately endangered. Of the species tracked under the Endangered Species Act `r nrow(distinct(fws_esa, BINOMIAL_NAT))` species, `r unique(fws_esa$BINOMIAL_NAT)`, was found at `r length(unique(fws_esa$PLOTID))` plots. 
+
+The Bureau of Land Management officially tracks plants which are of conservation concern on their lands, and which may be petitioned to be elevated to the more stringent categories implemented by the Fish and Wildlife Service, but which are mostly undergoing further assessment. As the BLM is contained within the government, these tracked taxa do not contain any redundancies with the Endangered Species Act list. BLM Colorado has `r nrow(blm)` sensitive species. Of the BLM sensitive species `r length(unique(blm_ss$BINOMIAL_NAT))`,  `r toString(unique(blm_ss$BINOMIAL_NAT))`, were found at a total of `r length(unique(blm_ss$PLOTID))` plots. 
+
+Several Non-Governmental Organizations (NGO's) also maintain their own information on species of concern, utilizing different methods and assessments than Government Agencies. A large portion of there goals are to form networks which are global in scale, rather than restricted to state actors, allowing for more comprehensive views of biological ranges and processes. Accordingly, they have a more integrated global perspective on species, and then make assessments of susceptibility to extinction at administrative units to assist local planners. One such agency is NatureServe. NatureServe uses a tiered ranking system, from 5-1, with lower values indicating susceptibility of a taxon to extinction at a either a Global or State level. Values '3' and below are taxa that warrant conservation considerations. The number of low value species, are greater at lower administrative levels, oftentimes due to species ranges crossing multiple administrative units. The number of S3 ('S' short for 'State') or lower (S2, S1) species in Colorado is `r nrow(state)`, and the subset of these which are globally tracked species with G3 ('G' short for 'Global')  or lower ranks is `r nrow(global)`. These two lists are not independent of the government data, for example the State list contains `r sum(state$GNAME %in% esa$GNAME)` of `r nrow(esa)` FWS species, while the global list contains `r sum(global$GNAME %in% esa$GNAME)` of them. In addition, the state list contains `r sum(state$GNAME %in% blm$GNAME)` or the `r nrow(blm)` BLM Sensitive Species, while the global list contains `r sum(global$GNAME %in% blm$GNAME)`. We subtract these species from these two lists and end up with a total of `r nrow(state_sub)` species on the state and `r nrow(global_sub)` species on the global lists to avoid confusion in reporting. We further remove the species present in the state list from the global list reducing the state list to `r nrow(state_sub1)`,  which maintains the global list at `r nrow(global_sub)`. Of the state species `r length(unique(state_aim$SYMBOL_USDA))`,  were found at a total of `r length(unique(state_aim$PLOTID))` plots, for a total of `r nrow(state_aim)` records. Of the state species `r length(unique(global_aim$SYMBOL_USDA))`,  were found at a total of `r length(unique(global_aim$PLOTID))` plots, for a total of `r nrow(global_aim)` records. 
+
+
+```{r remove some writing variables}
+rm(esa, fws_esa, blm, blm_ss, state, global, global_sub, state_sub, 
+   state_sub1, state_aim, global_aim)
+```
+
+
+A fascinating rare plant recorded on the AIM plots was *Mentzelia paradoxensis* J. J. Schenk & L. Hufford, a taxon described as new to science in 2010. This was found at a single plot, in the Paradox Valley, the locality from which it was collected in by prolific Intermountain West botanists Noel and Patricia Holmgren. This species hypothesis is so new, relatively little testing of it has been carried out, and to date the Colorado Natural Heritage Program has not evaluated the conservation status of it. Botanical collectors have determined it to be present in both the Paradox and the nearby Big Gypsum Valley, in both instances growing on stream terraces with elevated gypsum content. This species was requested to be added to the AIM database by both the Lead State Botanist, whom is also the BLM Rare Plant Lead, and the offices Ecologist. However, the AIM team refused to do so. We think it is important that other project leads maintain active lists of oddities which they come across to include in their analyses as needed and that they should not trust the NOC to adequately track biological resources. 
+
+
+
 
 
 When we remove these `r` known and documented, by CNHP, rare species from the subsequent analyses of rarity, the use of the composite Rabinowitzs Index identifies `r` taxa as rare. To determine whether this metric was capable of detecting species which have been identified as rare by the CNHP, the list of species ... was compared to the output from the function ... and chi-square results SAY ... Indicating that...
