@@ -155,7 +155,7 @@ Using the conceptual model in Figure 1 we see that a majority of species in the 
 
 In particular, they may be species which are at the edges of their distributions, populations of species at the edges of distributions - either geographically or climatically - these populations often have notably different genetic constitutions than populations near the centers (@hampe2005conserving, @oldfather2020range, reviewed in @PeclGrettaT2017Bruc). Populations which are expanding into new geographic ranges, largely following shifts in climates are termed *leading edges*, and those populations persisting at the edge of the extent geographic ranges are noted as *trailing edges*. Conserving trailing edge populations at the local level is important as they may contain many forms of genes which are pre-disposed to adapting to climate change associated variables (@hampe2005conserving). Further these populations may end up being essential for adaption on up-slope Forest Service Lands, where our border with them faces alterations associated with severe fires and which may require immediate seed sourcing to recover a stable state (@parks2019living). Theoretically the lowlands of the UFO are capable of receiving migrants to them from a *leading edge*, however the up slope travel required to enter the basins (e.g. Paradox), slows steady-state dispersal, reducing the chances of immigrants to relatively infrequent events, such as seeds being stuck to muddy bird feet (@nathan2008mechanisms, @jordano2017long). While these events have largely shaped the global distribution of biodiversity, their infrequent occurrence generally means they occur on timescales outside of land management (@nathan2008mechanisms). 
 
-Recently approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index). Here we attempt to leverage this index, along with another more traditional metric (@gaston1994rarity), to identify plants which are locally rare within the Field Offices administrative areas. 
+Recently approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index). Here we attempt to leverage this index, along with another more traditional metric - which defines rarity as records under teh 25th quantile (@gaston1994rarity), to identify plants which are locally rare within the Field Offices administrative areas. 
 
 ```{r Display Rabinowitz table with examples}
 knitr::include_graphics("../results/rab_tab_examples.png")
@@ -329,22 +329,51 @@ rm(m_gyp, meth)
 
 ## Identify Species Rare to the Field Office
 
-### Gastons Quantile
-To identify the number of rare plants under Gastons quantile...
 
-```{r Identify tracked Plants found on AIM plots}
+### Identification of Singletons
 
+```{r Indentification of Singletons}
+
+records <- spp_clean %>% 
+  group_by(SYMBOL_USDA) %>% 
+  count()
+
+singletons <- filter(records, n < 2)
 ```
+
 
 ```{r Calculate Gastons rarity}
 
+gastons <- records %>% 
+  st_drop_geometry() 
+
+gastons <- gastons %>% # note gastons is the same as Singletons here! 
+  mutate(qu25 = quantile(n, probs = c(0.25)))
+
+abundant_species <- gastons %>% 
+  filter(n > 50) %>% 
+  slice_sample(n = 15, weight_by = n) %>% 
+  arrange(n) %>% 
+  mutate(y = rep(seq(1:5)/100, nrow(.)/5))
+
+ggplot(gastons, aes(x = n)) +
+  geom_density(fill = 'grey80') +
+  geom_vline(xintercept = 1, color = 'red') +
+  theme_bw() +
+  labs(y = 'Density', x = 'Number of Plots Observed at', 
+       title = 'Distribution of Species Richness Across Plots', 
+       subtitle = '15 very common species randomly chosen as references') +
+  geom_text(data = abundant_species, aes(x = n, y = y, label = SYMBOL_USDA),
+            check_overlap = T)
+
+gastons_rare <- gastons %>% 
+  filter(n == qu25) 
+  
 ```
 
 ```{r Identify Single and doubleton incidences}
 
 ```
-
-### Identification of Singletons
 
 # Rabinowitz Though Experiment
 
@@ -429,9 +458,7 @@ the correlation of geographic range to habitat range was checked with linear reg
 
 # Results 
 
-The original AIM Species Richness data set contained `r no_records_full` plot based observations from `r length(unique(spp_richness$PLOTID))` plots. After removing `r unks` morphotypes which were not identified (`r paste0(round(((unks/no_records_full) * 100),2), '%')` of all records), dropping the `r nrow(spp_dirty)` records which were not identified beyond genus (`r paste0(round(((nrow(spp_dirty)/no_records_full) * 100),2), '%')` of all records), and removing `r (n_w_syn - nrow(spp_clean))` synonymous taxa at the same plot (`r paste0(round(((n_w_syn - nrow(spp_clean)) / nrow(spp_clean) * 100), 2), '%')`), `r nrow(spp_clean)` records were left. These records represented `r length(unique(spp_richness$SYMBOL_AIM))` distinct terminal taxa, i.e. final taxonomic units - species were not double-counted with infra species, which are more or less in accord with the states most current Floristic treatments, and the USDA. 
-
-
+The original AIM Species Richness data set contained `r no_records_full` plot based observations from `r length(unique(spp_richness$PLOTID))` plots. After removing `r unks` morphotypes which were not identified (`r paste0(round(((unks/no_records_full) * 100),2), '%')` of all records), dropping the `r nrow(spp_dirty)` records which were not identified beyond genus (`r paste0(round(((nrow(spp_dirty)/no_records_full) * 100),2), '%')` of all records), and removing `r (n_w_syn - nrow(spp_clean))` synonymous taxa at the same plot (`r paste0(round(((n_w_syn - nrow(spp_clean)) / nrow(spp_clean) * 100), 2), '%')`), `r nrow(spp_clean)` records were left. These records represented `r nrow(records)` distinct terminal taxa, i.e. final taxonomic units - species were not double-counted with infra species, which are more or less in accord with the states most current Floristic treatments, and the USDA. 
 
 The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r nrow(tracked)`, different organizations and agencies have different criteria for interpreting and classifying susceptibility of a species to extinction and loss of populations. The most rigorous and selective conditions are enforced the United States Fish and Wildlife Service (USFWS), whom maintain the only official registries and implement the evaluation procedures for 'Threatened' and 'Endangered' species. These categories represent species of the highest concern regarding their continued existence, with Endangered Species being the more severe category of the two. Colorado contains `r nrow(esa)` species tracked by the USFWS, `r nrow(esa[esa$USESA=='LT',])` of these species are threatened with extinction, and `r nrow(esa[esa$USESA=='LE',])` are immediately endangered. Of the species tracked under the Endangered Species Act `r nrow(distinct(fws_esa, BINOMIAL_NAT))` species, `r unique(fws_esa$BINOMIAL_NAT)`, was found at `r length(unique(fws_esa$PLOTID))` plots. 
 
