@@ -185,6 +185,8 @@ files <- list.files(ppro, pattern = 'csv')
 #richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
 #  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
 
+spp_richness <- read.csv(file.path(praw, f[grep('SpeciesRichness', f)]))
+
 CO_plants <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
   filter(NATIVITY == 'Native')
 
@@ -197,8 +199,59 @@ Nspp_trackedCO <- nrow(tracked)
 Nspp_blmCO_tracked <- filter(tracked, BLM_RANK == T) %>% nrow()
 ```
 
-To identify rare plants via the aggregated Rabinowitz method... the concepts of the Rare7 package were used. 
+## Rare Species of Known Conservation Concern
 
+### Endangered Species Act
+
+```{r}
+esa <- tracked %>% drop_na(USESA)
+```
+
+## Bureau of Land Management Sensitive Species
+
+```{r}
+blm <- tracked %>% filter(BLM_RANK == T)
+```
+
+
+### NatureServe Rare Species at State and Global
+
+```{r}
+fed <- c(blm$GNAME, esa$GNAME)
+```
+
+```{r}
+global <- tracked %>% filter(str_detect(GRANK, 'G1|G2|G3'))
+global_sub <- filter(global, !GNAME %in% fed)
+```
+
+```{r}
+state <- tracked %>% filter(str_detect(SRANK, 'S1|S2|S3'))
+state_sub <- filter(state, !GNAME %in% fed)
+```
+
+## Identify Species Rare to the Field Office
+
+### Gastons Quantile
+To identify the number of rare plants under Gastons quantile...
+
+```{r Identify tracked Plants found on AIM plots}
+
+```
+
+```{r Calculate Gastons rarity}
+
+```
+
+```{r Identify Single and doubleton incidences}
+
+```
+
+### Identification of Singletons
+
+#Rabinowitz Though Experiment
+
+To identify rare plants via the aggregated Rabinowitz method... the concepts of the Rare7 package were used, but implemented entirely seperately.
 
 ```{r Gather Plant Records, eval = F}
 spp_v <- CO_plants$BINOMIAL_NAT
@@ -212,9 +265,8 @@ occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>%
   filter(date_collected > '1900-01-01')
 ```
 
-
-#### Geographic Range - 
-to produce a spectrum of geographic ranges 10% of the species present in the Flora of Colorado were selected. A minimum convex hull was produced of their localities, and these records were subset to New World Occurrences. Large expanses of agricultural land, denoted as areas in 10x10 km cells with > 85% agriculture were removed from hulls as well. Fishnets were then created across the remaining areas where they number of cells equalled # Records / 10 . these were then rescaled to maximize the variance between 0 1. The number of occupied cells within this were used as a spectrum along which to identify the geographic extent of a taxon.
+##### Geographic Range - 
+to produce a spectrum of geographic ranges 10% of the species present in the Flora of Colorado were selected. A minimum convex hull was produced of their localities, and these records were subset to New World Occurrences. Large expanses of agricultural land, denoted as areas in 10x10 km cells with > 85% agriculture were removed from hulls as well. Fishnets were then created across the remaining areas where they number of cells equaled # Records / 10 . these were then re-scaled to maximize the variance between 0 1. The number of occupied cells within this were used as a spectrum along which to identify the geographic extent of a taxon.
 
 
 ```{r Prepare exclusion surfaces for geographic range records}
@@ -222,11 +274,10 @@ to produce a spectrum of geographic ranges 10% of the species present in the Flo
 ```
 
 
-
-#### Population Size -
+##### Population Size -
 To create a relatively consistent estimate of population size the % cover of LPI points for forbs were regressed against estimates of the # of individuals from species richness. The slopes of these regressions were then used to calculate a percent cover estimate for the taxon. Given the relatively low density placement of aim points along transects these were considered indepdenent (i.e. each point drop represents a distinct plant) for all life forms except for trees, which had this value recorded. 
 
-#### Habitat Range -
+##### Habitat Range -
 to produce a spectrum of habitat ranges 10% of the species present in the Flora of Colorado were selected. They had Omernik level 4 regions extracted to the points, and the proportion of habitats were calculated. $1 -  NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0 1., so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
 ```{r Rasterfy habitat Ranges and extract to point}
@@ -242,7 +293,6 @@ l4eco_rast <- rast(
   crs = crs(l4eco))
 l4eco_rast <- rasterize(l4eco, l4eco_rast, field = 'US_L4CODE')
 
-
 e <- ext(l3eco)
 l3eco_rast <- rast(
   resolution = 2000,
@@ -255,20 +305,13 @@ values(r) <- 1:ncell(r)
 s <- rast(nrows=25, ncols=30, xmin=1, xmax=11, ymin=-1, ymax=11)
 x <- resample(r, s, method="bilinear")
 
-
-
-
 eco_rast <- rasterize(eco, eco_rast, field = 'Code', filename = file.path(ppro, 'Ecoregion_raster.tif'))
-
 plot(l3eco_rast)
 
 rm(e)
-
 ```
 
-
 the correlation of geographic range to habitat range was checked with linear regression. These two values were then reconstituted to form a single variable via GR * HR. OR PCA...
-
 
 ```{r Gather Species Records from BIEN for Range Descriptions}
 
@@ -287,27 +330,18 @@ the correlation of geographic range to habitat range was checked with linear reg
 ```
 
 
-
-To identify the number of rare plants under Gastons quantile. 
-
-```{r Identify tracked Plants found on AIM plots}
-
-```
-
-```{r Calculate Gastons rarity}
-
-```
-
-```{r Identify Single and doubleton incidences}
-
-```
-
-
 # Results 
 
 As of 2022, the Colorado Natural Heritage Program noted entries for the tracking of `r Nspp_trackedCO` Vascular *taxa* of plants. Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.
 
-The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r Nplants_trackedCO` the Bureau of Land Management Sensitive Species for Colorado has `r Nspp_blmCO_tracked` species. The discrepancy in number arising largely from a BLM not including taxa which do not grow on the lands, as well as contextualizing these taxa in the west *ask ken how they actually do this - i made up this whole sentence*.  Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.
+The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r Nplants_trackedCO`, different organizations and agencies have different criteria for interpreting and classifying susceptibility of a species to extinction and loss of populations. The most rigorous and selective conditions are enforced the United States Fish and Wildlife Service (USFWS), whom maintain the only official registries and implement the evaluation procedures for 'Threatened' and 'Endangered' species. These categories represent species of the highest concern regarding their continued existence, with Endangered Species being the more severe category of the two. Colorado contains `r nrow(esa)` species tracked by the USFWS, `r nrow(esa[esa$USESA=='LT',])` of these species are threatened with extinction, and `r nrow(esa[esa$USESA=='LE',])` are immediately endangered. 
+
+The Bureau of Land Management officially tracks plants which are of conservation concern on their lands, and which may be petitioned to be elevated to the more stringent categories implemented by the Fish and Wildlife Service, but which are mostly undergoing further assessment. As the BLM is contained within the government, these tracked taxa do not contain any redundancies with the Endangered Species Act list. BLM Colorado has `r nrow(blm)` sensitive species. 
+
+Several Non-Governmental Organizations (NGO's) also maintain their own information on species of concern, utilizing different methods and assessments than Government Agencies. A large portion of there goals are to form networks which are global in scale, rather than restricted to state actors, allowing for more comprehensive views of biological ranges and processes. Accordingly, they have a more integrated global perspective on species, and then make assessments of susceptibility to extinction at administrative units to assist local planners. One such agency is NatureServe. NatureServe uses a tiered ranking system, from 5-1, with lower values indicating susceptibility of a taxon to extinction at a either a Global or State level. Values '3' and below are taxa that warrant conservation considerations. The number of low value species, are greater at lower administrative levels, oftentimes due to species ranges crossing multiple administrative units. The number of S3 ('S' short for 'State') or lower (S2, S1) species in Colorado is `r nrow(state)`, and the subset of these which are globally tracked species with G3 ('G' short for 'Global')  or lower ranks is `r nrow(global)`. These two lists are not independent of the government data, for example the State list contains `r sum(state$GNAME %in% esa$GNAME)` of `r nrow(esa)` FWS species, while the global list contains `r sum(global$GNAME %in% esa$GNAME)` of them. In addition, the state list contains `r sum(state$GNAME %in% blm$GNAME)` or the `r nrow(blm)` BLM Sensitive Species, while the global list contains `r sum(global$GNAME %in% blm$GNAME)`. We subtract these species from these two lists and end up with a total of `r nrow(state_sub)` species on the state and `r nrow(global_sub)` species on the global lists to avoid confusion in reporting. 
+
+
+the Bureau of Land Management Sensitive Species for Colorado has `r Nspp_blmCO_tracked` species. The discrepancy in number arising largely from a BLM not including taxa which do not grow on the lands, as well as contextualizing these taxa in the west *ask ken how they actually do this - i made up this whole sentence*.  Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.
 
 When we remove these `r` known and documented, by CNHP, rare species from the subsequent analyses of rarity, the use of the composite Rabinowitzs Index identifies `r` taxa as rare. To determine whether this metric was capable of detecting species which have been identified as rare by the CNHP, the list of species ... was compared to the output from the function ... and chi-square results SAY ... Indicating that...
 
