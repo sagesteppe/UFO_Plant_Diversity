@@ -172,6 +172,7 @@ install.packages('BIEN')
 ```{r Load libraries}
 library(tidyverse)
 library(terra)
+library(sf)
 ```
 
 
@@ -182,16 +183,72 @@ ppro <- '../data/processed'
 f <- list.files(praw)
 files <- list.files(ppro, pattern = 'csv')
 
-#richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
-#  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+spp_richness <- read.csv(file.path(praw, f[grep('SpeciesRichness[.]', f)])) %>% 
+  select(SpeciesList, PrimaryKey)
+spp_r_header <- read.csv(file.path(praw, f[grep('RichnessHeader', f)])) %>% 
+  select(FormDate, Observer, PrimaryKey)
 
-spp_richness <- read.csv(file.path(praw, f[grep('SpeciesRichness', f)]))
+pts <- st_read(
+  '../../aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+                quiet = T) %>% 
+  st_transform(26913) %>% 
+  st_buffer(65) %>% 
+  select(PLOTID, STRATUM) 
 
-CO_plants <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
-  filter(NATIVITY == 'Native')
+char <- read.csv(file.path(praw, f[grep('Characterization', f)] ) ) %>% 
+  st_as_sf( coords = c('Longitude', 'Latitude'), crs = 4269) %>% 
+  filter(str_detect(PrimaryKey, negate = T,
+                    'Fuels|Bull-Draw|CO-NWD|_Tres_Rios|Grand_Junction|Gunnison|Moab|TRFO'),
+         str_detect(PlotID, '[A-Z]{2,3}-[0-9]{2,3}')) %>% 
+  st_transform(26913) %>% 
+  select(PrimaryKey) 
 
+spp_richness <- st_intersection(pts, char)  %>% 
+  left_join(., spp_r_header, by = 'PrimaryKey') %>% 
+  left_join(., spp_richness, by = 'PrimaryKey') %>% 
+  rename(SYMBOL_AIM = SpeciesList) 
+
+rm(pts, char, spp_r_header, plots)
 ```
 
+
+```{r minor cleaning species richness}
+
+# remove unknowns here, only 118 records total across 5 years, pretty impressive!
+unks <- spp_richness %>% 
+  filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+')) %>%
+  nrow() 
+unks <- (unks / nrow(spp_richness)) * 100 # 1.5 %
+
+spp_richness <- spp_richness %>% 
+  filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+', negate = T))
+
+# add on the official USDA codes to the AIM codes to sync up with CNHP
+attributes <- read.csv(
+  file.path(ppro, files[grep('Attribute.*Table-RCB', files)]) ) %>% 
+  select(SYMBOL_AIM, SYMBOL_USDA) %>% 
+  distinct() # one duplicate in here somewhere!
+
+sp_clean <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM')
+
+# join all CNHP to ensure all of our records are a clean map
+
+CO_plants <- read.csv(file.path(ppro, files[grep('Native', files)]))
+
+sp_clean_1 <- sp_clean %>% 
+  filter(is.na(SYMBOL_USDA)) %>% 
+  left_join(., CO_plants, by = c('SYMBOL_AIM' = 'SYMBOL'))
+
+sp_dirty <- sp_clean_1  %>% 
+  filter(is.na(BINOMIAL_NAT)) %>% 
+  filter(str_detect(SYMBOL_AIM, '^UN.*', negate = T)) %>% 
+  count(SYMBOL_AIM) #  we now know how many records we lost to analysis here
+
+sp_clean <- bind_rows(sp_clean, sp_clean_1) 
+# we will use this dataset going foward,
+
+rm(sp_clean_1, CO_plants)
+```
 
 ```{r Import tracked Plants}
 tracked <- read.csv(file.path(ppro, files[grep('Rare_Plants_BLM', files)]))  
