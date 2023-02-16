@@ -175,6 +175,7 @@ install.packages('BIEN')
 library(tidyverse)
 library(terra)
 library(sf)
+source('functions.R')
 ```
 
 
@@ -412,8 +413,9 @@ To identify rare plants via the conceptual Rabinowitz framework the concepts of 
 ##### Geographic Range - 
 
 ```{r Gather Plant Records, eval = F}
+set.seed(1989)
 co_nat <- CO_plants %>% filter(NATIVITY == 'Native')
-ss <- 500
+ss <- 750
 ss_perc <- paste0(round((ss / length(unique(co_nat$BINOMIAL_NAT))) * 100, 1), '%')
 
 spp_v <- sample(unique(co_nat$BINOMIAL_NAT), ss)
@@ -428,6 +430,25 @@ occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>%
   filter(date_collected > '1900-01-01')
 ```
 
+
+```{r Calculate total geographic expanse}
+
+onion <- bien1 %>% filter(scrubbed_species_binomial == 'Allium textile') %>% 
+  st_as_sf(coords = c(x = 'longitude', y = 'latitude'), crs = 4326) 
+
+u <- ch_resample(onion)
+
+```
+
+```{r bien batch one, was here }
+
+bien1 <- read.csv(file.path(praw, f[grep('BIEN_occurrences.csv', f)])) 
+
+
+max(bien1$latitude)
+```
+
+
 In order to produce an estimate of the geographic ranges which species occurred over in the New World, `r ss` (`r ss_perc`) of the  `r nrow(co_nat)` native species present in the Flora of Colorado were randomly sampled. To acquire geographic information on each of these species they were submitted to the 'Botanical Information and Ecology Network' (BIEN) database. All downloaded records from North America from the year 1900 onward were maintained for subsequent analyses.
 
 To estimate the total geographic range which the species covers, minimum convex hulls were produced for each individual species using 500 *jacknife resampling* events; this approach was utilized to reduce the effects a single widely *disjunct* mis-identified record could have on results. The median of all re-sampling events was then used as the geographic range estimate. 
@@ -441,7 +462,26 @@ rm(co_nat, ss)
 
 
 ```{r Prepare exclusion surfaces for geographic range records}
- 
+
+r <- list.files(file.path(praw, 'landcover'))
+
+rast_ext <- ext(-170, -30, -60, 80)
+
+ag <- terra::rast(
+  file.path(file.path(praw, 'landcover', r[grep('Agriculture', r)])) )
+water <- terra::rast(
+  file.path(file.path(praw, 'landcover', r[grep('OpenWater', r)])) )
+snow <- terra::rast(
+  file.path(file.path(praw, 'landcover', r[grep('SnowIce', r)])) )
+urban <- terra::rast(
+  file.path(file.path(praw, 'landcover', r[grep('Urban', r)])) )
+
+impervious <- sum(ag, water, snow, urban)
+impervious <- crop(impervious, rast_ext)
+impervious <- classify(r, c(0, 0.75, 1), include.lowest=TRUE, brackets=TRUE)
+plot(impervious)
+
+rm(rast_ext, r, ag, water, snow, urban)
 ```
 
 
