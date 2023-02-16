@@ -433,8 +433,7 @@ In order to produce an estimate of the geographic ranges which species occurred 
 To estimate the total geographic range which the species covers, minimum convex hulls were produced for each individual species using 500 *jacknife resampling* events; this approach was utilized to reduce the effects a single widely *disjunct* mis-identified record could have on results. The median of all re-sampling events was then used as the geographic range estimate. 
 
 ##### Occupancy - 
-
-To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then 
+To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then re-scaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
 ```{r}
 rm(co_nat, ss)
@@ -447,11 +446,12 @@ rm(co_nat, ss)
 
 
 ##### Population Size -
-The BIEN data were split into two constituent portions, the first being records which were contributed from herbaria, and the others records from from survey based monitoring work. Raster cells were made more coarse, to 16km^2^, to avoid having many 0 records. All plot based records from across all species were combined, and each raster cell which contained the presence of a plot was used for future analyses. For each species, if a plot based record was located in a cell, it was classified as having a high population, if only an herbarium collection was present it was classified as having a low population. 
+To create a broad binomial estimation of population size the BIEN data were split into two constituent portions. The first being records which were contributed from herbaria, and the other being records collected via survey based monitoring work. Raster cells were made more coarse, to 16km^2^, to avoid having many 0 records. All plot based records from across all species were combined, and each raster cell which contained the presence of a plot was used for future analyses. For each species, if a plot based record was located in a cell, it was classified as having a high population, if only an herbarium collection was present it was classified as having a low population. The total number of $
 
 ##### Habitat Range -
-to produce a spectrum of habitat ranges 10% of the species present in the Flora of Colorado were selected. They had Omernik level 4 regions extracted to the points, and the proportion of habitats were calculated. $1 -  NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0 1., so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
+To produce a local spectrum of the range of habitats which a species occurs in all records had Omernik level 4 regions extracted to the them, and the proportion of habitats were calculated. $ NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
+To better understand the relationship between habitat range both in Colorado and abroad, the values of habitat range were multiplied by the values of occupancy. The consensus values were used for further analyses. 
 
 ```{r Rasterfy habitat Ranges and extract to point, eval = F}
 
