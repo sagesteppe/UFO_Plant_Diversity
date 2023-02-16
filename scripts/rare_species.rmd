@@ -5,9 +5,11 @@ date: NULL
 output:
   pdf_document: default
   word_document: default
-header-includes: 
- - \usepackage[width=\textwidth]{caption}
- - \usepackage{amsmath, booktabs, caption, longtable}
+  html_document:
+    df_print: paged
+header-includes:
+- \usepackage[width=\textwidth]{caption}
+- \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
@@ -210,7 +212,7 @@ spp_richness <- st_intersection(pts, char)  %>%
 
 no_records_full <- nrow(spp_richness)
 
-rm(pts, char, spp_r_header, plots)
+rm(pts, char, spp_r_header)
 ```
 
 
@@ -261,7 +263,16 @@ rm(spp_clean_1, CO_plants, attributes)
 tracked <- read.csv(file.path(ppro, files[grep('Rare_Plants_BLM', files)]))  
 ```
 
-## Rare Species of Known Conservation Concern
+\begin{wrapfigure}{l}{0.3\textwidth}
+  \centering
+    \includegraphics[width=0.3\textwidth]{../plots/graphics/quint_single.png}
+  \caption{The Commonness of Rarity; This plot shows the number of times which a species was encountered at an AIM Plot. Both the 'singletons' and Gastons Quintile are on the red line. A randomly selected subset of more abundant species are selected to contextualize the few abundant species}
+\end{wrapfigure}\leavevmode
+
+
+### Rare Species of Known Conservation Concern
+
+To identify species which are rare, and are species of conservation concern, the Colorado Natural Heritage Program (CNHP) registry of rare plants was downloaded directly from the website in Winter of 2023. Using the list of C-values, also from the CNHP website, which contained an entry for nearly every species in the state (less *Mentzelia paradoxensis*), we determined the appropriate mapping between the plant species symbol used in the AIM database, and the official USDA codes used in all CNHP work. The CNHP registry of rare plants was then subset and used as the definitive source for each organizations tracked species. 
 
 ```{r Endangered Species Act}
 esa <- tracked %>% drop_na(USESA)
@@ -283,7 +294,6 @@ blm <- tracked %>%
 ## POSSIBLE  FALSE POSITIVE Astragalus musiniensis 
 blm_ss <- spp_clean %>% filter(SYMBOL_USDA %in% blm$National_USDASymbol)
 ```
-
 
 ```{r NatureServe Rare Species}
 fed <- c(blm$GNAME, esa$GNAME)
@@ -309,6 +319,8 @@ state_sub1 <- filter(state_sub, !GNAME %in% global_sub$GNAME)
 state_aim <- spp_clean %>% filter(SYMBOL_USDA %in% state_sub$National_USDASymbol)
 ```
 
+### Rare but untracked Species
+
 ```{r Mentzelia gyposphila}
 
 m_gyp <- spp_clean %>% 
@@ -327,11 +339,6 @@ rm(m_gyp, meth)
 ```
 
 
-## Identify Species Rare to the Field Office
-
-
-### Identification of Singletons
-
 ```{r Indentification of Singletons}
 
 records <- spp_clean %>% 
@@ -340,7 +347,6 @@ records <- spp_clean %>%
 
 singletons <- filter(records, n < 2)
 ```
-
 
 ```{r Calculate Gastons rarity}
 
@@ -352,30 +358,53 @@ gastons <- gastons %>% # note gastons is the same as Singletons here!
 
 abundant_species <- gastons %>% 
   filter(n > 50) %>% 
-  slice_sample(n = 15, weight_by = n) %>% 
+  slice_sample(n = 24, weight_by = n) %>% 
   arrange(n) %>% 
-  mutate(y = rep(seq(1:5)/100, nrow(.)/5))
-
-ggplot(gastons, aes(x = n)) +
-  geom_density(fill = 'grey80') +
-  geom_vline(xintercept = 1, color = 'red') +
-  theme_bw() +
-  labs(y = 'Density', x = 'Number of Plots Observed at', 
-       title = 'Distribution of Species Richness Across Plots', 
-       subtitle = '15 very common species randomly chosen as references') +
-  geom_text(data = abundant_species, aes(x = n, y = y, label = SYMBOL_USDA),
-            check_overlap = T)
+  mutate(y = rep(seq(from = 25, to = 200, by = 25), nrow(.)/8))
 
 gastons_rare <- gastons %>% 
   filter(n == qu25) 
-  
 ```
 
-```{r Identify Single and doubleton incidences}
+```{r Plot Singletons and Gastons Quintile, eval = F}
+hl <- data.frame(yint = 1)
 
+df2 <- expand.grid(
+  lineend = c('round', 'butt', 'square'),
+  linejoin = c('round', 'mitre', 'bevel'),
+  stringsAsFactors = FALSE
+)
+
+quint_single <- ggplot(gastons, aes(y = n)) +
+  geom_histogram(fill = 'grey20', bins = 198) +
+  geom_hline(data = hl, aes(yintercept = yint),
+             color = 'red', lty = 2, show_guide = T)+
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        aspect.ratio=16/9) +
+  labs(y = 'Number of Species', x = 'Number of Plots', 
+       title = 'Species Occurrences') +
+  geom_text(data = abundant_species, aes(y = n, x = y, label = SYMBOL_USDA),
+            check_overlap = T, size = 2.5) +
+  geom_segment(
+    aes(xend = 233, yend = 5, x = 195, y = 25), 
+    color = 'forestgreen',
+     lineend = df2$lineend, linejoin = df2$linejoin,
+     size = 0.8, arrow = arrow(length = unit(0.6, "lines"))
+  )
+
+quint_single
+
+ggsave(plot = quint_single, device = 'png', height = 9, units = 'cm', 
+       path = '../plots/graphics', filename = 'quint_single.png')
+
+rm(hl, quint_single)
 ```
 
-# Rabinowitz Though Experiment
+The number of plots which a species was recorded at were counted. This list was filtered for species which only occurred at a single plot, our ecological version of the botanical 'singletons' collection. This list also had the 25^th^ quantile calculated on it using the 'quantile' function from base R.
+
+## Rabinowitz Thought Experiment
 
 To identify rare plants via the aggregated Rabinowitz method... the concepts of the Rare7 package were used, but implemented entirely seperately.
 
