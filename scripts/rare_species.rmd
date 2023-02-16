@@ -256,7 +256,7 @@ spp_clean <- spp_clean %>%  # NO SYNONYMS
   group_by(PLOTID, SYMBOL_USDA) %>% 
   distinct()
 
-rm(spp_clean_1, CO_plants, attributes)
+rm(spp_clean_1, attributes)
 ```
 
 ```{r Import tracked Plants}
@@ -356,17 +356,18 @@ gastons <- records %>%
 gastons <- gastons %>% # note gastons is the same as Singletons here! 
   mutate(qu25 = quantile(n, probs = c(0.25)))
 
+gastons_rare <- gastons %>% 
+  filter(n == qu25) 
+```
+
+```{r Plot Singletons and Gastons Quintile, eval = F}
+
 abundant_species <- gastons %>% 
   filter(n > 50) %>% 
   slice_sample(n = 24, weight_by = n) %>% 
   arrange(n) %>% 
   mutate(y = rep(seq(from = 25, to = 200, by = 25), nrow(.)/8))
 
-gastons_rare <- gastons %>% 
-  filter(n == qu25) 
-```
-
-```{r Plot Singletons and Gastons Quintile, eval = F}
 hl <- data.frame(yint = 1)
 
 df2 <- expand.grid(
@@ -399,29 +400,45 @@ quint_single
 ggsave(plot = quint_single, device = 'png', height = 9, units = 'cm', 
        path = '../plots/graphics', filename = 'quint_single.png')
 
-rm(hl, quint_single)
+rm(hl, quint_single, abundant_species)
 ```
 
 The number of plots which a species was recorded at were counted. This list was filtered for species which only occurred at a single plot, our ecological version of the botanical 'singletons' collection. This list also had the 25^th^ quantile calculated on it using the 'quantile' function from base R.
 
 ## Rabinowitz Thought Experiment
 
-To identify rare plants via the aggregated Rabinowitz method... the concepts of the Rare7 package were used, but implemented entirely seperately.
+To identify rare plants via the conceptual Rabinowitz framework the concepts of the Rare7 package were used, but implemented entirely separately. 
+
+##### Geographic Range - 
 
 ```{r Gather Plant Records, eval = F}
-spp_v <- CO_plants$BINOMIAL_NAT
-occurrences <- BIEN::BIEN_occurrence_species(spp_v)
+co_nat <- CO_plants %>% filter(NATIVITY == 'Native')
+ss <- 500
+ss_perc <- paste0(round((ss / length(unique(co_nat$BINOMIAL_NAT))) * 100, 1), '%')
+
+spp_v <- sample(unique(co_nat$BINOMIAL_NAT), ss)
+occurrences <- BIEN::BIEN_occurrence_species(spp_v, political.boundaries = F,
+                                             new.world = T)
 write.csv( file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
 ```
 
-```{r, eval = F}
+```{r save bien occurrence records after 1900, eval = F}
 occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
   mutate(date_collected = as.Date(date_collected)) %>% 
   filter(date_collected > '1900-01-01')
 ```
 
-##### Geographic Range - 
-to produce a spectrum of geographic ranges 10% of the species present in the Flora of Colorado were selected. A minimum convex hull was produced of their localities, and these records were subset to New World Occurrences. Large expanses of agricultural land, denoted as areas in 10x10 km cells with > 85% agriculture were removed from hulls as well. Fishnets were then created across the remaining areas where they number of cells equaled # Records / 10 . these were then re-scaled to maximize the variance between 0 1. The number of occupied cells within this were used as a spectrum along which to identify the geographic extent of a taxon.
+In order to produce an estimate of the geographic ranges which species occurred over in the New World, `r ss` (`r ss_perc`) of the  `r nrow(co_nat)` native species present in the Flora of Colorado were randomly sampled. To acquire geographic information on each of these species they were submitted to the 'Botanical Information and Ecology Network' (BIEN) database. All downloaded records from North America from the year 1900 onward were maintained for subsequent analyses.
+
+To estimate the total geographic range which the species covers, minimum convex hulls were produced for each individual species using 500 *jacknife resampling* events; this approach was utilized to reduce the effects a single widely *disjunct* mis-identified record could have on results. The median of all re-sampling events was then used as the geographic range estimate. 
+
+##### Occupancy - 
+
+To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then 
+
+```{r}
+rm(co_nat, ss)
+```
 
 
 ```{r Prepare exclusion surfaces for geographic range records}
@@ -430,10 +447,11 @@ to produce a spectrum of geographic ranges 10% of the species present in the Flo
 
 
 ##### Population Size -
-To create a relatively consistent estimate of population size the % cover of LPI points for forbs were regressed against estimates of the # of individuals from species richness. The slopes of these regressions were then used to calculate a percent cover estimate for the taxon. Given the relatively low density placement of aim points along transects these were considered indepdenent (i.e. each point drop represents a distinct plant) for all life forms except for trees, which had this value recorded. 
+The BIEN data were split into two constituent portions, the first being records which were contributed from herbaria, and the others records from from survey based monitoring work. Raster cells were made more coarse, to 16km^2^, to avoid having many 0 records. All plot based records from across all species were combined, and each raster cell which contained the presence of a plot was used for future analyses. For each species, if a plot based record was located in a cell, it was classified as having a high population, if only an herbarium collection was present it was classified as having a low population. 
 
 ##### Habitat Range -
 to produce a spectrum of habitat ranges 10% of the species present in the Flora of Colorado were selected. They had Omernik level 4 regions extracted to the points, and the proportion of habitats were calculated. $1 -  NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0 1., so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
+
 
 ```{r Rasterfy habitat Ranges and extract to point, eval = F}
 
@@ -466,22 +484,13 @@ plot(l3eco_rast)
 rm(e)
 ```
 
-the correlation of geographic range to habitat range was checked with linear regression. These two values were then reconstituted to form a single variable via GR * HR. OR PCA...
-
-```{r Gather Species Records from BIEN for Range Descriptions}
-
-```
-
-```{r Import ESG classifications of plots for habitat diversity}
-
-```
-
 ```{r Calculate the Rabinowitz consensus of rarity}
 
 ```
 
-```{r plot all aim species}
-  
+
+```{r remove method related variables}
+rm(f, fed, files, ppro, praw)
 ```
 
 
@@ -497,23 +506,30 @@ Several Non-Governmental Organizations (NGO's) also maintain their own informati
 
 A fascinating rare plant recorded on the AIM plots was *Mentzelia paradoxensis* J. J. Schenk & L. Hufford, a taxon described as new to science in 2010. This was found at a single plot, in the Paradox Valley, the locality from which it was collected in by prolific Intermountain West botanists Noel and Patricia Holmgren. This species hypothesis is so new, relatively little testing of it has been carried out, and to date the Colorado Natural Heritage Program has not evaluated the conservation status of it. Botanical collectors have determined it to be present in both the Paradox and the nearby Big Gypsum Valley, in both instances growing on stream terraces with elevated gypsum content. This species was requested to be added to the AIM database by both the Lead State Botanist, whom is also the BLM Rare Plant Lead, and the offices Ecologist. However, the AIM team refused to do so. We think it is important that other project leads maintain active lists of oddities which they come across to include in their analyses as needed and that they should not trust the NOC to adequately track biological resources. 
 
-In regards to species which are rare within the UFO field office, but not of conservation concern, two methods 'singletons' and 'Gastons Quantile', returned identical results. Both methods suggest that there are `r nrow(gastons_rare)` rare species. The convergence of values implicates two methodological limitations. In regards to singletons, these records generally come from floristic inventories, wherein a well trained botanist is unconstrained by the dimensions of plots, and is able to roam a large area using their knowledge of an area and intuition. In the case of a field office wide inventory, they would be able to allocate considerable less time to certain Ecological Sites with very few species, in lieu of spending it in areas with many species. We do feel after several more AIM sample frames this will start to deliver quite effective results. Regarding Gastons Quintile, or the lower 25% of records, this may indicate an inconsistency in goals of survey work. Many ecologists in the era in which this metric was derived were oftentimes explicitly surveying for species diversity and abundance metrics, whereas AIM serves to characterize landscape units, as delimited by geo-morphology. Accordingly, the ecologist of yesteryear strove to maximize variation between plots, while the rangeland ecologist of today seeks to maximize statistical inference across landscapes. That such a significant number of species only occurred at a single plot, may in part reflect that a single Sample Frame of AIM data is not enough to start to gather information on the biotic composition of this field office. However, we see no reasons that future results for Gaston's Index would be significantly different than the species composition presented here, and believe that many of the singleton's identified here, would be singleton's again after combing these data with  those in the next sample frame. 
+In regards to species which are rare within the UFO field office, but not of conservation concern, two methods 'singletons' and 'Gastons Quantile', returned identical results. Both methods suggest that there are `r nrow(gastons_rare)` rare species. The convergence of values implicates two methodological limitations. In regards to singletons, these records generally come from floristic inventories, wherein a well trained botanist is unconstrained by the dimensions of plots, and is able to roam a large area using their knowledge of an area and intuition. In the case of a field office wide inventory, they would be able to allocate considerable less time to certain Ecological Sites with very few species, in lieu of spending it in areas with many species. We do feel after several more AIM sample frames this will start to deliver quite effective results. Regarding Gastons Quintile, or the lower 25% of records, this may indicate an inconsistency in goals of survey work. Many ecologists in the era in which this metric was derived were oftentimes explicitly surveying for species diversity and abundance metrics, whereas AIM serves to characterize landscape units, as delimited by geomorphology. Accordingly, the ecologist of yesteryear strove to maximize variation between plots, while the rangeland ecologist of today seeks to maximize statistical inference across landscapes. That such a significant number of species only occurred at a single plot, may in part reflect that a single Sample Frame of AIM data is not enough to start to gather information on the biotic composition of this field office. However, we see no reasons that future results for Gaston's Index would be significantly different than the species composition presented here, and believe that many of the singleton's identified here, would be singleton's again after combing these data with  those in the next sample frame. 
 
 
 ```{r similarity conservation concern and locally rare}
+cc <- unique(c(fws_esa$SYMBOL_USDA, global_aim$SYMBOL_AIM, 
+                          state_aim$SYMBOL_AIM, blm_ss$SYMBOL_AIM)) # 27 spp. 
 
-
+gr_ncc <- gastons_rare %>% filter(!SYMBOL_USDA %in% cc)
 ```
 
-Of the species identified by the Gaston and and Singleton method `r ` overlap with the species of conservation concern from above. 
+Of the `r nrow(gastons_rare)`species identified by Gaston's and the Singleton method `r nrow(gastons_rare) - nrow(gr_ncc)` overlap with the `r length(cc)`species of conservation concern which were found on plots. It is expected that these approaches would give different results, given that rare species tend to be abundant in portions of their ranges. 
 
 
-```{r remove some writing variables}
+```{r remove writing variables}
 rm(esa, fws_esa, blm, blm_ss, state, global, global_sub, state_sub, 
-   state_sub1, state_aim, global_aim)
+   state_sub1, state_aim, global_aim, cc, gr_ncc, gastons, gastons_rare, singletons,
+   spp_dirty, tracked, unks, spp_richness, n_w_syn, no_records_full)
 ```
 
 __When we remove these `r` known and documented, by CNHP, rare species from the subsequent analyses of rarity, the use of the composite Rabinowitzs Index identifies `r` taxa as rare. To determine whether this metric was capable of detecting species which have been identified as rare by the CNHP, the list of species ... was compared to the output from the function ... and chi-square results SAY ... Indicating that...
+
+```{r}
+
+```
 
 
  Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.__
