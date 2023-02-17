@@ -419,31 +419,73 @@ ss <- 750
 ss_perc <- paste0(round((ss / length(unique(co_nat$BINOMIAL_NAT))) * 100, 1), '%')
 
 spp_v <- sample(unique(co_nat$BINOMIAL_NAT), ss)
-occurrences <- BIEN::BIEN_occurrence_species(spp_v, political.boundaries = F,
-                                             new.world = T)
-write.csv( file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
-```
+occurrences <- BIEN::BIEN_occurrence_species(
+  spp_v, political.boundaries = F, new.world = T)
 
-```{r save bien occurrence records after 1900, eval = F}
-occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
+occurrences <- occurrences %>% 
   mutate(date_collected = as.Date(date_collected)) %>% 
-  filter(date_collected > '1900-01-01')
+  filter(date_collected > '1900-01-01') %>% 
+  select(-datasource_id, -collection_code, -is_new_world)
+
+write.csv(occurrences, file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
+```
+
+```{r Gather Focal Plant Records}
+
+# step 1 only grab records not already downloaded in the last query
+
+spp_occ <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
+  distinct(scrubbed_species_binomial) %>% 
+  left_join(., 
+            CO_plants, by = c('scrubbed_species_binomial' =  'BINOMIAL_NAT')) %>% 
+  pull(SYMBOL)
+
+spp2query_bien <- spp_clean %>% 
+  distinct(SYMBOL_USDA) %>% 
+  left_join(., CO_plants,  by = c('SYMBOL_USDA' =  'SYMBOL')) %>% 
+  filter(!SYMBOL_USDA %in% spp_occ) %>% 
+  drop_na(BINOMIAL_NAT) %>% 
+  pull(SYMBOL_USDA)
+
+focal_occurrences <- BIEN::BIEN_occurrence_species(
+  spp2query_bien, political.boundaries = F, new.world = T)
+
+focal_occurrences <- focal_occurrences %>% 
+  mutate(date_collected = as.Date(date_collected)) %>% 
+  filter(date_collected > '1900-01-01') %>% 
+  select(-datasource_id, -collection_code, -is_new_world)
+
+write.csv(focal_occurrences, 
+          file.path(praw, 'BIEN_focal_occurrences.csv'), row.names = F)
 ```
 
 
-```{r Calculate total geographic expanse}
+```{r Calculate total geographic expanse, eval = F}
 
-onion <- bien1 %>% filter(scrubbed_species_binomial == 'Allium textile') %>% 
-  st_as_sf(coords = c(x = 'longitude', y = 'latitude'), crs = 4326) 
+occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv'))
 
-u <- ch_resample(onion)
+occurrences <- occurrences %>% 
+  drop_na(longitude) %>% 
+  drop_na(latitude) %>% 
+  st_as_sf(coords = c(x = 'longitude', y = 'latitude'), crs = 4326) %>% 
+  group_by(scrubbed_species_binomial) %>% 
+  filter(n() > 10)
 
+occurrences_l <- split(occurrences, f = occurrences$scrubbed_species_binomial )
+occurrences_ch <- lapply(occurrences_l, convex_hull_resample)
+occurrences_geographic <- bind_rows(occurrences_ch)
+
+write.csv(occurrences_geographic, file.path(praw, 'reference_occurrence_geographic_size.csv'))
+
+rm(occurrences_l, occurrences_ch, occurrences)
+
+ggplot(occurrences_geographic) +
+  geom_point(aes(x = Records, y = sqrt(Median_CH_Ha)))
 ```
 
-```{r bien batch one, was here }
+```{r bien batch one was here, eval = F}
 
 bien1 <- read.csv(file.path(praw, f[grep('BIEN_occurrences.csv', f)])) 
-
 
 max(bien1$latitude)
 ```
@@ -453,35 +495,40 @@ In order to produce an estimate of the geographic ranges which species occurred 
 
 To estimate the total geographic range which the species covers, minimum convex hulls were produced for each individual species using 500 *jacknife resampling* events; this approach was utilized to reduce the effects a single widely *disjunct* mis-identified record could have on results. The median of all re-sampling events was then used as the geographic range estimate. 
 
-##### Occupancy - 
-To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then re-scaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
-
 ```{r}
 rm(co_nat, ss)
 ```
 
+##### Occupancy - 
+To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then re-scaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
-```{r Prepare exclusion surfaces for geographic range records}
+
+```{r Prepare exclusion surfaces for geographic range records, eval = F}
 
 r <- list.files(file.path(praw, 'landcover'))
-
 rast_ext <- ext(-170, -30, -60, 80)
 
-ag <- terra::rast(
-  file.path(file.path(praw, 'landcover', r[grep('Agriculture', r)])) )
-water <- terra::rast(
-  file.path(file.path(praw, 'landcover', r[grep('OpenWater', r)])) )
-snow <- terra::rast(
-  file.path(file.path(praw, 'landcover', r[grep('SnowIce', r)])) )
-urban <- terra::rast(
-  file.path(file.path(praw, 'landcover', r[grep('Urban', r)])) )
+ag <- rast(file.path(praw, 'landcover', r[grep('Agriculture', r)]))
+water <- rast(file.path(praw, 'landcover', r[grep('OpenWater', r)]))
+snow <- rast(file.path(praw, 'landcover', r[grep('SnowIce', r)]))
+urban <- rast(file.path(praw, 'landcover', r[grep('Urban', r)]))
 
 impervious <- sum(ag, water, snow, urban)
 impervious <- crop(impervious, rast_ext)
-impervious <- classify(r, c(0, 0.75, 1), include.lowest=TRUE, brackets=TRUE)
-plot(impervious)
+impervious <- classify(impervious, c(0, 75, 100), 
+                       include.lowest=TRUE, brackets=TRUE)
+impervious <- focal(impervious, w = 3, fun="max") 
+impervious <- aggregate(impervious, fact = 4, fun = 'max')
 
-rm(rast_ext, r, ag, water, snow, urban)
+writeRaster(impervious, filename = file.path(praw, 'landcover', 'Impervious_surfaces.tif'))
+
+rm(rast_ext, r, ag, water, snow, urban, impervious)
+```
+
+```{r import impervious sufaces}
+
+impervious <- rast(file.path(praw, 'landcover', 'Impervious_surfaces.tif'))
+
 ```
 
 
