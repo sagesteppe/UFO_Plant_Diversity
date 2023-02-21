@@ -46,5 +46,7 @@ us_eco_14/
 EcoRegionsCombined.tif
 occurrences/
 landcover/
-
+BIEN_occurrences.csv
+LPIRAW.csv
+BIEN_focal_occurrences.csv
 

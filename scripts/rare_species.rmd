@@ -3,8 +3,8 @@ title: "Rare Species"
 author: NULL
 date: NULL
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
   html_document:
     df_print: paged
 header-includes:
@@ -412,12 +412,45 @@ To identify rare plants via the conceptual Rabinowitz framework the concepts of 
 
 ##### Geographic Range - 
 
-```{r Gather Plant Records, eval = F}
+```{r install gbif, eval = F}
+install.packages("rgbif")
+user <- "steppe" # your gbif.org username 
+pwd <- "blmquery" # your gbif.org password
+email <- "reedbenkendorf27@gmail.com" # your email 
+```
+
+```{r Prepare GBIF queries, eval = F}
+library(rgbif)
+
+gbif_taxon_keys <- spp_v %>% 
+  name_backbone_checklist()  %>% 
+  filter(!matchType == "NONE") %>% 
+  pull(usageKey)
+
+dl_key <- occ_download(
+  pred_in("taxonKey", gbif_taxon_keys),
+  user=user, pwd=pwd, email=email,
+  pred("country", "US"),
+  pred("hasCoordinate", TRUE),
+  pred("hasGeospatialIssue", FALSE),
+  pred_gte("year", 1900)
+)
+
+d <- occ_download_get( dl_key ) %>%
+    occ_download_import()
+
+```
+
+
+
+```{r Gather Plant Records I}
 set.seed(1989)
 co_nat <- CO_plants %>% filter(NATIVITY == 'Native')
 ss <- 750
 ss_perc <- paste0(round((ss / length(unique(co_nat$BINOMIAL_NAT))) * 100, 1), '%')
+```
 
+```{r Gather Plant Records II, eval = F}
 spp_v <- sample(unique(co_nat$BINOMIAL_NAT), ss)
 occurrences <- BIEN::BIEN_occurrence_species(
   spp_v, political.boundaries = F, new.world = T)
@@ -430,7 +463,7 @@ occurrences <- occurrences %>%
 write.csv(occurrences, file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
 ```
 
-```{r Gather Focal Plant Records}
+```{r Gather Focal Plant Records - First Pass, eval = F}
 
 # step 1 only grab records not already downloaded in the last query
 
@@ -445,7 +478,7 @@ spp2query_bien <- spp_clean %>%
   left_join(., CO_plants,  by = c('SYMBOL_USDA' =  'SYMBOL')) %>% 
   filter(!SYMBOL_USDA %in% spp_occ) %>% 
   drop_na(BINOMIAL_NAT) %>% 
-  pull(SYMBOL_USDA)
+  pull(BINOMIAL_NAT)
 
 focal_occurrences <- BIEN::BIEN_occurrence_species(
   spp2query_bien, political.boundaries = F, new.world = T)
@@ -453,41 +486,75 @@ focal_occurrences <- BIEN::BIEN_occurrence_species(
 focal_occurrences <- focal_occurrences %>% 
   mutate(date_collected = as.Date(date_collected)) %>% 
   filter(date_collected > '1900-01-01') %>% 
+  drop_na(latitude) %>% 
+  drop_na(longitude) %>% 
   select(-datasource_id, -collection_code, -is_new_world)
 
 write.csv(focal_occurrences, 
           file.path(praw, 'BIEN_focal_occurrences.csv'), row.names = F)
 ```
 
+```{r Gather Focal Plant Records - Second Pass, eval = F}
 
-```{r Calculate total geographic expanse, eval = F}
+focal <- read.csv(file.path(praw, 'BIEN_focal_occurrences.csv')) %>% 
+  distinct(scrubbed_species_binomial)  %>% 
+  pull(scrubbed_species_binomial)
+  
+spp2query_bien <- spp_clean %>% 
+  distinct(SYMBOL_USDA) %>% 
+  left_join(., CO_plants,  by = c('SYMBOL_USDA' =  'SYMBOL')) %>% 
+  filter(!SYMBOL_USDA %in% spp_occ) %>% 
+  drop_na(BINOMIAL_NAT) %>% 
+  pull(BINOMIAL_NAT)
+
+not_found <-  spp2query_bien[!spp2query_bien %in% focal] # these were not found
+not_found
+
+focal
+
+```
+
+
+```{r Calculate total geographic expanse - reference, eval = F}
 
 occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv'))
 
-occurrences <- occurrences %>% 
+occurrences_l <- occurrences %>% 
   drop_na(longitude) %>% 
   drop_na(latitude) %>% 
   st_as_sf(coords = c(x = 'longitude', y = 'latitude'), crs = 4326) %>% 
-  group_by(scrubbed_species_binomial) %>% 
-  filter(n() > 10)
+#  group_by(scrubbed_species_binomial) %>% 
+#  filter(n() > 2) %>% 
+#  ungroup() %>% 
+  split(., f = .$scrubbed_species_binomial)
 
-occurrences_l <- split(occurrences, f = occurrences$scrubbed_species_binomial )
-occurrences_ch <- lapply(occurrences_l, convex_hull_resample)
+start <- Sys.time()
+occurrences_ch <- lapply(occurrences_l, convex_hull_resample) 
+end <- Sys.time()
+end - start
+
 occurrences_geographic <- bind_rows(occurrences_ch)
-
 write.csv(occurrences_geographic, file.path(praw, 'reference_occurrence_geographic_size.csv'))
 
 rm(occurrences_l, occurrences_ch, occurrences)
-
-ggplot(occurrences_geographic) +
-  geom_point(aes(x = Records, y = sqrt(Median_CH_Ha)))
 ```
 
-```{r bien batch one was here, eval = F}
 
-bien1 <- read.csv(file.path(praw, f[grep('BIEN_occurrences.csv', f)])) 
+```{r Calculate total geographic expanse - UFO, eval = F}
 
-max(bien1$latitude)
+focal_occurrences <- read.csv(file.path(praw, 'BIEN_focal_occurrences.csv'))
+
+focal_occurrences_l <- focal_occurrences %>% 
+  st_as_sf(coords = c(x = 'longitude', y = 'latitude'), crs = 4326) %>% 
+  split(., f = .$scrubbed_species_binomial )
+
+occurrences_ch <- lapply(focal_occurrences_l, convex_hull_resample)
+occurrences_geographic <- bind_rows(occurrences_ch)
+
+write.csv(occurrences_geographic, 
+          file.path(praw, 'focal_occurrence_geographic_size.csv'))
+
+rm(focal_occurrences, focal_occurrences_l, occurrences_ch, occurrences_geographic)
 ```
 
 
@@ -502,11 +569,10 @@ rm(co_nat, ss)
 ##### Occupancy - 
 To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then re-scaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
-
 ```{r Prepare exclusion surfaces for geographic range records, eval = F}
 
 r <- list.files(file.path(praw, 'landcover'))
-rast_ext <- ext(-170, -30, -60, 80)
+rast_ext <- ext(-170, -30, 20, 80)
 
 ag <- rast(file.path(praw, 'landcover', r[grep('Agriculture', r)]))
 water <- rast(file.path(praw, 'landcover', r[grep('OpenWater', r)]))
@@ -517,18 +583,103 @@ impervious <- sum(ag, water, snow, urban)
 impervious <- crop(impervious, rast_ext)
 impervious <- classify(impervious, c(0, 75, 100), 
                        include.lowest=TRUE, brackets=TRUE)
-impervious <- focal(impervious, w = 3, fun="max") 
-impervious <- aggregate(impervious, fact = 4, fun = 'max')
+impervious <- focal(impervious, w = 5, fun="median") 
+impervious <- aggregate(impervious, fact = 8, fun = 'median')
+plot(impervious)
 
-writeRaster(impervious, filename = file.path(praw, 'landcover', 'Impervious_surfaces.tif'))
+writeRaster(impervious, overwrite = T, 
+            filename = file.path(praw, 'landcover', 'Impervious_surfaces.tif'))
 
 rm(rast_ext, r, ag, water, snow, urban, impervious)
 ```
 
-```{r import impervious sufaces}
+```{r import impervious sufaces make vector, eval = F}
 
 impervious <- rast(file.path(praw, 'landcover', 'Impervious_surfaces.tif'))
+impervious_vect <- as.polygons(impervious)
+plot(impervious_vect)
 
+impervious_sf <- impervious_vect %>% 
+  st_as_sf() %>% 
+  st_simplify() %>% 
+  st_cast('POLYGON')
+
+impervious_sf - impervious_sf %>% 
+  mutate(area = as.numeric(st_area(impervious_sf)) / 1000000) 
+
+impervious_sf <- impervious_sf %>% 
+  filter(focal_median == 1) %>% 
+  st_simplify() %>% 
+  filter(area > 20)
+
+ggplot(impervious_sf) +
+  geom_sf(aes(fill = focal_median), color = NA)
+
+rm(impervious, impervious_vect)
+```
+
+
+```{r grid creation and occurrence counting, eval = F}
+
+focal <- read.csv(file.path(praw, 'BIEN_focal_occurrences.csv')) %>%
+  filter(scrubbed_species_binomial == 'Achnatherum nelsonii')
+
+species_records <- focal %>% 
+  st_as_sf(coords = c(x = 'longitude', y = 'latitude'), crs = 4326) %>% 
+  group_by(scrubbed_species_binomial) %>% 
+  summarize(records = n()) %>% 
+  mutate(pairs = round(records/2,0), .before = geometry)
+
+species_records_dt <- species_records %>% 
+  st_drop_geometry() 
+species_records_dt <- setDT(species_records_dt, key = 'pairs')
+
+reference_multiples <- data.table(
+  multipliers = 2:100
+)[,pairs := multipliers * multipliers]
+reference_multiples <- setkey(reference_multiples, pairs) # set the tables key
+
+# this gives us the number of cells to make
+species_records_dt <- reference_multiples[species_records_dt, roll = T]
+
+grid <- st_make_grid(x = species_records, 
+                     what = "polygons", n = species_records_dt$multipliers) %>% 
+  st_as_sf() %>% 
+  mutate(ID = 1:n(), .before = x) %>% 
+  rename(geometry = x)
+
+ggplot() +
+  geom_sf(data = grid, fill = NA) +
+  geom_sf(data = species_records) + 
+  theme_bw()
+
+# this supplies the number of cells which contain OCCUPANCIES Of the species
+occupied_cells <- st_join(grid, species_records) %>% 
+  drop_na(scrubbed_species_binomial)
+
+# this supplies the number of cells which are to be removed due to not enough natural areas
+impervious_cells <- st_intersection(grid, impervious_sf) %>% 
+  mutate(intersect_area = as.numeric(st_area(.))) %>%   # create new column with shape area  
+  select(ID, intersect_area) %>% 
+  st_drop_geometry() %>% 
+  group_by(ID) %>% 
+  summarise(intersect_area = sum(intersect_area)) %>% 
+  mutate(intersect_pct =
+           (intersect_area / as.numeric(st_area(grid[1,]))) * 100 ) %>% 
+  filter(intersect_pct > 50) %>% 
+  
+  # purely for visualization to ensure the process works
+  left_join(., grid, by = 'ID')
+
+impervious_cells <- st_as_sf(impervious_cells)
+
+ggplot() + 
+  geom_sf(data = grid, fill = NA) +
+  geom_sf(data = occupied_cells, fill = 'green') + 
+  geom_sf(data = impervious_cells, fill = 'red') +
+  geom_sf(data = species_records) +
+  geom_sf(data = impervious_sf, fill = 'yellow', alpha = 0.4) +
+  theme_bw()
 ```
 
 
@@ -605,7 +756,6 @@ gr_ncc <- gastons_rare %>% filter(!SYMBOL_USDA %in% cc)
 
 Of the `r nrow(gastons_rare)`species identified by Gaston's and the Singleton method `r nrow(gastons_rare) - nrow(gr_ncc)` overlap with the `r length(cc)`species of conservation concern which were found on plots. It is expected that these approaches would give different results, given that rare species tend to be abundant in portions of their ranges. 
 
-
 ```{r remove writing variables}
 rm(esa, fws_esa, blm, blm_ss, state, global, global_sub, state_sub, 
    state_sub1, state_aim, global_aim, cc, gr_ncc, gastons, gastons_rare, singletons,
@@ -621,7 +771,6 @@ __When we remove these `r` known and documented, by CNHP, rare species from the 
 
  Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.__
  
-
 
 # Discussion
 

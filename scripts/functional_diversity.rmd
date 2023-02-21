@@ -932,13 +932,13 @@ pts <- st_read(
   terra::project(terra::crs(r))
 
 reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>% 
-  st_as_sf() %>% 
+ as.data.frame() %>% 
   mutate(lyr1 = case_when(
-         PLOTID %in% c('PJ-143', 'PJ-153') ~ 4, 
-         PLOTID %in% c('AS-002', 'AS-004') ~ 3, 
-         PLOTID == 'MC-068' ~ 2,
-         TRUE ~ lyr1)) #%>% 
-#  st_drop_geometry()
+         PLOTID %in% c('SS-313-', 'PJ-143', 'PJ-153', 'PJ-164', 'SS-313') ~ 4, 
+         PLOTID %in% c('AS-002', 'AS-004', 'MMS-097') ~ 3, 
+         PLOTID %in% c('MC-068', 'AS-012') ~ 2, 
+         PLOTID %in% c('SS-306') ~ 6,
+         TRUE ~ lyr1)) 
          
 achieving <- left_join(achieving, reclass, by = 'PLOTID') %>% 
   left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 

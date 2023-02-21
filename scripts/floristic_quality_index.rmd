@@ -34,7 +34,11 @@ FQA scores are tied to the regional list of C-values, accordingly they cannot be
 > `r tufte::quote_footer('--- Spyreas 2019')`
 
 
+# Methods
 
+Cleaned AIM species richness data were imported from TerrAdat and joined to the CNHP c-values using the lookup keys developed for the Functional Diversity section. All species from the plot based species richness which were not unamibgiously identified to terminal taxon were droppped from analysis. The Mean Coefficient of Conservatism and Floristic Quality Index were calculated via the formulation in the appendix. To determine whether their were bias in the MCoC values between the strata, a linear model with a single set categorical predictors and a single continuous response (an 'ANOVA'; Analysis of Variance) was used, with a Kruskall-Wallis Post-hoc test with 95% Confidence Intervals. The strata used for detecting differences were those developed in SECTION XXX.
+
+Estimates of the total portion of each parcel of BLM land's condition at certain Mean COC values were calculated using the 'cont_analysis' function from spsurvey. This function was used due to BLM not having metrics of benchmarks, nor what constitutes land meeting them for FQA. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
@@ -45,9 +49,14 @@ knitr::opts_chunk$set(warning = F)
 
 ```{r load libraries and define functions}
 library(tidyverse)
+library(sf)
+library(ggpubr)
+library(spsurvey)
+source('functions.R')
+mcoc <- function(x){sum(x)/length(x)} 
+fqi <- function(x){sum(x)/length(x) * sqrt(length(x))}
 
-# mcoc <- function(x){sum(x)/length(x)} 
-# fqi <- function(x){sum(x)/length(x) * sqrt(length(x))}
+rm(convex_hull_resample)
 ```
 
 ```{r Import AIM Species Richness Data}
@@ -56,14 +65,305 @@ ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 fp <- list.files(ppro, pattern = 'csv')
 
-# spp <- 
+spp_richness <- read.csv(file.path(praw, f[grep('SpeciesRichness[.]', f)])) %>% 
+  select(SpeciesList, PrimaryKey)
+spp_r_header <- read.csv(file.path(praw, f[grep('RichnessHeader', f)])) %>% 
+  select(FormDate, Observer, PrimaryKey)
+
+pts <- st_read(
+  '../../aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+                quiet = T) %>% 
+  st_transform(26913) %>% 
+  st_buffer(65) %>% 
+  select(PLOTID, STRATUM) 
+
+char <- read.csv(file.path(praw, f[grep('Characterization', f)] ) ) %>% 
+  st_as_sf( coords = c('Longitude', 'Latitude'), crs = 4269) %>% 
+  filter(str_detect(PrimaryKey, negate = T,
+                    'Fuels|Bull-Draw|CO-NWD|_Tres_Rios|Grand_Junction|Gunnison|Moab|TRFO'),
+         str_detect(PlotID, '[A-Z]{2,3}-[0-9]{2,3}')) %>% 
+  st_transform(26913) %>% 
+  select(PrimaryKey) 
+
+spp_richness <- st_intersection(pts, char)  %>% 
+  left_join(., spp_r_header, by = 'PrimaryKey', multiple = "all") %>% 
+  left_join(., spp_richness, by = 'PrimaryKey', multiple = "all") %>% 
+  rename(SYMBOL_AIM = SpeciesList)  %>% 
+  select(PLOTID, STRATUM, SYMBOL_AIM, geometry)
+
+no_records_full <- nrow(spp_richness)
+
+rm(pts, char, spp_r_header)
+```
+ 
+```{r Join C Values to Species Richness}
+
+# remove unknowns here, only 118 records total across 5 years, pretty impressive!
+unks <- spp_richness %>% 
+  filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+')) %>%
+  nrow()
+
+spp_richness <- spp_richness %>% 
+  filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+', negate = T))
+
+# add on the official USDA codes to the AIM codes to sync up with CNHP
+attributes <- read.csv(
+  file.path(ppro, fp[grep('Attribute.*Table-RCB', fp)]) ) %>% 
+  select(SYMBOL_AIM, SYMBOL_USDA) %>% 
+  distinct(.keep_all = T)   # one duplicate in here somewhere!
+
+spp_clean <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM', multiple = "all") %>% 
+  mutate(SYMBOL_USDA = if_else( is.na(SYMBOL_USDA), SYMBOL_AIM, SYMBOL_USDA))
 
 cvals <- read.csv(file.path(ppro, fp[grep('C-Values', fp)])) %>% 
-  select(National_USDASymbol, FQA_C.Value2020_Numeric, FQA_NativeStatus, Ack_SciName_noAuthority, USDA_Duration)
+  select(SYMBOL_USDA = National_USDASymbol, C.Val = FQA_C.Value2020_Numeric, Native = FQA_NativeStatus, 
+         Ack_SciName_noAuthority)
 
+spp_clean <- left_join(spp_clean, cvals, by = 'SYMBOL_USDA', multiple = "all") %>% 
+  # due to multiple look ups we will remove duplicate records
+  group_by(PLOTID, SYMBOL_USDA) %>% 
+  slice_sample(n = 1)
 
+# spp_clean %>%  # check for duplicates here. 
+#  group_by(PLOTID, SYMBOL_USDA) %>% 
+#  filter(n() > 1)
+
+no_CVAL_match <- filter(spp_clean, is.na(C.Val)) %>% 
+  nrow()
+
+spp_clean <- drop_na(spp_clean) %>% 
+  group_by(PLOTID)
+
+rm(cvals, attributes)
+```
+
+```{r Calculate Coefficients}
+FQI_results <- spp_clean %>% 
+  summarize(mcoc_r = mcoc(C.Val), 
+            fqi_r = fqi(C.Val)) %>% 
+  st_as_sf()
+
+rm(fqi, mcoc)
+```
+
+```{r map coefficients}
+ggplot(FQI_results) + 
+  geom_sf() + 
+  
+  geom_point( aes(fill = mcoc_r, size = fqi_r, geometry = geometry),
+    stat = "sf_coordinates", shape = 21
+  ) +
+  scale_fill_viridis_c('Mean C', option = "C", alpha = 0.6, direction = -1) +
+  scale_size_binned('FQI') +
+  theme_void() +
+  theme(legend.position = "right")
 
 ```
+
+
+```{r add strata to site}
+
+lc_lkp <- read.csv(file.path(praw, f[grep('landcover', f)]) )  %>% 
+  cbind(., RealStratum = c('MC', 'AS', 'MMS', 'PJ', 'SD', 'SS'))
+r <- terra::rast('../../plot_post_stratification/data/processed/PredictedVegClass.tif')
+pts <- FQI_results %>% 
+  select(PLOTID) %>% 
+  terra::vect() %>% 
+  terra::project(terra::crs(r))
+
+reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>% 
+ as.data.frame() %>% 
+  mutate(lyr1 = case_when(
+         PLOTID %in% c('SS-313-', 'PJ-143', 'PJ-153', 'PJ-164', 'SS-313') ~ 4, 
+         PLOTID %in% c('AS-002', 'AS-004', 'MMS-097') ~ 3, 
+         PLOTID %in% c('MC-068', 'AS-012') ~ 2, 
+         PLOTID %in% c('SS-306') ~ 6,
+         TRUE ~ lyr1)) 
+         
+FQI_results <- left_join(FQI_results, reclass, by = 'PLOTID') %>% 
+  left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
+  select(-lyr1) %>% 
+  relocate(stratum, .before = geometry) %>% 
+  st_as_sf() %>% 
+  mutate(stratum = str_trim(stratum)) 
+
+rm(r, pts, reclass, lc_lkp)
+```
+
+
+```{r determine whether the metrics vary by classified stratum}
+
+wghts <- read.csv( file.path(praw, f[grep('Weights', f)])) %>% 
+  select(WghtPerPlot, STRATUM = Stratum, AoInference = Area)
+
+fqi_weights <- read.csv(file.path(praw, f[grep('Interence', f)])) %>% 
+  select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
+  right_join(., FQI_results, by = 'PLOTID') %>% 
+  rowwise() %>% 
+  mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
+  left_join(., wghts, by = c('STRATUM','AoInference'))
+
+rm(wghts)
+```
+
+```{r Plot difference of MCOC by stratum}
+
+fqi_weights_sub <- fqi_weights %>% filter(RealStratum != 'AS')
+coc_box <- boxplot_drawer(df = fqi_weights_sub, response = mcoc_r, 
+                     group = RealStratum, col_pal = strata_pal) +
+  labs(title = 'Mean CoC by Stratum', x = 'Stratum', y = 'Mean Coefficient of Conservatism') 
+
+fqa_meds <- fqi_weights_sub %>% 
+  group_by(RealStratum) %>% 
+  summarize(med_C = median(mcoc_r),
+            mean_C = mean(mcoc_r))
+
+rm(fqi_weights_sub, theme_boxplot, boxplot_drawer, strata_pal)
+```
+
+```{r Interpolate FQI values to office }
+
+# covariates: elevation, rolling window population density, 
+# distance from nearest road, stratum
+
+```
+
+
+
+```{r print stratum comparisions, fig.cap='Median Values of Coefficient of Conservation by Stratum', out.width="50%"}
+coc_box
+
+my_range <- function(x, col){
+  paste(round(min(x[,col]),2), '-', round(max(x[,col]),2) )
+}
+
+```
+
+The mean C-Values varied by stratum (Analysis of Variance (ANOVA), ...), follow-up tests (Kruskall-Wallis) indicated that Salt-Desert and Sage-Brush sites did not differ from each other, nor Mixed Mountain Shrub and Pinon-Juniper from each other. Results indicate that all members of these two groups differed across them, e.g. Sage-brush differed from both Mixed Mountain Shrub and Pinon-Juniper and *vice versa*.  The two lower elevation strata, Salt Desert and Sage Brush, are generally more accessible to humans and have higher recreational land uses, and had the lowest C-Vals. While the values did vary, the extent of the variation was minor, with the range of variation from the median values `r my_range(fqa_meds, 'med_C')` and a mean range of `r my_range(fqa_meds, 'mean_C')`, given that the these values occur over a range of 0-10, we considered this to be a negligible difference, not indicative of major biases in the C-values ascribed to plants themselves, but rather indicative of actual land conditions. 
+
+
+
+```{r Kriging interpolation of FQI across field office - prepare covariates, eval = F}
+library(terra)
+library(spatstat)
+library(tigris)
+
+rp <- '../../AIM_Field_rasters'
+rf <- list.files(rp, recursive = T, pattern = 'tif')
+p2carto <- '../../UFO_cartography'
+
+vector_data <- list.files(p2carto, recursive = T, pattern = 'shp$')
+popDen <- rast(file.path(rp, rf[grep('population', rf)] ))
+
+# import extent file
+ext <- vect('../../UFO_cartography/UFO_mask/mask/mask.shp') 
+
+ext_84 <- ext %>% 
+  project(crs(popDen)) %>% 
+  ext()
+
+################          Human population Density          ####################
+# data were downloaded on Feb 21, 14:15 CST, from (HDX)[https://data.humdata.org/dataset/united-states-high-resolution-population-density-maps-demographic-estimates] 
+# for the area 38N - 48N, 100 - 110W. These data were cropped and masked to the outer extent of the UFO field office. 
+
+# crop to extent of analysis
+popDen <- crop(popDen, ext_84, mask = T, overwrite = T,)
+
+# aggregate to 90m resolution
+popDen_c <- aggregate(popDen, fact=3, cores=20, fun = 'sum', na.rm = T)
+
+# create a rolling window SUM, over 2070m (~2 km)
+popDen_c <- focal(popDen_c, w = 23, fun = 'sum', expand = T, overwrite = T, na.rm = T)
+
+# project into planar coordinates
+popDen_c <- project(popDen_c, crs(ext), filename = 
+                      file.path(rp, 'PopDensity_planar.tif'))
+rm(popDen, ext_84)
+
+## import elevation data at 90m resolution
+elev90 <- rast(file.path(p2carto, list.files(p2carto, recursive = T, pattern = 'DEM.*tif')))
+elev90 <- crop(elev90, ext)
+
+################# patch size of contiguous public land - PADUS #################
+padus <- st_read(
+  file.path(p2carto, vector_data[grep('PAD.*Fee*', vector_data)]), quiet = T) %>% 
+  filter(Mang_Type == 'FED') %>% 
+  group_by(Mang_Type) %>% 
+  summarize(geometry = st_union(geometry)) %>% 
+  st_cast(., to = "POLYGON")  %>% 
+  mutate(AreaHA = as.numeric(st_area(.)) / 10000 )
+
+patchsize_r <- padus %>% 
+  vect() %>% 
+  rasterize(., elev90, 'AreaHA',
+            background = 0)
+
+####################### distance from nearest road #############################
+# ensure that roads data are in planar coordinates systems before converting
+# simplify roads data 
+
+
+ext_sf <- st_read('../../UFO_cartography/UFO_mask/mask/mask.shp')
+
+CO <- counties(state = 'CO', cb = T)  %>%
+  select(COUNTYFP, NAME ) %>% 
+  st_transform(st_crs(ext_sf))
+counties <- st_join(ext_sf, CO) %>% pull(COUNTYFP)
+
+CO_roads <- roads(state = 'CO', county = counties, keep_zipped_shapefile = T) %>% 
+  st_transform(st_crs(ext_sf)) %>% 
+  st_crop(CO_roads, ext_sf) %>% 
+  st_simplify() %>% 
+  select(geometry) %>% 
+  st_cast('LINESTRING') %>% 
+  st_as_sfc()
+
+# rm(CO, counties)
+
+##################     distance to nearest road  raster      ###################
+
+flat_lines_psp <- as.psp(CO_roads)
+
+L <- shift(flat_lines_psp, origin = "bottomleft")
+unitname(L) <- "m"
+D90m <- distmap(L, eps = 90)
+
+plot(D30m)
+
+```
+
+
+```{r Dredge a consensus model}
+
+# Run automated model selection 
+library(MuMin)
+library(vif)
+
+# check for correlation amongst the independent variables from 5000 random cells
+corr_check_sample <- terra::sample(fqa_stack, size = 5000, method = 'regular')
+
+vif_results <- vifstep(corr_check_sample ,th=10)
+
+rm(corr_check_sample, vif_results)
+# this is the theoretical full model:
+# glm(mCoC_r ~ distance_road * pop_density * patchsize_r * elevation * coordX * coordY, data = spatial_vars)
+
+full_model <- glm(mCoC_r ~ ., data = spatial_vars)
+optimal_models <- dredge(full_model, abbrev.names = T)
+
+# gather the actual terms from the top performing models, to see what worked.
+model_terms <- get.models(optimal_models)
+
+# if top models have dAIC < 2.0, than 'stack' the models
+stacked_model <- model.avg(optimal_models, subset = delta < 2, fit = T)
+```
+
+
+```{r}
+rm(my_range)
+```
+
+# Discussion
 
 
 
@@ -95,7 +395,7 @@ Where:
   \item[] $\sqrt{S}$ is the square root of the number of species included in the calculation  
 \end{enumerate}
 
-Equations from @swink1994plants, modified for more simple formulations. 
+Equations from @swink1994plants, and modified for simpler formulations. 
 
 
 \newpage
