@@ -341,7 +341,7 @@ rm(time90m, flat_lines_psp, L, CO_roads, m90_r, CO_roads_v, road_raster)
 
 
 ```{r prepare raster stack for FQI prediction}
-
+library(terra)
 
 rp <- '../../AIM_Field_rasters'
 rf <- list.files(rp, recursive = T, pattern = 'tif')
@@ -358,48 +358,111 @@ patch <- rast(file.path(rp, rf[grep( 'public_patchsize.tif', rf)]))
 
 popDen <- crop(popDen, elev_90)
 popDen <- resample(popDen, elev_90)
+popDen[is.na(popDen[])] <- 0
 patch <- crop(patch, elev_90)
 patch <- resample(patch, elev_90)
 roadDist <- crop(roadDist, elev_90)
 roadDist <- resample(roadDist, elev_90)
 
-pred_stack <- c(elev_90, popDen, patch, roadDist)
+# make X and Y coords explicit layers in the model. 
+x_rast <- rast(elev_90)
+x_rast <- init(x_rast, "x")
 
-rm(elev_90, popDen, patch, roadDist)
+y_rast <- rast(elev_90)
+y_rast <- init(y_rast, "y")
+
+pred_stack <- c(elev_90, popDen, patch, roadDist, x_rast, y_rast)
+names(pred_stack) <- c('elevation', 'pop_density', 'patch_size', 'road_dist',
+                       'xcoord', 'ycoord')
+
+rm(elev_90, popDen, patch, roadDist, x_rast, y_rast)
 ```
 
 
 ```{r Dredge a consensus model}
 
 # Run automated model selection 
-library(MuMin)
-library(vif)
+library(MuMIn)
+library(usdm)
 
-# check for correlation amongst the independent variables from 5000 random cells
-corr_check_sample <- terra::sample(fqa_stack, size = 5000, method = 'regular')
-vif_results <- vifstep(corr_check_sample, th=10)
-
-# filter if need be. 
+# check for correlation among the independent variables from 5000 random cells
+corr_check_sample <- terra::spatSample(pred_stack, size = 5000, method = 'regular')
+vif_results <-  usdm::vifstep(corr_check_sample, th=10)
+vif_results
 
 rm(corr_check_sample, vif_results)
 
 ## extract values to AIM Plots
-#extract(fqa_plots, fqa_stack)
+fqa_results_V <- FQI_results %>% 
+  dplyr::select(PLOTID, mcoc_r) %>% 
+  vect()
+fqa_rast_vals <- extract(pred_stack, fqa_results_V,  bind = T) %>%
+  data.frame()
 
+# pull off plotID
+fqa_rast_vals <- dplyr::select(fqa_rast_vals, -PLOTID)
+fqa_rast_vals <- fqa_rast_vals[complete.cases(fqa_rast_vals),]
 
 ## attempt to model FQA as a function of human disturbance, and elevation. 
 
 # this is the theoretical full model:
-# glm(mCoC_r ~ distance_road * pop_density * patchsize_r * elevation * coordX * coordY, data = spatial_vars)
+glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord, data = fqa_rast_vals)
 
-full_model <- glm(mCoC_r ~ ., data = spatial_vars)
-optimal_models <- dredge(full_model, abbrev.names = T)
+oop <- options(na.action = "na.fail")
+
+full_model <- glm(mcoc_r ~ ., data = fqa_rast_vals)
+optimal_models <- dredge(full_model)
+optimal_models
 
 # gather the actual terms from the top performing models, to see what worked.
-model_terms <- get.models(optimal_models)
+model_terms <- get.models(optimal_models, subset = T)
 
 # if top models have dAIC < 2.0, than 'stack' the models
 stacked_model <- model.avg(optimal_models, subset = delta < 2, fit = T)
+
+# these provides the estimates of our coefficients
+stacked_model$coefficients
+
+# identify out top component models
+stacked_model
+
+```
+
+
+```{r stack the top models}
+head(model_terms)
+
+
+# we will create predictions from EACH model with dAIC < 2.0 and then take the m
+# mean of each model 
+model_terms[["20"]][["call"]]
+model_terms[["18"]][["call"]]
+model_terms[["28"]][["call"]]
+model_terms[["24"]][["call"]]
+model_terms[["52"]][["call"]]
+
+model_20 <- glm(formula = mcoc_r ~ elevation + patch_size + xcoord + 1, data = fqa_rast_vals)
+model_18 <- glm(formula = mcoc_r ~ elevation + xcoord + 1, data = fqa_rast_vals)
+model_28 <- glm(formula = mcoc_r ~ elevation + patch_size + road_dist + xcoord +  1, data = fqa_rast_vals)
+model_24 <- glm(formula = mcoc_r ~ elevation + patch_size + pop_density +  xcoord + 1, data = fqa_rast_vals)
+model_52 <- glm(formula = mcoc_r ~ elevation + patch_size + xcoord + ycoord +  1, data = fqa_rast_vals)
+
+top_pred_r <- c(
+  pred_20 <- predict(pred_stack, model_20, type="response"),
+  pred_18 <- predict(pred_stack, model_18, type="response"),
+  pred_28 <- predict(pred_stack, model_28, type="response"),
+  pred_24 <- predict(pred_stack, model_24, type="response"),
+  pred_52 <- predict(pred_stack, model_52, type="response")
+)
+
+plot(top_pred_r) # model 4 is bogus
+top_pred_r <- subset(top_pred_r, c(1:3, 5))
+top_pred_r <- mean(top_pred_r)
+plot(top_pred_r)
+
+# create a simple ensemble, by calculating the mean of each top model
+
+rm(model_18, model_20, model_24, model_28, model_52, )
 ```
 
 
