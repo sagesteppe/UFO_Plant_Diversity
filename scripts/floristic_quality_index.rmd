@@ -243,9 +243,8 @@ The mean C-Values varied by stratum (Analysis of Variance (ANOVA), ...), follow-
 
 
 
-```{r Kriging interpolation of FQI across field office - prepare covariates, eval = F}
+```{r Predict FQI across field office - prepare covariates, eval = F}
 library(terra)
-library(spatstat)
 library(tigris)
 
 rp <- '../../AIM_Field_rasters'
@@ -253,7 +252,8 @@ rf <- list.files(rp, recursive = T, pattern = 'tif')
 p2carto <- '../../UFO_cartography'
 
 vector_data <- list.files(p2carto, recursive = T, pattern = 'shp$')
-popDen <- rast(file.path(rp, rf[grep('population', rf)] ))
+popDen28 <- rast(file.path(rp, rf[grep('population.*28', rf)] ))
+popDen38 <- rast(file.path(rp, rf[grep('population.*38', rf)] ))
 
 # import extent file
 ext <- vect('../../UFO_cartography/UFO_mask/mask/mask.shp') 
@@ -262,12 +262,19 @@ ext_84 <- ext %>%
   project(crs(popDen)) %>% 
   ext()
 
+## import elevation data at 90m resolution
+elev90 <- rast(file.path(p2carto, list.files(p2carto, recursive = T, pattern = 'DEM.*tif')))
+elev90 <- crop(elev90, ext)
+
 ################          Human population Density          ####################
 # data were downloaded on Feb 21, 14:15 CST, from (HDX)[https://data.humdata.org/dataset/united-states-high-resolution-population-density-maps-demographic-estimates] 
 # for the area 38N - 48N, 100 - 110W. These data were cropped and masked to the outer extent of the UFO field office. 
 
 # crop to extent of analysis
-popDen <- crop(popDen, ext_84, mask = T, overwrite = T,)
+popDen <- mosaic(popDen28, popDen38, fun = 'mean', overwrite = T,
+                 filename = file.path(rp, 'PopDensity_mosaic.tif'))
+
+popDen <- crop(popDen, ext_84, mask = T, overwrite = T)
 
 # aggregate to 90m resolution
 popDen_c <- aggregate(popDen, fact=3, cores=20, fun = 'sum', na.rm = T)
@@ -276,13 +283,12 @@ popDen_c <- aggregate(popDen, fact=3, cores=20, fun = 'sum', na.rm = T)
 popDen_c <- focal(popDen_c, w = 23, fun = 'sum', expand = T, overwrite = T, na.rm = T)
 
 # project into planar coordinates
-popDen_c <- project(popDen_c, crs(ext), filename = 
+popDen_c <- project(popDen_c, crs(ext), overwrite = T, filename = 
                       file.path(rp, 'PopDensity_planar.tif'))
-rm(popDen, ext_84)
+popDen_c <- resample(popDen_c, elev90, overwrite = T, filename = 
+                       file.path(rp, 'PopDensity_planar_resamp.tif'))
 
-## import elevation data at 90m resolution
-elev90 <- rast(file.path(p2carto, list.files(p2carto, recursive = T, pattern = 'DEM.*tif')))
-elev90 <- crop(elev90, ext)
+rm(popDen, popDen28, popDen38, ext_84)
 
 ################# patch size of contiguous public land - PADUS #################
 padus <- st_read(
@@ -298,10 +304,11 @@ patchsize_r <- padus %>%
   rasterize(., elev90, 'AreaHA',
             background = 0)
 
+writeRaster(patchsize_r, file.path(rp, 'public_patchsize.tif'))
+
 ####################### distance from nearest road #############################
 # ensure that roads data are in planar coordinates systems before converting
 # simplify roads data 
-
 
 ext_sf <- st_read('../../UFO_cartography/UFO_mask/mask/mask.shp')
 
@@ -312,24 +319,53 @@ counties <- st_join(ext_sf, CO) %>% pull(COUNTYFP)
 
 CO_roads <- roads(state = 'CO', county = counties, keep_zipped_shapefile = T) %>% 
   st_transform(st_crs(ext_sf)) %>% 
-  st_crop(CO_roads, ext_sf) %>% 
+  st_crop(., ext_sf) %>% 
   st_simplify() %>% 
   select(geometry) %>% 
   st_cast('LINESTRING') %>% 
   st_as_sfc()
 
-# rm(CO, counties)
+rm(CO, counties)
 
-##################     distance to nearest road  raster      ###################
+##  now create distance to nearest roads  raster  ###
 
-flat_lines_psp <- as.psp(CO_roads)
+CO_roads_v <- vect(CO_roads)
+road_raster <- rasterize(CO_roads_v, elev_90,
+            background = NA)
+m90_r <- distance(road_raster)
+writeRaster(m90_r, file.path(rp, '90m_RoadDistance.tif'), overwrite = T)
 
-L <- shift(flat_lines_psp, origin = "bottomleft")
-unitname(L) <- "m"
-D90m <- distmap(L, eps = 90)
+rm(time90m, flat_lines_psp, L, CO_roads, m90_r, CO_roads_v, road_raster)
+```
 
-plot(D30m)
 
+
+```{r prepare raster stack for FQI prediction}
+
+
+rp <- '../../AIM_Field_rasters'
+rf <- list.files(rp, recursive = T, pattern = 'tif')
+p2carto <- '../../UFO_cartography'
+
+ext <- vect('../../UFO_cartography/UFO_mask/mask/mask.shp') 
+
+elev_90 <- rast(file.path(p2carto, list.files(p2carto, recursive = T, pattern = 'DEM.*tif')))
+elev_90 <- crop(elev_90, ext)
+
+popDen <- rast(file.path(rp, rf[grep( 'PopD.*resamp', rf)]))
+roadDist <- rast(file.path(rp, rf[grep( 'RoadDistance', rf)]))
+patch <- rast(file.path(rp, rf[grep( 'public_patchsize.tif', rf)]))
+
+popDen <- crop(popDen, elev_90)
+popDen <- resample(popDen, elev_90)
+patch <- crop(patch, elev_90)
+patch <- resample(patch, elev_90)
+roadDist <- crop(roadDist, elev_90)
+roadDist <- resample(roadDist, elev_90)
+
+pred_stack <- c(elev_90, popDen, patch, roadDist)
+
+rm(elev_90, popDen, patch, roadDist)
 ```
 
 
@@ -341,10 +377,18 @@ library(vif)
 
 # check for correlation amongst the independent variables from 5000 random cells
 corr_check_sample <- terra::sample(fqa_stack, size = 5000, method = 'regular')
+vif_results <- vifstep(corr_check_sample, th=10)
 
-vif_results <- vifstep(corr_check_sample ,th=10)
+# filter if need be. 
 
 rm(corr_check_sample, vif_results)
+
+## extract values to AIM Plots
+#extract(fqa_plots, fqa_stack)
+
+
+## attempt to model FQA as a function of human disturbance, and elevation. 
+
 # this is the theoretical full model:
 # glm(mCoC_r ~ distance_road * pop_density * patchsize_r * elevation * coordX * coordY, data = spatial_vars)
 
