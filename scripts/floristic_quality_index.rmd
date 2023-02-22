@@ -408,6 +408,13 @@ stacked_model
 
 ```
 
+```{r report top models}
+
+summary(model.avg(res)) |> knitr::kable()
+
+sw(res) |> knitr::kable()
+
+```
 
 ```{r stack the top models}
 head(model_terms)
