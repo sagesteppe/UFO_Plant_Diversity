@@ -48,8 +48,8 @@ knitr::opts_chunk$set(warning = F)
 ```
 
 ```{r load libraries and define functions}
-library(tidyverse)
 library(sf)
+library(tidyverse)
 library(ggpubr)
 library(spsurvey)
 source('functions.R')
@@ -83,13 +83,13 @@ char <- read.csv(file.path(praw, f[grep('Characterization', f)] ) ) %>%
                     'Fuels|Bull-Draw|CO-NWD|_Tres_Rios|Grand_Junction|Gunnison|Moab|TRFO'),
          str_detect(PlotID, '[A-Z]{2,3}-[0-9]{2,3}')) %>% 
   st_transform(26913) %>% 
-  select(PrimaryKey) 
+  dplyr::select(PrimaryKey) 
 
 spp_richness <- st_intersection(pts, char)  %>% 
   left_join(., spp_r_header, by = 'PrimaryKey', multiple = "all") %>% 
   left_join(., spp_richness, by = 'PrimaryKey', multiple = "all") %>% 
   rename(SYMBOL_AIM = SpeciesList)  %>% 
-  select(PLOTID, STRATUM, SYMBOL_AIM, geometry)
+  dplyr::select(PLOTID, STRATUM, SYMBOL_AIM, geometry)
 
 no_records_full <- nrow(spp_richness)
 
@@ -109,14 +109,14 @@ spp_richness <- spp_richness %>%
 # add on the official USDA codes to the AIM codes to sync up with CNHP
 attributes <- read.csv(
   file.path(ppro, fp[grep('Attribute.*Table-RCB', fp)]) ) %>% 
-  select(SYMBOL_AIM, SYMBOL_USDA) %>% 
+  dplyr::select(SYMBOL_AIM, SYMBOL_USDA) %>% 
   distinct(.keep_all = T)   # one duplicate in here somewhere!
 
 spp_clean <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM', multiple = "all") %>% 
   mutate(SYMBOL_USDA = if_else( is.na(SYMBOL_USDA), SYMBOL_AIM, SYMBOL_USDA))
 
 cvals <- read.csv(file.path(ppro, fp[grep('C-Values', fp)])) %>% 
-  select(SYMBOL_USDA = National_USDASymbol, C.Val = FQA_C.Value2020_Numeric, Native = FQA_NativeStatus, 
+  dplyr::select(SYMBOL_USDA = National_USDASymbol, C.Val = FQA_C.Value2020_Numeric, Native = FQA_NativeStatus, 
          Ack_SciName_noAuthority)
 
 spp_clean <- left_join(spp_clean, cvals, by = 'SYMBOL_USDA', multiple = "all") %>% 
@@ -167,7 +167,7 @@ lc_lkp <- read.csv(file.path(praw, f[grep('landcover', f)]) )  %>%
   cbind(., RealStratum = c('MC', 'AS', 'MMS', 'PJ', 'SD', 'SS'))
 r <- terra::rast('../../plot_post_stratification/data/processed/PredictedVegClass.tif')
 pts <- FQI_results %>% 
-  select(PLOTID) %>% 
+  dplyr::select(PLOTID) %>% 
   terra::vect() %>% 
   terra::project(terra::crs(r))
 
@@ -182,7 +182,7 @@ reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>%
          
 FQI_results <- left_join(FQI_results, reclass, by = 'PLOTID') %>% 
   left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
-  select(-lyr1) %>% 
+  dplyr::select(-lyr1) %>% 
   relocate(stratum, .before = geometry) %>% 
   st_as_sf() %>% 
   mutate(stratum = str_trim(stratum)) 
@@ -194,10 +194,10 @@ rm(r, pts, reclass, lc_lkp)
 ```{r determine whether the metrics vary by classified stratum}
 
 wghts <- read.csv( file.path(praw, f[grep('Weights', f)])) %>% 
-  select(WghtPerPlot, STRATUM = Stratum, AoInference = Area)
+  dplyr::select(WghtPerPlot, STRATUM = Stratum, AoInference = Area)
 
 fqi_weights <- read.csv(file.path(praw, f[grep('Interence', f)])) %>% 
-  select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
+  dplyr::select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
   right_join(., FQI_results, by = 'PLOTID') %>% 
   rowwise() %>% 
   mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
@@ -270,22 +270,6 @@ popDen_c <- resample(popDen_c, elev90, overwrite = T, filename =
 
 rm(popDen, popDen28, popDen38, ext_84)
 
-################# patch size of contiguous public land - PADUS #################
-padus <- st_read(
-  file.path(p2carto, vector_data[grep('PAD.*Fee*', vector_data)]), quiet = T) %>% 
-  filter(Mang_Type == 'FED') %>% 
-  group_by(Mang_Type) %>% 
-  summarize(geometry = st_union(geometry)) %>% 
-  st_cast(., to = "POLYGON")  %>% 
-  mutate(AreaHA = as.numeric(st_area(.)) / 10000 )
-
-patchsize_r <- padus %>% 
-  vect() %>% 
-  rasterize(., elev90, 'AreaHA',
-            background = 0)
-
-writeRaster(patchsize_r, file.path(rp, 'public_patchsize.tif'))
-
 ####################### distance from nearest road #############################
 # ensure that roads data are in planar coordinates systems before converting
 # simplify roads data 
@@ -293,7 +277,7 @@ writeRaster(patchsize_r, file.path(rp, 'public_patchsize.tif'))
 ext_sf <- st_read('../../UFO_cartography/UFO_mask/mask/mask.shp')
 
 CO <- counties(state = 'CO', cb = T)  %>%
-  select(COUNTYFP, NAME ) %>% 
+  dplyr::select(COUNTYFP, NAME ) %>% 
   st_transform(st_crs(ext_sf))
 counties <- st_join(ext_sf, CO) %>% pull(COUNTYFP)
 
@@ -301,7 +285,7 @@ CO_roads <- roads(state = 'CO', county = counties, keep_zipped_shapefile = T) %>
   st_transform(st_crs(ext_sf)) %>% 
   st_crop(., ext_sf) %>% 
   st_simplify() %>% 
-  select(geometry) %>% 
+  dplyr::select(geometry) %>% 
   st_cast('LINESTRING') %>% 
   st_as_sfc()
 
@@ -315,7 +299,38 @@ road_raster <- rasterize(CO_roads_v, elev_90,
 m90_r <- distance(road_raster)
 writeRaster(m90_r, file.path(rp, '90m_RoadDistance.tif'), overwrite = T)
 
-rm(time90m, flat_lines_psp, L, CO_roads, m90_r, CO_roads_v, road_raster)
+################# patch size of contiguous public land - PADUS #################
+padus <- st_read(
+  file.path(p2carto, vector_data[grep('PAD.*Fee*', vector_data)]), quiet = T) %>% 
+  filter(Mang_Type == 'FED') %>% 
+  group_by(Mang_Type) %>% 
+  summarize(geometry = st_union(geometry))#
+
+# now erase the roads from it 
+
+CO_roads_buff <- CO_roads %>% 
+  st_as_sf() %>% 
+  st_buffer(., 20) %>% 
+  st_make_valid() %>% 
+  st_union() %>% 
+  st_as_sf() %>% 
+  st_simplify()
+
+padus_erased <- rmapshaper::ms_erase(padus, CO_roads_buff)
+
+padus_erased <- padus_erased %>% 
+  st_cast(., to = "POLYGON")  %>% 
+  mutate(AreaHA = as.numeric(st_area(.)) / 10000 ) 
+
+patchsize_r <- padus_erased %>% 
+  vect() %>% 
+  rasterize(., elev90, 'AreaHA',
+            background = 0)
+
+writeRaster(patchsize_r, file.path(rp, 'public_patchsize.tif'), overwrite = T)
+
+rm(time90m, flat_lines_psp, L, CO_roads, m90_r, CO_roads_v, road_raster,
+   padus_erased, CO_roads_buff, patchsize_r)
 ```
 
 
@@ -357,7 +372,8 @@ names(pred_stack) <- c('elevation', 'pop_density', 'patch_size', 'road_dist',
 
 rm(elev_90, popDen, patch, roadDist, x_rast, y_rast)
 ```
-In order to detect variables which were collinear, and hence would violate assumptions, of indepedence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term $$glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord, data = fqa_rast_vals)$$ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theretic framework. All tops models, those with dAIC < 2.0, were each preicted onto gridded surface of the extent of analysis, and the mean of all of these models were calculated using terra. The consensus map was then clipped to the extent of UFO BLM administered lands.
+
+In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term $$glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord, data = fqa_rast_vals)$$ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework. All tops models, those with dAIC < 2.0, were each selected for further analyses. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering.  The means of all of these models were calculated using terra. The consensus map was then clipped to the extent of UFO BLM administered lands.
 
 ```{r Dredge a consensus model}
 
@@ -386,7 +402,7 @@ fqa_rast_vals <- fqa_rast_vals[complete.cases(fqa_rast_vals),]
 ## attempt to model FQA as a function of human disturbance, and elevation. 
 
 # this is the theoretical full model:
-glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord, data = fqa_rast_vals)
+# glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord, data = fqa_rast_vals)
 
 oop <- options(na.action = "na.fail")
 
@@ -406,19 +422,19 @@ stacked_model$coefficients
 # identify out top component models
 stacked_model
 
+
+rm(fqa_results_V)
 ```
 
-```{r report top models}
+```{r report top models, eval = F}
 
-summary(model.avg(res)) |> knitr::kable()
+summary(model.avg(optimal_models)) |> knitr::kable()
 
 sw(res) |> knitr::kable()
 
 ```
 
 ```{r stack the top models}
-head(model_terms)
-
 
 # we will create predictions from EACH model with dAIC < 2.0 and then take the m
 # mean of each model 
@@ -443,14 +459,53 @@ top_pred_r <- c(
 )
 
 plot(top_pred_r) # model 4 is bogus
-top_pred_r <- subset(top_pred_r, c(1:3, 5))
+top_pred_r <- subset(top_pred_r, c(1:3, 5)) # we can remove it here
 top_pred_r <- mean(top_pred_r)
 plot(top_pred_r)
 
 # create a simple ensemble, by calculating the mean of each top model
 
-rm(model_18, model_20, model_24, model_28, model_52, )
+rm(model_18, model_20, model_24, model_28, model_52, oop, pred_20, pred_18, pred_28, pred_24, pred_52)
 ```
+
+
+```{r test for spatial autocorrelation, eval = F}
+
+xy <- data.matrix(fqa_rast_vals[,c("xcoord", "ycoord")])
+nb.gab <- spdep::graph2nb(spdep::gabrielneigh(xy), sym=TRUE)
+par(mar=c(0,0,0,0))
+plot(nb.gab, xy)
+listw.gab <- spdep::nb2listw(nb.gab)
+
+dlist <- spdep::nbdists(nb.gab, xy)
+dlist <- lapply(dlist, function(x) 1/x)
+listw.d1 <- spdep::nb2listw(nb.gab, style = "W", glist=dlist)
+dlist <- lapply(dlist, function(x) 1/x^2)
+listw.d2 <- spdep::nb2listw(nb.gab, style = "W", glist=dlist)
+
+# apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.gab)
+# apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.d1)
+# apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.d2)
+
+m_list <- list(model_20, model_18, model_28, model_24, model_52 )
+lapply(m_list, spdep::lm.morantest, listw.gab) 
+lapply(m_list, spdep::lm.morantest, listw.d1) 
+lapply(m_list, spdep::lm.morantest, listw.d2) 
+
+rm(xy, nb.gab, listw.gabv, listw.d1, listw.d2, m_list, listw.gab, dlist)
+```
+
+```{r remove some modelling variables}
+rm(fqa_rast_vals, model_18, model_20, model_24, model_28, model_52, optimal_models, pred_stack)
+```
+
+
+```{r Crop prediction of FQI to UFO land, eval = F}
+
+
+
+```
+
 
 
 ```{r}
