@@ -17,16 +17,13 @@ Diversity, which after evolution - a process inextricably linked to it, may be t
 
 *Alpha-diversity* - or species richness, is simply the number of species in a space at a point in time. The scale at which we discuss $\alpha  -diversity$ is usually up to a few footballs in size. This metric refers to areas which we are intimately familiar with and may traverse readily on foot. *Gamma-Diversity*, represents the richness of species in a larger area, generally a landscape. For example, we may readily discuss the $\gamma-diversity$ of the Dominguez-Escalente National Monument. In all instances the alpha diversity of many sites are nested within the gamma diversity of an area. Gamma diversities -in this case the number of species- exceed those of alpha diversities, both due to the relative uncommonness of many species, these uncommon species are often not present across the entirety of the landscape, and due to the large changes in the type of species supported by the habitats. These turnovers across the alpha diversity of sites, the difference in species present at sites, comprise *beta-diversity*. High rates of $\beta-diversity$, or dissimilarity of sites, foster high rates of gamma-diversity. We will not discuss it in depth here (@whittaker1972evolution).
 
-Evolution, the process largely mediating the maintenance of diversity, is survival of the fittest. However, the conditions of the test which may constitute the 'fittest' are nearly as numerous as the forms of diversity. Many species which exist in the same location in space, have distinct characteristics which allow for them to persist; dry years favor some species, while wet years favor others, some require more sun, while others thrive with less, the permutations and combinations of these settings go on *ad nauseum*. **The cover of these species ebb and flow with the usual weather and disturbances within the climate zone of the site (@hoover2014resistance, ...). These trends are especially important for the production of forage and browse, over the life of most large animals, they will have to feed on what they have available. No single species is the fittest at a site on a time scale which the BLM manages land, having multiple species which function similarly in space is the only stable strategy for management. **
+Evolution, the process largely mediating the maintenance of diversity, is survival of the fittest. However, the conditions of the test which may constitute the 'fittest' are nearly as numerous as the forms of diversity. Many species which exist in the same location in space, have distinct characteristics which allow for them to persist; dry years favor some species, while wet years favor others, some require more sun, while others thrive with less, the permutations and combinations of these settings go on *ad nauseum*. The cover of these species ebb and flow with the usual weather and disturbances within the climate zone of the site (@hoover2014resistance, ...). These trends are especially important for the production of forage and browse, over the life of most large animals, they will have to feed on what they have available. No single species is the fittest at a site on a time scale which the BLM manages land, having multiple species which function similarly in space is the only stable strategy for management.
 
 While Ecological Site Descriptions do not provide true measures of $\alpha-diversity$ - a list of all taxa which may grow at a site - many of them do contain lists of taxa which may be considered *dominant* or *subordinate* at a site (@avolio2019demystifying, @grime1998benefits). In general, it seems that the Shrubs, Trees, and Grasses at an Ecological Site would be considered *dominant*, and the forbs *subordinate*; keep in mind these terms refer to immediate ecosystem cycling effects, and the services offered by forbs to insects and then larger animals remain substantial (@avolio2019demystifying). These species which have high amounts of biomass, and ground cover, may be thought of as a core groups of species which are essential for the functioning of an ecosystem (@grime1998benefits), and each of the dominant species have been theorized to have conceptual effects as large as their cover. When dominant and subordinate species are lost from an area, it also has effects on the remaining species - most of which are relatively uncommon across the landscape (@grime1998benefits, @whittaker1965dominance). Considerable research has shown that having a diverse suite of plant species allows areas to: 1) Produce more forage in both a single year, and across different weather scenarios (@vogel2012grassland, @hoover2014resistance), 2) recover from disturbances such as fire, or compaction (@tilman1994biodiversity) 3) and resist degradation such as from the encroachment of noxious weeds (@weisser2017biodiversity, @avolio2019demystifying, @allan2011more, @gaitan2014vegetation, @sheley2010resistance, @isbell2011high, @oakley2013plant, *and reviewed in* @maestre2016structure, @oliver2015biodiversity). 
 
 Recruitment of native species back following drought may have issues pertaining to seed recruitment... @tilman1992drought .. although soil seeds banks in arid systems well.
 
-Given the generally high % abundance of the taxa listed in the species tables ESD's it is unlikely that they are truly lost, and should at least show in species richness meanders which have higher probability of uncovering more microhabitats, areas which individuals may have more access to water or other 
-
-
-@hooper2005effects
+Given the generally high % abundance of the taxa listed in the species tables ESD's it is unlikely that they are truly lost, and should at least show in species richness meanders which have higher probability of uncovering more microhabitats, areas which individuals may have more access to water or other ... @hooper2005effects
 
 
 ```{r setup, include=FALSE}
@@ -36,12 +33,11 @@ knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
 ```
 
-Information on production at Ecological Sites implies some superficial, yet essential, components of plant diversity. 
-
-### run analyses for both LPI and SR, most of these things are pretty much dirt common and should be found on lines without much hassle !?
+Information on production at Ecological Sites implies some superficial, yet essential, components of plant diversity. Here we determine what proportion of species identified in ESD production tables are present at each AIM plot, how many are missing, and whether any species are uniformly missing. We also combine plots by ES to determine $\gamma-diversity$ by site, and compare the relative turn over in species composition within each Ecological Site which has replicate plots.  
 
 ```{r}
 library(tidyverse)
+library(sf)
 ```
 
 
@@ -53,62 +49,118 @@ fp <- list.files(ppro, pattern = 'csv')
 ```
 
 
-```{r Import Data for both Species Richness and LPI, eval = F}
+```{r import aim data for species richness}
 
-aim_rich <- read.csv(file.path(ppro, fp[grep('AIM_Rich', fp)]))
-aim_lpi <- read.csv(file.path(ppro, fp[grep('AIM_LPI', fp)]))
+spp_richness <- read.csv(file.path(praw, f[grep('SpeciesRichness[.]', f)])) %>% 
+  select(SpeciesList, PrimaryKey)
+spp_r_header <- read.csv(file.path(praw, f[grep('RichnessHeader', f)])) %>% 
+  select(FormDate, Observer, PrimaryKey)
 
-esds <- read.csv(file.path(praw, f[grep('Plot.*ESD', f)])) %>% drop_na()
+pts <- st_read(
+  '../../aimDB/data/raw/AIM_Sample_Design/AIM_Design_Stratification.shp',
+                quiet = T) %>% 
+  st_transform(26913) %>% 
+  st_buffer(65) %>% 
+  select(PLOTID, STRATUM) 
 
-# aim_data <-  # CREATE BOOLEAN COLUMN, 1 = ON LPI, 0 - MISSING FROM LPI - 
+char <- read.csv(file.path(praw, f[grep('Characterization', f)] ) ) %>% 
+  st_as_sf( coords = c('Longitude', 'Latitude'), crs = 4269) %>% 
+  filter(str_detect(PrimaryKey, negate = T,
+                    'Fuels|Bull-Draw|CO-NWD|_Tres_Rios|Grand_Junction|Gunnison|Moab|TRFO'),
+         str_detect(PlotID, '[A-Z]{2,3}-[0-9]{2,3}')) %>% 
+  st_transform(26913) %>% 
+  select(PrimaryKey) 
 
+spp_richness <- st_intersection(pts, char)  %>% 
+  left_join(., spp_r_header, by = 'PrimaryKey') %>% 
+  left_join(., spp_richness, by = 'PrimaryKey') %>% 
+  rename(SYMBOL_AIM = SpeciesList) 
+
+no_records_full <- nrow(spp_richness)
+
+spp_richness <- spp_richness %>% 
+  filter(str_detect(SYMBOL_AIM, '^AG|^PG|^AF|^PF|^SH\\d+', negate = T))
+
+# add on the official USDA codes to the AIM codes to sync up with CNHP
+attributes <- read.csv(
+  file.path(ppro, fp[grep('Attribute.*Table-RCB', fp)]) ) %>% 
+  distinct() # one duplicate in here somewhere!
+
+Pk2PID <- spp_richness %>% 
+  select(PrimaryKey, PLOTID) %>% 
+  st_drop_geometry() %>% 
+  distinct()
+
+spp_richness <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM') %>% 
+  filter(INVASIVE == F) %>% 
+  select(-FormDate, -Observer, -INVASIVE, -NATIVITY, -SYMBOL_AIM,
+         SYMBOL = SYMBOL_USDA, -BINOMIAL_NAT, -PrimaryKey)
+
+rm(spp_r_header, char)
 ```
 
 
-```{r Lookup Grass and Shrub Status}
-photosynthetic <- read.csv(file.path(praw, f[grep('Photo.*RCB', f)])) %>% 
-  mutate(PHOTOSYNTHETIC = if_else(str_detect(PHOTOSYNTHETIC, 'C3'), 'C3', 'C4' )) 
+```{r Import Data for LPI}
 
-shrub_sprout <- read.csv(file.path(ppro, files[grep('Shrub', files)])) %>% 
-  bind_rows(., read.csv(file.path(praw, f[grep('shrubs_resprout', f)]))) %>% 
-  select(SYMBOL, RESPROUT) %>% 
-  mutate(RESPROUT = if_else(RESPROUT == 'Yes', 'RESPROUT', 'NON-RESPROUT'))
+lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>% 
+  select(PrimaryKey, RecKey, PointLoc:SoilSurface) %>% 
+  mutate(across(.cols = TopCanopy:SoilSurface, ~ na_if(.x, ""))) %>% 
+  pivot_longer(TopCanopy:SoilSurface, values_to = 'SYMBOL_AIM', names_to = 'Intercept') %>% 
+  drop_na(SYMBOL_AIM) %>% 
+  filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4) 
 
-richness <- richness %>%  
-  left_join(., photosynthetic, by = 'SYMBOL') %>% 
-  left_join(., shrub_sprout, by = 'SYMBOL')
-  
-rm(photosynthetic, shrub_sprout)
-```
+lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+  group_by(PrimaryKey, SYMBOL_USDA) %>% 
+  add_count(name = 'hits') %>% 
+  distinct(PrimaryKey, SYMBOL_USDA, .keep_all = T) %>% 
+  drop_na(FUNCTIONAL) %>% 
+  filter(INVASIVE == F) %>% 
+  select(-RecKey, -PointLoc, -PointNbr, -Intercept, -SYMBOL_AIM, -BINOMIAL_NAT,
+         -INVASIVE, -NATIVITY, SYMBOL = SYMBOL_USDA) 
 
-```{r Lookup Forb Life Cycle}
+lpi <- left_join(lpi, Pk2PID, by = 'PrimaryKey') %>% 
+  drop_na(PLOTID) %>% 
+  select(-PrimaryKey)
 
-life_cycle <- read_csv(file.path(praw, f[grep('export', f)]), show_col_types = F) %>%
-  filter(USDA_GrowthHabitSimple == 'Forb', FQA_USDASymbol != 'GUSA2') %>% 
-  select(SYMBOL = FQA_USDASymbol, NATIVITY = FQA_NativeStatus, LIFECYCLE = USDA_Duration) %>% 
-  mutate(LIFECYCLE = case_when(
-    LIFECYCLE == 'Biennial, Perennial' ~ 'Perennial', 
-    LIFECYCLE == 'Annual, Biennial' ~ 'Annual', 
-    LIFECYCLE == 'Annual, Biennial, Perennial' ~ 'Any',
-    TRUE ~ as.character(LIFECYCLE)
-  ))
+rm(Pk2PID)
 
 ```
 
 ```{r Create Finer Functional Groups}
 
-richness <- richness %>% 
-  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "LIFECYCLE", "FUNCTIONAL")), 
+spp_richness1 <- spp_richness %>% 
+  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "DURATION", 'GROWTHHABITSUB')), 
            .after = last_col()) %>% 
-  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:FUNCTIONAL, 
+  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:GROWTHHABITSUB, 
         sep = "-", na.rm = T, remove = F) %>% 
-  select(-PHOTOSYNTHETIC, -RESPROUT)
+  select(-PHOTOSYNTHETIC, -RESPROUT) %>% 
+  mutate(
+    FUNCTIONAL_FINE = str_remove(FUNCTIONAL_FINE, 'CAM-'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-TREE', 'TREE'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS') #, 
+#    FUNCTIONAL_FINE = 
+#      str_replace(FUNCTIONAL_FINE, '^NON-RESPROUT-PERENNIAL-SUCCULENT$', 'NON-RESPROUT-SHRUB'),
+#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^PERENNIAL-SUCCULENT$', 'SHRUB'),
+#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^PERENNIAL-TREE$', 'TREE'), 
+#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^CAM-PERENNIAL-FORB$|^C3-PERENNIAL-FORB$', 'PERENNIAL-FORB'),
+#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'C3-PERENNIAL-SHRUB|^C3-SHRUB|CAM-SHRUB$', 'SHRUB'), 
+#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^NON-RESPROUT-PERENNIAL-FORB$', 'PERENNIAL-FORB'), 
+#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^PERENNIAL-SUBSHRUB$', 'SHRUB') 
+         ) %>% 
+  select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE)
+
+unique(spp_richness1$FUNCTIONAL_FINE)
+
+# spp_richness %>% 
+#   filter(DURATION == 'ANNUAL' & GROWTHHABITSUB == 'SHRUB')
 
 ```
 
-```{r append nativity information}
+```{r filter to native species}
 
-nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>% 
+nativity <- read.csv(file.path(ppro, fp[grep('Native', fp)])) %>% 
   select(SYMBOL, LIFECYCLE = DURATION, NATIVITY) %>% 
   mutate(across(.cols = everything(), ~ str_to_upper(.))) %>% 
   mutate(LIFECYCLE = case_when(
@@ -119,80 +171,91 @@ nativity <- read.csv(file.path(ppro, files[grep('Native', files)])) %>%
     TRUE ~ as.character(LIFECYCLE)
   )) 
 
-richness <- left_join(richness, nativity, by = 'SYMBOL') %>% 
-  unite(LIFECYCLE, c(LIFECYCLE.x, LIFECYCLE.y), na.rm = T) %>% 
-  unite(NATIVITY, c(NATIVITY.x, NATIVITY.y), na.rm = T) %>% 
-  mutate(across(.cols = c(LIFECYCLE, NATIVITY), ~ str_remove_all(.x, '_.*')))
+lpi <- left_join(lpi, nativity, by = 'SYMBOL') %>%
+  filter(NATIVITY == 'NATIVE') %>% 
+  select(-NATIVITY)
+  
+spp_richness <- left_join(spp_richness, nativity, by = 'SYMBOL') %>%
+  filter(NATIVITY == 'NATIVE') %>% 
+  select(-NATIVITY)
 
+rm(nativity)
 ```
-
-```{r Filter Reference Datasets, eval = F}
-
-richness <- read.csv(file.path(praw, f[grep('Associations', f)])) %>% 
-  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
-
-# this where production > 0 - represents expected richness for a site
-production_zero <- richness %>% 
-  filter(LOWER > 0) %>% 
-  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
-  count()   
-
-production <- richness %>% # this with 0 production - 
-  # represents all core gamma richness by ESD ??
-  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
-  count()
-
-
-# How many plots meet A for each standard ? And where do they sit relative to B ?
-
-richness <- 
-
-# Let us split out Grass, into C3, C4, and annual - three categories
-# perhaps also split out Shrub into (resprout) and (non-resprout) 
-
-
-# let us split out forbs into native and non-native
-# Create a facet wrap of each major functional group
-# - Shrub (resprout), Shrub (non-resprout),  - and then colour by ESD group.
-
-# so cols = TREE, SHRUB (NS), SHRUB (S), PG - C3, PG - C4, AG, PERENNIAL FORB, ANNUAL FORB,   
-
-```
-
-
 
 
 ```{r gather estimate of number of species in functional groups}
 
 dominant_plants <- read.csv(file.path(ppro, fp[grep('Associations', fp)])) %>% 
-  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)  
+  filter(PHASE == '1.1', str_length(SYMBOL) >= 4)   %>% 
+  distinct() %>% 
+  select(-NATIVITY)
+  
+  # FOR EVERY SPECIES IN THESE DATASETS, WHICH ARE ALSO IN OUR ATTRIBUTE TABLES
+  # WE WILL APPEND OUR OWN FUNCTIONAL DATA TO ENSURE THAT WE HAVE THE 
+  # APPROPRIATE MAPPING BETWEEN OUR AND THESE DATA. THE DEFAULTS FROM THESE DATA
+  # WILL BE USED FOR REMAINING UNMATCHED RECORDS. 
+dp1 <- dominant_plants %>% 
+  select(ECO.SITE:UPPER, FUNCTIONAL) %>% 
+  left_join(., attributes, by = c( 'SYMBOL' = 'SYMBOL_USDA')) %>% 
+  drop_na(BINOMIAL_NAT) %>% 
+  relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "DURATION", 'GROWTHHABITSUB')), 
+           .after = last_col()) %>% 
+  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:GROWTHHABITSUB, 
+        sep = "-", na.rm = T, remove = F) %>% 
+  select(-PHOTOSYNTHETIC, -RESPROUT) %>% 
+  mutate(
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SUCCULENT', 'SHRUB'),
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID', 'GRASS'),
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'),
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SUBSHRUB', 'SHRUB')
+         ) %>% 
+  select(ECO.SITE:UPPER, FUNCTIONAL_FINE, LIFECYLE =  DURATION, FUNCTIONAL = FUNCTIONAL.x)
+  
+dominant_plants <- dominant_plants %>% 
+  filter(!SYMBOL %in% unique(dp1$SYMBOL)) %>% 
+  bind_rows(., dp1)
 
-# this where production > 0 - represents expected richness for a site
-production_zero_func_1 <- richness %>% 
-  filter(LOWER > 0) %>% 
-  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
-  count()   
+# total number of plant species per basic life form groups
+ref_spp_cnt_lifeform <- dominant_plants %>% 
+  group_by(ECO.SITE, FUNCTIONAL) %>% 
+  count(name = 'Lifeform')
 
-production_potential_func_1 <- richness %>% # this with 0 production - 
-  # represents all core gamma richness by ESD ??
-  group_by(ECO.SITE, STATE, FUNCTIONAL) %>% 
-  count()
+# total number of plant species per finer functional groups
+ref_spp_cnt_functional <- dominant_plants %>% 
+  group_by(ECO.SITE, FUNCTIONAL_FINE) %>% 
+  count(name = 'Functional_fine')
 
-production_zero_func_2 <- richness %>% 
-  filter(LOWER > 0) %>% 
-  group_by(ECO.SITE, STATE, FUNCTIONAL_FINE) %>% 
-  count()   
 
-production_potential_func_2 <- richness %>% # this with 0 production - 
-  # represents all core gamma richness by ESD ??
-  group_by(ECO.SITE, STATE, FUNCTIONAL_FINE) %>% 
-  count()
+rm(dp1, attributes)
 ```
 
+```{r add ESD to plots}
+
+esd_class <- read.csv( file.path(praw, f[grep('Tracking', f)]) ) %>% 
+  filter(STATUS == 'SAMPLED') %>% 
+  mutate(ECO.SITE = if_else(ECO.SITE.MATCHED == F, 'UNKNOWN', ECO.SITE)) %>% 
+  select(PLOTID = PLOT.ID, ECO.SITE)
+
+spp_richness <- left_join(spp_richness, esd_class)
+lpi <- left_join(lpi, esd_class)
+
+rm(esd_class)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```{r Join Homebrewed ESD groups to Ecological Site Descriptions}
-
 esdM <- read.csv(file.path(praw, f[grep('modules', f)]))
-
 ```
 
 
