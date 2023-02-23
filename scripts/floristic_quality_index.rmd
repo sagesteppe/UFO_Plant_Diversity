@@ -1,13 +1,13 @@
 ---
 title: "Floristic Quality Index"
-author: NULL
-date: NULL
 output:
   pdf_document: default
   word_document: default
+  html_document:
+    df_print: paged
 header-includes:
- - \usepackage[width=\textwidth]{caption}
- - \usepackage{enumitem}
+- \usepackage[width=\textwidth]{caption}
+- \usepackage{enumitem}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
@@ -146,21 +146,9 @@ FQI_results <- spp_clean %>%
 rm(fqi, mcoc)
 ```
 
-```{r map coefficients}
-ggplot(FQI_results) + 
-  geom_sf() + 
-  
-  geom_point( aes(fill = mcoc_r, size = fqi_r, geometry = geometry),
-    stat = "sf_coordinates", shape = 21
-  ) +
-  scale_fill_viridis_c('Mean C', option = "C", alpha = 0.6, direction = -1) +
-  scale_size_binned('FQI') +
-  theme_void() +
-  theme(legend.position = "right")
-
+```{r export coefficients for mapping, eval = F}
 
 st_write(FQI_results, '../results/FQI_values.shp')
-
 ```
 
 
@@ -373,12 +361,10 @@ pred_stack <- c(elev_90, popDen, patch, roadDist ) #,
              #   x_rast, y_rast)
 names(pred_stack) <- c('elevation', 'pop_density', 'patch_size', 'road_dist') #,
                     #   'xcoord', 'ycoord')
+
+rm(ext)
 ```
 
-In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework. All tops models, those with dAIC < 2.0, were each selected for further analyses; the combined maximal model for the top terms was: `r stacked_model[["formula"]]`. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering. Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that it was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with dAIC < 2.12 were checked for spatial autocorrelation, using the same methods as the models above. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more readily interpretable, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
-
-
-The means of all of these models were calculated using terra. The consensus map was then clipped to the extent of UFO BLM administered lands. 
 
 ```{r Dredge a consensus model}
 
@@ -389,7 +375,7 @@ library(usdm)
 # check for correlation among the independent variables from 5000 random cells
 corr_check_sample <- terra::spatSample(pred_stack, size = 5000, method = 'regular')
 vif_results <-  usdm::vifstep(corr_check_sample, th=10)
-vif_results
+# vif_results
 
 rm(corr_check_sample, vif_results)
 
@@ -413,41 +399,45 @@ oop <- options(na.action = "na.fail")
 
 full_model <- glm(mcoc_r ~ ., data = fqa_rast_vals)
 optimal_models <- dredge(full_model)
-optimal_models
+# optimal_models
 
 # gather the actual terms from the top performing models, to see what worked.
 model_terms <- get.models(optimal_models, subset = T)
 
 # if top models have dAIC < 2.0, than 'stack' the models
-stacked_model <- model.avg(optimal_models, subset = delta < 2.5, fit = T)
+stacked_model <- model.avg(optimal_models, subset = delta < 2.15, fit = T)
 
 # these provides the estimates of our coefficients
-stacked_model$coefficients
+# stacked_model$coefficients
 # identify out top component models
 # stacked_model
 
+rm(full_model)
 ```
+
+
+In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework. All tops models, those with dAIC < 2.0, were each selected for further analyses; the combined maximal model for the top terms was: `r stacked_model[["formula"]]`. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering. Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that it was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with dAIC <= 2.12 were checked for spatial autocorrelation, using the same methods as the models above. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more easy to interpret, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
+
+All six of these candidate AIC models were predicted into space, and the weighted means, based on each models weight in a final combination model (terra), were used to generate a consensus prediction layer (from MuMIn). The consensus prediction was then clipped to the extent of UFO BLM administered lands. 
 
 ```{r report top models, eval = F}
 
 summary(stacked_model)
 sw(optimal_models)
 
-model_terms
 ```
 
 ```{r stack the top models}
 
 # we will create predictions from EACH model with dAIC < 2.0 and then take the m
 # mean of each model 
-optimal_models
 
-model_terms[["6"]][["call"]]
-model_terms[["8"]][["call"]]
-model_terms[["2"]][["call"]]
-model_terms[["4"]][["call"]]
-model_terms[["14"]][["call"]]
-model_terms[["16"]][["call"]]
+# model_terms[["6"]][["call"]]
+# model_terms[["8"]][["call"]]
+# model_terms[["2"]][["call"]]
+# model_terms[["4"]][["call"]]
+# model_terms[["14"]][["call"]]
+# model_terms[["16"]][["call"]]
 
 model_6 <- glm(formula = mcoc_r ~ elevation + pop_density + 1, data = fqa_rast_vals)
 model_8 <- glm(formula = mcoc_r ~ elevation + patch_size + pop_density + 1, data = fqa_rast_vals)
@@ -465,13 +455,13 @@ top_pred_r <- c(
   pred_18 <- predict(pred_stack, model_16, type="response")
 )
 
-plot(top_pred_r) 
+# plot(top_pred_r) 
 # create a simple ensemble, by calculating the mean of each top model
-top_pred_r <- mean(top_pred_r)
-plot(top_pred_r)
+top_pred_r <- weighted.mean(top_pred_r, w = stacked_model$msTable$weight)
+# plot(top_pred_r)
 
-rm(model_6, model_8, model_2, model_4, model_16, model_14, oop, pred_20, pred_16, 
-   pred_2, pred_4, pred_6, pred_8, model_terms)
+rm(model_6, model_8, model_2, model_4, model_16, model_14, oop, pred_16, 
+   pred_2, pred_4, pred_6, pred_8, pred_18, model_terms)
 ```
 
 
@@ -506,11 +496,11 @@ lapply(m_list, spdep::lm.morantest, listw.d1)
 lapply(m_list, spdep::lm.morantest, listw.d2) 
 
 rm(xy, nb.gab, listw.gabv, listw.d1, listw.d2, m_list, listw.gab, dlist)
-rm(elev_90, popDen, patch, roadDist, x_rast, y_rast, fqa_results_V)
 ```
 
 ```{r remove some modelling variables}
-rm(fqa_rast_vals, optimal_models, pred_stack)
+rm(fqa_rast_vals, optimal_models, pred_stack, x_rast, y_rast, fqi_weights, 
+   elev_90, popDen, patch, roadDist, fqa_results_V)
 ```
 
 ```{r Crop prediction of FQI to UFO land, eval = F}
@@ -520,7 +510,7 @@ vector_data <- list.files(p2carto, recursive = T, pattern = 'shp$')
 ufo_land <- vect(file.path(p2carto, vector_data[grep('Grazing', vector_data)])) |>
   aggregate()
 
-top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, 
+top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, overwrite = T, 
                       filename = '../results/predicted_FQI_noXY.tif')
 
 top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, 
@@ -531,7 +521,7 @@ rm(ufo_land, p2carto, vector_datatop_pred_r, top_pred_crop)
 
 
 ```{r}
-rm(my_range)
+rm(my_range, top_pred_r)
 ```
 
 # Discussion
@@ -543,17 +533,38 @@ my_range <- function(x, col){
   paste(round(min(x[,col]),2), '-', round(max(x[,col]),2) )
 }
 
+rm(coc_box)
 ```
 
-The mean C-Values varied by stratum (Analysis of Variance (ANOVA), ...), follow-up tests (Kruskall-Wallis) indicated that Salt-Desert and Sage-Brush sites did not differ from each other, nor Mixed Mountain Shrub and Pinon-Juniper from each other. Results indicate that all members of these two groups differed across them, e.g. Sage-brush differed from both Mixed Mountain Shrub and Pinon-Juniper and *vice versa*.  The two lower elevation strata, Salt Desert and Sage Brush, are generally more accessible to humans and have higher recreational land uses, and had the lowest C-Vals. While the values did vary, the extent of the variation was minor, with the range of variation from the median values `r my_range(fqa_meds, 'med_C')` and a mean range of `r my_range(fqa_meds, 'mean_C')`, given that the these values occur over a range of 0-10, we considered this to be a negligible difference, not indicative of major biases in the C-values ascribed to plants themselves, but rather indicative of actual land conditions. 
+The mean C-Values varied by stratum (Analysis of Variance (ANOVA)), follow-up tests (Kruskall-Wallis) indicated that Salt-Desert and Sage-Brush sites did not differ from each other, nor Mixed Mountain Shrub and Pinon-Juniper from each other. Results indicate that all members of these two groups differed across them, e.g. Sage-brush differed from both Mixed Mountain Shrub and Pinon-Juniper and *vice versa*.  The two lower elevation strata, Salt Desert and Sage Brush, are generally more accessible to humans and have higher recreational land uses, and had the lowest C-Vals. While the values did vary, the extent of the variation was minor, with the range of variation from the median values `r my_range(fqa_meds, 'med_C')` and a mean range of `r my_range(fqa_meds, 'mean_C')`, given that the these values occur over a range of 0-10, we considered this to be a negligible difference, not indicative of major biases in the C-values ascribed to plants themselves, but rather indicative of actual land conditions. 
 
+The generalized linear models were used to predict the floristic quality of un-sampled areas of BLM Land. Based on AIC model selection a total of `r nrow(stacked_model$msTable)` top models were retained, and these were then combined into a single model, of which the weights used to make an ensembled prediction of the Mean Coefficient of Conservatism. The results from these top models indicate that all predictors, elevation, human population density, Federal lands patch size, and distance to nearest road, affect the FQI, but that by far the strongest predictor is elevation. Elevation was such a useful predictor, that under certain statistical paradigms our models may be simplified to include it as the only predictor, and still give very good results. The other predictors had the expected effect on FQI as expected, FQI slowly increases as nearby human population density decreases, and FQI slowly increases as the size of the patch of natural lands and the distance from the nearest road increase. 
 
+From the predicted FQI values we can infer that habitat quality varies across the field office. In general, the lowest elevation sites display the lowest values of FQI and Mean CoC. This is especially apparent as one would be travelling to Montrose from Grand Junction on Highway 50, before reaching Delta. In particular, these and several other areas of Salt Desert along Highway 50, and near Crawford are areas of concern. However, not all Salt Desert is inherently in this condition as can be seen from the values for a moderately sized parcel of BLM Land immediately Southeast of Montrose; indicating that human uses of theses areas may be causal factors in these low values. These areas represent targets for eventual restoration action. The highest elevation portions of BLM Land are in the best habitat condition, and very good conditions range into Pinon-Juniper, including most of the disturbed areas around historic mining in the West End. By these metrics considerable portions of BLM Sagebrush areas, such as 'Crawford Country' are also in good condition, given the high priority nature of these areas for Gunnison Sage Grouse conservation this is promising. 
+
+Subjective interpretation suggests these results seem very similar to those generated by the much more time intensive comparison of Ecological Sites to Benchmarks. This relationships considers serious consideration in the use of FQA as a proxy of site condition. 
+
+```{r Map results, fig.cap='Consensus predictions of FQI Values across the UFO Field Office (excluding lands East of Paonia along the '}
+knitr::include_graphics('../plots/maps/FQI.png')
+```
+
+```{r remove the remaining variables}
+rm(f, fp, no_CVAL_match, no_records_full, p2carto, ppro, praw, rf, rp, unks, my_range)
+```
 
 \newpage
 
-### Appendix A - Indices
+## Appendix A - Indices
 
-Mean Coefficient of Conservatism: 
+<br>    
+<br>    
+<br>    
+<br>    
+
+**Mean Coefficient of Conservatism** 
+<br>     
+<br>    
+
 $$
 \overline{C} = \frac{\sum{} C_i}{S}
 $$
@@ -566,7 +577,19 @@ Where:
   \item[] $\sum{}$ is an operator, meaning that we will calculate the sum of all C-Values, $C$  
 \end{enumerate}
 
-Floristic Quality Index: 
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+
+**Floristic Quality Index** 
+<br>    
+<br>   
+
 $$
 FQI = \overline{C} * \sqrt{S}
 $$
@@ -576,6 +599,15 @@ Where:
   \item[] $\overline{C}$ is the Mean Coefficient of Conservatism, or for short Mean C  
   \item[] $\sqrt{S}$ is the square root of the number of species included in the calculation  
 \end{enumerate}
+
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
+<br>    
 
 Equations from @swink1994plants, and modified for simpler formulations. 
 
