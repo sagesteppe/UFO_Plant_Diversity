@@ -224,7 +224,7 @@ fqa_meds <- fqi_weights_sub %>%
 rm(fqi_weights_sub, theme_boxplot, boxplot_drawer, strata_pal)
 ```
 
-The floristic quality index data are independent of the ecological sites. Accordingly, we can create a statistical using the plots which were sampled, and predict the values of floristic quality across the field office. Based on the map above, and our field experience collecting these data, we suspected that the variables which are most related to the FQI scores, and which we could readily acquire or create were: 1) distance to nearrest road, 2) patch size of federal public lands, 3) the human population density within ~ 10 km (~6 miles), 4) elevation. These analyses occurred across the extent of the mapped area in Figure 1), at a resolution of 90meters. To calculate the distance of each 90m pixel of BLM land from the nearest road, the U.S. Census Bureau's 'roads' data set was acquired through 'tigris' and simplified using st_simplify, the distance function of 'terra' was then used to calculate the distances to nearest roads. The tigris dataset contains nearly all of 'major' dirt and gravel roads across the field office, included many used for historic mining activities. To calculate the patch size of federal lands, i.e. all area, across BLM Forest Service and National Park Service managements, were queried from the PAD-US database and then these areas were erased using the tigris road dataset, the areas of each parcel were then calculated using st_area from sf, and then converted from meters squared to hectares, the patches were then converted into a raster using 'rasterize' from terra. To create estimates of population density within a distance of  each pixel of BLM Land, population density data at 30m resolution were downloaded from HDX (cite). Elevation data were acquired from EarthEnv, and were prepared by JETZ ET AL. All datasets were cropped and resampled to a template to ensure optimal matching of cells. 
+The floristic quality index data are independent of the ecological sites. Accordingly, we can create a statistical using the plots which were sampled, and predict the values of floristic quality across the field office. Based on the map above, and our field experience collecting these data, we suspected that the variables which are most related to the FQI scores, and which we could readily acquire or create were: 1) distance to nearrest road, 2) patch size of federal public lands, 3) the human population density within ~ 10 km (~6 miles), 4) elevation. These analyses occurred across the extent of the mapped area in Figure 1), at a resolution of 90meters. To calculate the distance of each 90m pixel of BLM land from the nearest road, the U.S. Census Bureau's 'roads' data set was acquired through 'tigris' and simplified using st_simplify, the distance function of 'terra' was then used to calculate the distances to nearest roads. The tigris dataset contains nearly all of 'major' dirt and gravel roads across the field office, included many used for historic mining activities. To calculate the patch size of federal lands, i.e. all area, across BLM Forest Service and National Park Service managements, were queried from the PAD-US database and then these areas were erased using the tigris road dataset, the areas of each parcel were then calculated using st_area from sf, and then converted from meters squared to hectares, the patches were then converted into a raster using 'rasterize' from terra. To create estimates of population density within a distance of  each pixel of BLM Land, population density data at 30m resolution were downloaded from HDX (cite). Elevation data were acquired from EarthEnv, and were prepared by JETZ ET AL. All data sets were cropped and re-sampled to a template to ensure optimal matching of cells. 
 
 ```{r Predict FQI across field office - prepare covariates, eval = F}
 library(terra)
@@ -242,7 +242,7 @@ popDen38 <- rast(file.path(rp, rf[grep('population.*38', rf)] ))
 ext <- vect('../../UFO_cartography/UFO_mask/mask/mask.shp') 
 
 ext_84 <- ext %>% 
-  project(crs(popDen)) %>% 
+  project(crs(popDen28)) %>% 
   ext()
 
 ## import elevation data at 90m resolution
@@ -262,8 +262,8 @@ popDen <- crop(popDen, ext_84, mask = T, overwrite = T)
 # aggregate to 90m resolution
 popDen_c <- aggregate(popDen, fact=3, cores=20, fun = 'sum', na.rm = T)
 
-# create a rolling window SUM, over 2070m (~2 km)
-popDen_c <- focal(popDen_c, w = 23, fun = 'sum', expand = T, overwrite = T, na.rm = T)
+# create a rolling window SUM, over 9990m (~10 km area)
+popDen_c <- focal(popDen_c, w = 111, fun = 'sum', expand = T, overwrite = T, na.rm = T)
 
 # project into planar coordinates
 popDen_c <- project(popDen_c, crs(ext), overwrite = T, filename = 
@@ -369,14 +369,16 @@ x_rast <- init(x_rast, "x")
 y_rast <- rast(elev_90)
 y_rast <- init(y_rast, "y")
 
-pred_stack <- c(elev_90, popDen, patch, roadDist, x_rast, y_rast)
-names(pred_stack) <- c('elevation', 'pop_density', 'patch_size', 'road_dist',
-                       'xcoord', 'ycoord')
-
-rm(elev_90, popDen, patch, roadDist, x_rast, y_rast)
+pred_stack <- c(elev_90, popDen, patch, roadDist ) #,
+             #   x_rast, y_rast)
+names(pred_stack) <- c('elevation', 'pop_density', 'patch_size', 'road_dist') #,
+                    #   'xcoord', 'ycoord')
 ```
 
-In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework. All tops models, those with dAIC < 2.0, were each selected for further analyses; the combined maximal model for the top terms was: `r stacked_model[["formula"]]`. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering.  The means of all of these models were calculated using terra. The consensus map was then clipped to the extent of UFO BLM administered lands.
+In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework. All tops models, those with dAIC < 2.0, were each selected for further analyses; the combined maximal model for the top terms was: `r stacked_model[["formula"]]`. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering. Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that it was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with dAIC < 2.12 were checked for spatial autocorrelation, using the same methods as the models above. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more readily interpretable, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
+
+
+The means of all of these models were calculated using terra. The consensus map was then clipped to the extent of UFO BLM administered lands. 
 
 ```{r Dredge a consensus model}
 
@@ -417,14 +419,13 @@ optimal_models
 model_terms <- get.models(optimal_models, subset = T)
 
 # if top models have dAIC < 2.0, than 'stack' the models
-stacked_model <- model.avg(optimal_models, subset = delta < 2, fit = T)
+stacked_model <- model.avg(optimal_models, subset = delta < 2.5, fit = T)
 
 # these provides the estimates of our coefficients
 stacked_model$coefficients
 # identify out top component models
 # stacked_model
 
-rm(fqa_results_V)
 ```
 
 ```{r report top models, eval = F}
@@ -432,38 +433,56 @@ rm(fqa_results_V)
 summary(stacked_model)
 sw(optimal_models)
 
+model_terms
 ```
 
 ```{r stack the top models}
 
 # we will create predictions from EACH model with dAIC < 2.0 and then take the m
 # mean of each model 
+optimal_models
 
-model_terms[["18"]][["call"]]
-model_terms[["26"]][["call"]]
-model_terms[["20"]][["call"]]
+model_terms[["6"]][["call"]]
+model_terms[["8"]][["call"]]
+model_terms[["2"]][["call"]]
+model_terms[["4"]][["call"]]
+model_terms[["14"]][["call"]]
+model_terms[["16"]][["call"]]
 
-model_18 <- glm(formula = mcoc_r ~ elevation + xcoord + 1, data = fqa_rast_vals)
-model_26 <- glm(formula = mcoc_r ~ elevation + road_dist + xcoord + 1, data = fqa_rast_vals)
-model_20 <- glm(formula = mcoc_r ~ elevation + patch_size + xcoord + 1, data = fqa_rast_vals)
+model_6 <- glm(formula = mcoc_r ~ elevation + pop_density + 1, data = fqa_rast_vals)
+model_8 <- glm(formula = mcoc_r ~ elevation + patch_size + pop_density + 1, data = fqa_rast_vals)
+model_2 <- glm(formula = mcoc_r ~ elevation + 1, data = fqa_rast_vals)
+model_4 <- glm(formula = mcoc_r ~ elevation + patch_size + 1, data = fqa_rast_vals)
+model_14 <- glm(formula = mcoc_r ~ elevation + pop_density + road_dist +  1, data = fqa_rast_vals)
+model_16 <- glm(formula = mcoc_r ~ elevation + patch_size + pop_density + road_dist + 1, data = fqa_rast_vals)
 
 top_pred_r <- c(
-  pred_18 <- predict(pred_stack, model_18, type="response"),
-  pred_26 <- predict(pred_stack, model_26, type="response"),
-  pred_20 <- predict(pred_stack, model_20, type="response")
+  pred_6 <- predict(pred_stack, model_6, type="response"),
+  pred_8 <- predict(pred_stack, model_8, type="response"),
+  pred_2 <- predict(pred_stack, model_2, type="response"), 
+  pred_4 <- predict(pred_stack, model_4, type="response"), 
+  pred_16 <- predict(pred_stack, model_14, type="response"), 
+  pred_18 <- predict(pred_stack, model_16, type="response")
 )
 
-# plot(top_pred_r) 
+plot(top_pred_r) 
 # create a simple ensemble, by calculating the mean of each top model
 top_pred_r <- mean(top_pred_r)
-# plot(top_pred_r)
+plot(top_pred_r)
 
-
-rm(model_18, model_20, model_24, model_28, model_26, oop, pred_20, pred_18, pred_26, model_terms)
+rm(model_6, model_8, model_2, model_4, model_16, model_14, oop, pred_20, pred_16, 
+   pred_2, pred_4, pred_6, pred_8, model_terms)
 ```
 
 
 ```{r test for spatial autocorrelation, eval = F}
+
+fqa_rast_vals <- extract(pred_stack, fqa_results_V,  bind = T) %>%
+  data.frame() %>% 
+  dplyr::select(-PLOTID)
+
+pred_stack <- c(elev_90, popDen, patch, roadDist, x_rast, y_rast)
+names(pred_stack) <- c('elevation', 'pop_density', 'patch_size', 'road_dist',  'xcoord', 'ycoord')
 
 xy <- data.matrix(fqa_rast_vals[,c("xcoord", "ycoord")])
 nb.gab <- spdep::graph2nb(spdep::gabrielneigh(xy), sym=TRUE)
@@ -477,20 +496,21 @@ listw.d1 <- spdep::nb2listw(nb.gab, style = "W", glist=dlist)
 dlist <- lapply(dlist, function(x) 1/x^2)
 listw.d2 <- spdep::nb2listw(nb.gab, style = "W", glist=dlist)
 
-# apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.gab)
-# apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.d1)
-# apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.d2)
+apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.gab)
+apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.d1)
+apply(fqa_rast_vals, MAR = 2, spdep::moran.test, listw.d2)
 
-m_list <- list(model_20, model_18, model_26 )
+m_list <- list(model_6, model_8, model_2, model_4, model_16, model_14,  model_16)
 lapply(m_list, spdep::lm.morantest, listw.gab) 
 lapply(m_list, spdep::lm.morantest, listw.d1) 
 lapply(m_list, spdep::lm.morantest, listw.d2) 
 
 rm(xy, nb.gab, listw.gabv, listw.d1, listw.d2, m_list, listw.gab, dlist)
+rm(elev_90, popDen, patch, roadDist, x_rast, y_rast, fqa_results_V)
 ```
 
 ```{r remove some modelling variables}
-rm(fqa_rast_vals, model_18, model_20, model_24, model_28, model_52, optimal_models, pred_stack)
+rm(fqa_rast_vals, optimal_models, pred_stack)
 ```
 
 ```{r Crop prediction of FQI to UFO land, eval = F}
@@ -501,9 +521,12 @@ ufo_land <- vect(file.path(p2carto, vector_data[grep('Grazing', vector_data)])) 
   aggregate()
 
 top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, 
+                      filename = '../results/predicted_FQI_noXY.tif')
+
+top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, 
                       filename = '../results/predicted_FQI.tif')
 
-rm(ufo_land, p2carto, vector_datatop_pred_r, top_pred_crop, )
+rm(ufo_land, p2carto, vector_datatop_pred_r, top_pred_crop)
 ```
 
 
