@@ -2,17 +2,27 @@
 title: "Floristic Quality Index"
 output:
   pdf_document: default
-  word_document: default
   html_document:
     df_print: paged
+  word_document: default
 header-includes:
 - \usepackage[width=\textwidth]{caption}
-- \usepackage{enumitem}
+- \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
+
+\vspace{-1cm}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(dpi = 300) 
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(fig.align="left") 
+```
 
 Floristic Quality Assessments (FQA) utilize the presence of vascular plant species in an area as indicators of the quality of the habitat. The fundamental assumption guiding the use of plants as indicators of habitat quality is that different species respond differently to the types and frequencies of disturbance. At one end of this spectrum are species which are able to persist, or may introduced to an area, after certain types of disturbance - e.g. compaction of soil via heavy vehicles. On the other end of the spectrum are taxa which may only grow in areas which receive episodic disturbances characteristic of their ecosystem - e.g. a 100 year flood in a wetland. The subjectively estimated likelihood of a species either persisting, or being removed from a site due to disturbance is expressed as a Conservatism Value (C-Value). C-Values range from 1 to 10 for plants native to North America, and 0 for plants introduced to the continent by since colonization by European Settlers, with highly disturbance tolerant plants being at the upper end of the spectrum. 
 
@@ -39,13 +49,6 @@ FQA scores are tied to the regional list of C-values, accordingly they cannot be
 Cleaned AIM species richness data were imported from TerrAdat and joined to the CNHP c-values using the lookup keys developed for the Functional Diversity section. All species from the plot based species richness which were not unamibgiously identified to terminal taxon were droppped from analysis. The Mean Coefficient of Conservatism and Floristic Quality Index were calculated via the formulation in the appendix. To determine whether their were bias in the MCoC values between the strata, a linear model with a single set categorical predictors and a single continuous response (an 'ANOVA'; Analysis of Variance) was used, with a Kruskall-Wallis Post-hoc test with 95% Confidence Intervals. The strata used for detecting differences were those developed in SECTION XXX.
 
 Estimates of the total portion of each parcel of BLM land's condition at certain Mean COC values were calculated using the 'cont_analysis' function from spsurvey. This function was used due to BLM not having metrics of benchmarks, nor what constitutes land meeting them for FQA. 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = F)
-knitr::opts_chunk$set(dpi = 300) 
-knitr::opts_chunk$set(message = F)
-knitr::opts_chunk$set(warning = F)
-```
 
 ```{r load libraries and define functions}
 library(sf)
@@ -197,18 +200,26 @@ fqi_weights <- read.csv(file.path(praw, f[grep('Interence', f)])) %>%
 rm(wghts)
 ```
 
-```{r Plot difference of MCOC by stratum}
+```{r Plot difference of MCOC by stratum 1}
 
 fqi_weights_sub <- fqi_weights %>% filter(RealStratum != 'AS')
-coc_box <- boxplot_drawer(df = fqi_weights_sub, response = mcoc_r, 
-                     group = RealStratum, col_pal = strata_pal) +
-  labs(title = 'Mean CoC by Stratum', x = 'Stratum', y = 'Mean Coefficient of Conservatism') 
 
 fqa_meds <- fqi_weights_sub %>% 
   group_by(RealStratum) %>% 
   summarize(med_C = median(mcoc_r),
             mean_C = mean(mcoc_r))
+```
 
+```{r Plot difference of MCOC by stratum 2, eval = F}
+boxplot_drawer(df = fqi_weights_sub, response = mcoc_r, 
+                     group = RealStratum, col_pal = strata_pal) +
+  labs(title = 'Mean CoC by Stratum', x = 'Stratum', y = 'Mean Coefficient of Conservatism') 
+
+ggsave(plot = last_plot(), device = 'png', height = 9, units = 'cm', 
+       path = '../plots/graphics', filename = 'Mcoc_boxplot.png')
+```
+
+```{r}
 rm(fqi_weights_sub, theme_boxplot, boxplot_drawer, strata_pal)
 ```
 
@@ -416,9 +427,9 @@ rm(full_model)
 ```
 
 
-In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculcated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (CITE BABAK). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework. All tops models, those with dAIC < 2.0, were each selected for further analyses; the combined maximal model for the top terms was: `r stacked_model[["formula"]]`. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering. Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that it was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with dAIC <= 2.12 were checked for spatial autocorrelation, using the same methods as the models above. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more easy to interpret, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
+In order to detect variables which were collinear, and hence would violate assumptions, of independence variance inflation factors calculated used from the 'function' vifstep in the package usdm with a theta cut off 10 using 5000 random pixels regularly dispersed across the extent of the sample area (@naimi2014usdm). No combination of variables were suggested to be removed from the analysis, but collinearity existed between the elevation and x coordinates, this likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework (@Barton2022mumin). All tops models, those with dAIC < 2.0, were each selected for further analyses; the combined maximal model for the top terms was: `r stacked_model[["formula"]]`. Each model was checked for the effect of spatial autocorrelation in the residuals by creating identifying neighboring points using 'graph2nb' from and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering (@bivand2022spdep). Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that it was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with dAIC <= 2.13 were checked for spatial autocorrelation, using the same methods as the models above. The general rule of thumb for only utilzing models with dAIC < 2, was bent in order to accommodate two more models which incorporated terms we have observed to be ecologically relevant, and are well supported in the primary literature. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more easy to interpret, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
 
-All six of these candidate AIC models were predicted into space, and the weighted means, based on each models weight in a final combination model (terra), were used to generate a consensus prediction layer (from MuMIn). The consensus prediction was then clipped to the extent of UFO BLM administered lands. 
+All six of these candidate AIC models were predicted into space, and the weighted means, based on each models weight in a final combination model, were used to generate a consensus prediction layer (@Barton2022mumin, @dormann2018model). The consensus prediction was then clipped to the extent of UFO BLM administered lands. Most spatial analyses were performed using terra @hijman2022terra, and sf @pebesma2018sf.
 
 ```{r report top models, eval = F}
 
@@ -521,20 +532,24 @@ rm(ufo_land, p2carto, vector_datatop_pred_r, top_pred_crop)
 
 
 ```{r}
-rm(my_range, top_pred_r)
+rm(top_pred_r)
 ```
 
 # Discussion
 
-```{r print stratum comparisions, fig.cap='Median Values of Coefficient of Conservation by Stratum', out.width="50%"}
-coc_box
+```{r helper function}
 
 my_range <- function(x, col){
   paste(round(min(x[,col]),2), '-', round(max(x[,col]),2) )
 }
-
-rm(coc_box)
 ```
+
+
+\begin{wrapfigure}{l}{0.3\textwidth}
+  \centering
+    \includegraphics[width=0.3\textwidth]{../plots/graphics/Mcoc_boxplot.png}
+  \caption{Comparision of median values by Stratum}
+\end{wrapfigure}
 
 The mean C-Values varied by stratum (Analysis of Variance (ANOVA)), follow-up tests (Kruskall-Wallis) indicated that Salt-Desert and Sage-Brush sites did not differ from each other, nor Mixed Mountain Shrub and Pinon-Juniper from each other. Results indicate that all members of these two groups differed across them, e.g. Sage-brush differed from both Mixed Mountain Shrub and Pinon-Juniper and *vice versa*.  The two lower elevation strata, Salt Desert and Sage Brush, are generally more accessible to humans and have higher recreational land uses, and had the lowest C-Vals. While the values did vary, the extent of the variation was minor, with the range of variation from the median values `r my_range(fqa_meds, 'med_C')` and a mean range of `r my_range(fqa_meds, 'mean_C')`, given that the these values occur over a range of 0-10, we considered this to be a negligible difference, not indicative of major biases in the C-values ascribed to plants themselves, but rather indicative of actual land conditions. 
 
@@ -544,7 +559,7 @@ From the predicted FQI values we can infer that habitat quality varies across th
 
 Subjective interpretation suggests these results seem very similar to those generated by the much more time intensive comparison of Ecological Sites to Benchmarks. This relationships considers serious consideration in the use of FQA as a proxy of site condition. 
 
-```{r Map results, fig.cap='Consensus predictions of FQI Values across the UFO Field Office (excluding lands East of Paonia along the '}
+```{r Map results,  out.width="95%", fig.cap='Consensus predictions of FQI Values across the UFO Field Office (excluding lands East of Paonia towards Marble)' }
 knitr::include_graphics('../plots/maps/FQI.png')
 ```
 
@@ -610,6 +625,7 @@ Where:
 <br>    
 
 Equations from @swink1994plants, and modified for simpler formulations. 
+
 
 
 \newpage
