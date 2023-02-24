@@ -122,13 +122,16 @@ lpi <- left_join(lpi, Pk2PID, by = 'PrimaryKey') %>%
   drop_na(PLOTID) %>% 
   select(-PrimaryKey)
 
+lpi <- lpi %>% 
+  filter(str_detect(SYMBOL, '^AG|^PG|^AF|^PF|^SH\\d+', negate = T))
+
 rm(Pk2PID)
 
 ```
 
 ```{r Create Finer Functional Groups}
 
-spp_richness1 <- spp_richness %>% 
+spp_richness <- spp_richness %>% 
   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "DURATION", 'GROWTHHABITSUB')), 
            .after = last_col()) %>% 
   unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:GROWTHHABITSUB, 
@@ -139,22 +142,23 @@ spp_richness1 <- spp_richness %>%
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'), 
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-TREE', 'TREE'), 
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS') #, 
-#    FUNCTIONAL_FINE = 
-#      str_replace(FUNCTIONAL_FINE, '^NON-RESPROUT-PERENNIAL-SUCCULENT$', 'NON-RESPROUT-SHRUB'),
-#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^PERENNIAL-SUCCULENT$', 'SHRUB'),
-#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^PERENNIAL-TREE$', 'TREE'), 
-#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^CAM-PERENNIAL-FORB$|^C3-PERENNIAL-FORB$', 'PERENNIAL-FORB'),
-#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'C3-PERENNIAL-SHRUB|^C3-SHRUB|CAM-SHRUB$', 'SHRUB'), 
-#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^NON-RESPROUT-PERENNIAL-FORB$', 'PERENNIAL-FORB'), 
-#    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, '^PERENNIAL-SUBSHRUB$', 'SHRUB') 
-         ) %>% 
-  select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE)
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS')) %>% 
+  select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE, GROWTHHABITSUB)
 
-unique(spp_richness1$FUNCTIONAL_FINE)
-
-# spp_richness %>% 
-#   filter(DURATION == 'ANNUAL' & GROWTHHABITSUB == 'SHRUB')
+lpi <- lpi %>% 
+   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "DURATION", 'GROWTHHABITSUB')), 
+           .after = last_col()) %>% 
+  unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:GROWTHHABITSUB, 
+        sep = "-", na.rm = T, remove = F) %>% 
+  select(-PHOTOSYNTHETIC, -RESPROUT) %>% 
+  mutate(
+    FUNCTIONAL_FINE = str_remove(FUNCTIONAL_FINE, 'CAM-'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-TREE', 'TREE'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS')) %>% 
+  ungroup() %>% 
+  select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE, GROWTHHABITSUB)
 
 ```
 
@@ -196,35 +200,62 @@ dominant_plants <- read.csv(file.path(ppro, fp[grep('Associations', fp)])) %>%
   # WILL BE USED FOR REMAINING UNMATCHED RECORDS. 
 dp1 <- dominant_plants %>% 
   select(ECO.SITE:UPPER, FUNCTIONAL) %>% 
-  left_join(., attributes, by = c( 'SYMBOL' = 'SYMBOL_USDA')) %>% 
+  left_join(., attributes, by = c('SYMBOL' = 'SYMBOL_USDA')) %>% 
   drop_na(BINOMIAL_NAT) %>% 
+  distinct() %>% 
   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "DURATION", 'GROWTHHABITSUB')), 
            .after = last_col()) %>% 
   unite(col = FUNCTIONAL_FINE, PHOTOSYNTHETIC:GROWTHHABITSUB, 
         sep = "-", na.rm = T, remove = F) %>% 
   select(-PHOTOSYNTHETIC, -RESPROUT) %>% 
   mutate(
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SUCCULENT', 'SHRUB'),
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID', 'GRASS'),
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'),
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SUBSHRUB', 'SHRUB')
-         ) %>% 
-  select(ECO.SITE:UPPER, FUNCTIONAL_FINE, LIFECYLE =  DURATION, FUNCTIONAL = FUNCTIONAL.x)
+    FUNCTIONAL_FINE = str_remove(FUNCTIONAL_FINE, 'CAM-'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-TREE', 'TREE'), 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS')
+      ) %>% 
+  filter(SYMBOL != 'ECTR' & FUNCTIONAL_FINE != 'PERENNIAL-FORB') %>% 
+  select(ECO.SITE:UPPER, FUNCTIONAL_FINE, LIFECYLE =  DURATION, FUNCTIONAL = FUNCTIONAL.x) %>% 
+  distinct() 
   
 dominant_plants <- dominant_plants %>% 
   filter(!SYMBOL %in% unique(dp1$SYMBOL)) %>% 
-  bind_rows(., dp1)
+  bind_rows(., dp1) %>% 
+  filter(FUNCTIONAL_FINE != 'GRASS') %>% # not enough info
+  mutate(
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'ANY-FORB|ANNUAL-PERENNIAL-FORB', 'FORB'),
+    FUNCTIONAL_FINE = case_when(
+      SYMBOL == 'POTEN' ~ 'PERENNIAL-FORB', 
+      SYMBOL == 'ARPUL' ~ 'C4-PERENNIAL-GRASS',
+      SYMBOL == c('PLIN7', 'PECR5') ~ 'PERENNIAL-FORB',
+      FUNCTIONAL_FINE == 'C3-GRASS' & LIFECYCLE == 'PERENNIAL' ~ 'C3-PERENNIAL-GRASS',
+      FUNCTIONAL_FINE == 'C3-GRASS' & LIFECYCLE == 'ANNUAL' ~ 'C3-ANNUAL-GRASS',
+      FUNCTIONAL_FINE == 'C4-GRASS' & LIFECYCLE == 'PERENNIAL' ~ 'C4-PERENNIAL-GRASS',
+      TRUE ~ FUNCTIONAL_FINE
+    )
+  )
+
+dominant_plants <- dominant_plants %>% 
+  mutate(FUNC_LIFE = case_when(
+    FUNCTIONAL_FINE == 'TREE' ~ 'T',
+    FUNCTIONAL_FINE == 'PERENNIAL-FORB' ~ 'PF',
+    FUNCTIONAL_FINE == 'ANNUAL-FORB' ~ 'AF',
+    FUNCTIONAL_FINE == 'C3-ANNUAL-GRASS' ~ 'AG',
+    str_detect(FUNCTIONAL_FINE, 'PERENNIAL-GRASS') ~ 'PG',
+    str_detect(FUNCTIONAL_FINE, 'SHRUB')  ~  'SH'
+  ),
+  FUNCTIONAL = if_else(SYMBOL == 'ERUM', 'SHRUB', FUNCTIONAL)) 
 
 # total number of plant species per basic life form groups
-ref_spp_cnt_lifeform <- dominant_plants %>% 
+benchmarks <- dominant_plants %>% 
   group_by(ECO.SITE, FUNCTIONAL) %>% 
-  count(name = 'Lifeform')
-
-# total number of plant species per finer functional groups
-ref_spp_cnt_functional <- dominant_plants %>% 
+  add_count(name = 'Lifeform_count') %>% 
   group_by(ECO.SITE, FUNCTIONAL_FINE) %>% 
-  count(name = 'Functional_fine')
-
+  add_count(name = 'Functional_count') %>% 
+  select(ECO.SITE, FUNCTIONAL, FUNC_LIFE, FUNCTIONAL_FINE, Lifeform_count, Functional_count) %>% 
+  arrange(ECO.SITE) %>% 
+  distinct()
 
 rm(dp1, attributes)
 ```
@@ -243,7 +274,28 @@ rm(esd_class)
 ```
 
 
+```{r Number of Species per Ecological Site}
 
+lifeform_pal <- setNames(
+  c('#37C864', '#30A934', '#AE0F86', '#860FAE','#DD4513', '#D4D7D4', '#e7b013'),
+  c('AG', 'PG', 'AF', 'PF', 'T', 'SH', 'SU')
+)
+
+lifeform_fill_pal <- setNames(
+  c('#37C864', '#30A934', '#AE0F86', '#860FAE', '#9A0F9A', '#DD4513', '#D4D7D4'),
+  c('C3-ANNUAL-GRASS', 'PG', 'ANNUAL-FORB', 'PERENNIAL-FORB', 'FORB', 'TREE', 'SHRUB')
+)
+
+benchmarks %>% 
+  ggplot() + 
+  geom_bar(aes(x = Lifeform_count, colour = FUNC_LIFE, fill = FUNCTIONAL_FINE)) +
+  scale_fill_manual(values = lifeform_fill_pal) +
+  scale_color_manual( values = lifeform_pal) +
+  facet_wrap(~ FUNCTIONAL) +
+  theme_bw()
+
+
+```
 
 
 
