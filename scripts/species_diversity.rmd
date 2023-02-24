@@ -349,9 +349,7 @@ lpi_lifeform <- lpi %>%
 ```
 
 
-
-
-```{r number of plots meeting benchmarks for known ESD}
+```{r number of plots meeting coarse benchmarks for known ESD}
 
 spp_richness_lifeform_esd <- spp_richness_lifeform %>% 
   filter(ECO.SITE %in% benchmarks$ECO.SITE) %>% 
@@ -374,18 +372,22 @@ lpi_lifeform_esd <- lpi_lifeform %>%
 
 lifeform_coarse <- bind_rows(spp_richness_lifeform_esd, lpi_lifeform_esd)
 
-# three plots
-library(cowplot)
+rm(lpi_lifeform_esd, spp_richness_lifeform_esd)
+```
+
+```{r  plot number of plots meeting coarse benchmarks for known ESD, eval = F}
 
 f <- lifeform_coarse %>% 
   filter(FUNCTIONAL_C == 'FORB') %>% 
   group_by(ECO.SITE) %>% 
   mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
   ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
-  geom_point() + 
-  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.8) + 
+  geom_point(color = '#AE0F86', size = 4, shape = 18) + 
+  
+  scale_color_manual(values = c('#e54c09', '#237cd4')) +
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
         legend.position = "none", 
         plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
         plot.title = element_text(hjust = 0.5)) +
@@ -397,10 +399,12 @@ g <- lifeform_coarse %>%
   group_by(ECO.SITE) %>% 
   mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
   ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
-  geom_point() + 
-  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.8) + 
+  geom_point(color = '#37C864', size = 4, shape = 18) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4')) +
+  
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
         legend.position = "none",
         plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
         axis.text.y = element_blank(),
@@ -414,11 +418,13 @@ s <- lifeform_coarse %>%
   group_by(ECO.SITE) %>% 
   mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
   ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
-  geom_point() + 
-  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.8) + 
+  geom_point(color = '#7f817f', size = 4, shape = 18) + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4')) +
+  
   theme_bw() +
   ylim(0,30) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
         legend.position = "none",
         plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
         axis.text.y = element_blank(),
@@ -427,13 +433,149 @@ s <- lifeform_coarse %>%
   labs(title = 'Shrub', y = NULL, x = NULL)
 
 plot <-plot_grid(f, g, s, nrow = 1, align='vh', vjust=1, scale = 1)
-l <-  draw_label("Socio-economic measures")
+ggdraw(add_sub(plot, "Ecological Site",  vpadding=grid::unit(0,"lines"), 
+               y=4.8, x=0.5, vjust=4.5))
 
-ggdraw(add_sub(plot, "Ecological Site",  vpadding=grid::unit(0,"lines"), y=4.8, x=0.5, vjust=4.5))
+ggsave(plot = last_plot(),  device = 'png', height = 12, units = 'cm', 
+       path = '../plots/graphics', filename = 'lifeform_esd.png')
   
-rm(lpi_lifeform_esd, spp_richness_lifeform_esd)
+rm(plot, s, g, f)
 ```
 
+
+```{r number of plots meeting fine benchmarks for known ESD}
+
+spp_richness_functional_esd <- spp_richness_lifeform %>% 
+  filter(ECO.SITE %in% benchmarks$ECO.SITE) %>% 
+  distinct(PLOTID, FUNCTIONAL_FINE, Observed = Lifeform_count, ECO.SITE) %>% 
+  left_join(., select(benchmarks, ECO.SITE, FUNCTIONAL_FINE, 
+                      Expected = Lifeform_count) %>% distinct(), 
+            by = c('ECO.SITE' , 'FUNCTIONAL_FINE')) %>% 
+  filter(FUNCTIONAL_FINE != 'TREE') %>% 
+  mutate(METHOD = 'Richness')
+
+lpi_functional_esd <- lpi_lifeform %>% 
+  filter(ECO.SITE %in% benchmarks$ECO.SITE) %>% 
+  distinct(PLOTID, FUNCTIONAL_FINE, Observed = Lifeform_count, ECO.SITE) %>% 
+  left_join(., select(benchmarks, ECO.SITE, FUNCTIONAL_FINE, 
+                      Expected = Lifeform_count) %>% distinct(), 
+            by = c('ECO.SITE' , 'FUNCTIONAL_FINE')) %>% 
+  filter(FUNCTIONAL_FINE != 'TREE') %>% 
+  mutate(METHOD = 'LPI')
+
+lifeform_fine <- bind_rows(spp_richness_functional_esd, lpi_functional_esd)
+
+rm(lpi_functional_esd, spp_richness_functional_esd)
+```
+
+
+```{r fine lifeform species diverity plot, eval = F}
+
+## col 1,  row 1 & 2  ##    
+
+pg3 <- lifeform_fine %>% 
+  filter(FUNCTIONAL_FINE == 'C3-PERENNIAL-GRASS') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point(color = '#2b982e', size = 4, shape = 18)+ 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4'))  + 
+  
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Perennial C3 Grass', y = NULL, x = NULL)
+
+pg4 <- lifeform_fine %>% 
+  filter(FUNCTIONAL_FINE == 'C4-PERENNIAL-GRASS') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point(color = '#134314', size = 4, shape = 18) + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4')) + 
+  
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Perennial C4 Grass', y = NULL, x = NULL)
+
+## col 2, rows 1 & 2  ##
+
+sh_s <- lifeform_fine %>% 
+  filter(FUNCTIONAL_FINE == 'RESPROUT-SHRUB') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point(color = '#7f817f', size = 4, shape = 18) +
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4'))  + 
+  
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Resprouting Shrubs', y = NULL, x = NULL)
+
+sh_ns  <- lifeform_fine %>% 
+  filter(FUNCTIONAL_FINE == 'NON-RESPROUT-SHRUB') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point(color = '#323332', size = 4, shape = 18) + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4')) +
+  
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Non-Resprouting Shrubs', y = NULL, x = NULL)
+
+## col 3, rows 1 & 2 ##
+
+af <- lifeform_fine %>% 
+  filter(FUNCTIONAL_FINE == 'ANNUAL-FORB') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point(color = '#AE0F86', size = 4, shape = 18)+ 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4')) + 
+  
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Annual Forbs', y = NULL, x = NULL)
+
+pf <- lifeform_fine %>% 
+  filter(FUNCTIONAL_FINE == 'PERENNIAL-FORB') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point(color = '#860FAE', size = 4, shape = 18)+ 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual(values = c('#e54c09', '#237cd4')) + 
+  
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Perennial Forbs', y = NULL, x = NULL)
+
+top <- plot_grid(af, pg3, sh_ns, nrow = 1, align='vh', vjust=1, scale = 1)
+bottom <- plot_grid(pf, pg4, sh_s, nrow = 1, align='vh', vjust=1, scale = 1)
+plot_grid(top, bottom, ncol = 1)
+
+ggsave(plot = last_plot(),  device = 'png', height = 15, units = 'cm', 
+       path = '../plots/graphics', filename = 'functional_esd.png')
+  
+rm(af, pf, pg3, pg4, sh_s, sh_ns)
+```
 
 While the plots of species per functional group exhibit a regular dispersion, we are not sure exactly how these data were collected, and use the median in lieu of the mean; which was quite similar and has negligible differences. 
 
@@ -452,39 +594,30 @@ feat_eng_F <- benchmarks %>%
 ```
 
 
-```{r Plot number of species at plots without benchmarks}
+```{r Clear methods environment }
+rm(f, fp, funct_names, lifeform_fill_pal, ord, ppro, praw)
+```
 
-feat_eng_C %>% 
-  filter(FUNCTIONAL != 'TREE') %>% 
-  ggplot(aes(x = q, y = No_spp, color = q)) +
-  geom_point() +
-  geom_line() +
-  facet_wrap(~ FUNCTIONAL) +
-  theme_bw() +
-  theme(aspect.ratio = 1)
+# Results 
 
+
+\begin{wrapfigure}{l}{0.6\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../plots/graphics/lifeform_esd.png}
+  \caption{Number of Species Per Coarse Functional Groups}
+\end{wrapfigure}
+
+
+
+
+
+
+```{r clear writing variables from environment}
+rm(lifeform_esd.png)
 ```
 
 
 
-
-
-```{r Join Homebrewed ESD groups to Ecological Site Descriptions}
-esdM <- read.csv(file.path(praw, f[grep('modules', f)]))
-```
-
-
-```{r Boxplots of different ESG with ESDs and reference standards}
-
-# ! colour the Facet panel backgrounds by this!!!!!!!!
-cols <- colorspace::qualitative_hcl(9, palette = "Dark 3") # these for matching with the species diversity. 
-
-```
-
-
-```{r clean environment}
-
-```
 
 
 
