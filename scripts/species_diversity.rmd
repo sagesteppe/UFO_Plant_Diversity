@@ -290,6 +290,7 @@ lifeform_fill_pal <- c( '#AE0F86', '#860FAE', '#5d0a79',
 lifeform_fill_pal <- setNames(lifeform_fill_pal, ord)
 
 benchmarks <- benchmarks %>% 
+  ungroup() %>% 
   mutate(plotting_names = stringr::str_to_title(gsub('-', " ", FUNCTIONAL_FINE)) ,
          plotting_names = str_replace(plotting_names, 
                                       'Non Resprout Shrub', 'Non-Resprout Shrub'), 
@@ -349,6 +350,91 @@ lpi_lifeform <- lpi %>%
 
 
 
+
+```{r number of plots meeting benchmarks for known ESD}
+
+spp_richness_lifeform_esd <- spp_richness_lifeform %>% 
+  filter(ECO.SITE %in% benchmarks$ECO.SITE) %>% 
+  distinct(PLOTID, FUNCTIONAL_C = GROWTHHABITSUB, Observed = Lifeform_count, ECO.SITE) %>% 
+  left_join(., select(benchmarks, ECO.SITE, FUNCTIONAL_C = FUNCTIONAL, 
+                      Expected = Lifeform_count) %>% distinct(), 
+            by = c('ECO.SITE' , 'FUNCTIONAL_C')) %>% 
+  filter(FUNCTIONAL_C != 'TREE') %>% 
+  mutate(METHOD = 'Richness')
+
+lpi_lifeform_esd <- lpi_lifeform %>% 
+  ungroup() %>% 
+  filter(ECO.SITE %in% benchmarks$ECO.SITE) %>% 
+  distinct(PLOTID, FUNCTIONAL_C = GROWTHHABITSUB, Observed = Lifeform_count, ECO.SITE) %>% 
+  left_join(., select(benchmarks, ECO.SITE, FUNCTIONAL_C = FUNCTIONAL, 
+                      Expected = Lifeform_count) %>% distinct(), 
+            by = c('ECO.SITE' , 'FUNCTIONAL_C')) %>% 
+  filter(FUNCTIONAL_C != 'TREE')  %>% 
+  mutate(METHOD = 'LPI')
+
+lifeform_coarse <- bind_rows(spp_richness_lifeform_esd, lpi_lifeform_esd)
+
+# three plots
+library(cowplot)
+
+f <- lifeform_coarse %>% 
+  filter(FUNCTIONAL_C == 'FORB') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point() + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.8) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        legend.position = "none", 
+        plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
+        plot.title = element_text(hjust = 0.5)) +
+  ylim(0,30) +
+  labs(title = 'Forb', y = 'No. Species', x = NULL)
+
+g <- lifeform_coarse %>% 
+  filter(FUNCTIONAL_C == 'GRASS') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point() + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.8) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        legend.position = "none",
+        plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  ylim(0,30) +
+  labs(title = 'Grass', y = NULL, x = NULL)
+
+s <- lifeform_coarse %>% 
+  filter(FUNCTIONAL_C == 'SHRUB') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = fct_reorder(ECO.SITE, Expected, .fun='median')) %>% 
+  ggplot(aes(x=reorder(ECO.SITE, Expected), y = Expected))  + 
+  geom_point() + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.8) + 
+  theme_bw() +
+  ylim(0,30) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        legend.position = "none",
+        plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = 'Shrub', y = NULL, x = NULL)
+
+plot <-plot_grid(f, g, s, nrow = 1, align='vh', vjust=1, scale = 1)
+l <-  draw_label("Socio-economic measures")
+
+ggdraw(add_sub(plot, "Ecological Site",  vpadding=grid::unit(0,"lines"), y=4.8, x=0.5, vjust=4.5))
+  
+rm(lpi_lifeform_esd, spp_richness_lifeform_esd)
+```
+
+
 While the plots of species per functional group exhibit a regular dispersion, we are not sure exactly how these data were collected, and use the median in lieu of the mean; which was quite similar and has negligible differences. 
 
 ```{r feature engineer benchmarks for unsampled sites}
@@ -370,7 +456,7 @@ feat_eng_F <- benchmarks %>%
 
 feat_eng_C %>% 
   filter(FUNCTIONAL != 'TREE') %>% 
-  ggplot(aes(x = No_spp, y = No_spp, color = q)) +
+  ggplot(aes(x = q, y = No_spp, color = q)) +
   geom_point() +
   geom_line() +
   facet_wrap(~ FUNCTIONAL) +
