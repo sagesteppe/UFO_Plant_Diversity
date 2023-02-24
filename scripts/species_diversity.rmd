@@ -7,6 +7,7 @@ output:
   word_document: default
 header-includes:
  - \usepackage[width=\textwidth]{caption}
+ - \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
@@ -72,8 +73,8 @@ char <- read.csv(file.path(praw, f[grep('Characterization', f)] ) ) %>%
   select(PrimaryKey) 
 
 spp_richness <- st_intersection(pts, char)  %>% 
-  left_join(., spp_r_header, by = 'PrimaryKey') %>% 
-  left_join(., spp_richness, by = 'PrimaryKey') %>% 
+  left_join(., spp_r_header, by = 'PrimaryKey', multiple = "all") %>% 
+  left_join(., spp_richness, by = 'PrimaryKey', multiple = "all") %>% 
   rename(SYMBOL_AIM = SpeciesList) 
 
 no_records_full <- nrow(spp_richness)
@@ -109,7 +110,7 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
   drop_na(SYMBOL_AIM) %>% 
   filter(SYMBOL_AIM != 'None', str_length(SYMBOL_AIM) >= 4) 
 
-lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+lpi <-  left_join(lpi, attributes, by = 'SYMBOL_AIM', multiple = "all") %>% 
   group_by(PrimaryKey, SYMBOL_USDA) %>% 
   add_count(name = 'hits') %>% 
   distinct(PrimaryKey, SYMBOL_USDA, .keep_all = T) %>% 
@@ -126,7 +127,6 @@ lpi <- lpi %>%
   filter(str_detect(SYMBOL, '^AG|^PG|^AF|^PF|^SH\\d+', negate = T))
 
 rm(Pk2PID)
-
 ```
 
 ```{r Create Finer Functional Groups}
@@ -142,7 +142,9 @@ spp_richness <- spp_richness %>%
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'), 
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-TREE', 'TREE'), 
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS')) %>% 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS'),
+    GROWTHHABITSUB = str_replace(GROWTHHABITSUB, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
+    GROWTHHABITSUB = str_replace(GROWTHHABITSUB, 'GRAMINOID|SEDGE', 'GRASS')) %>% 
   select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE, GROWTHHABITSUB)
 
 lpi <- lpi %>% 
@@ -156,9 +158,11 @@ lpi <- lpi %>%
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-SHRUB', 'SHRUB'), 
     FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'PERENNIAL-TREE', 'TREE'), 
-    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS')) %>% 
+    FUNCTIONAL_FINE = str_replace(FUNCTIONAL_FINE, 'GRAMINOID|SEDGE', 'GRASS'),
+    GROWTHHABITSUB = str_replace(GROWTHHABITSUB, 'SUCCULENT|SUBSHRUB', 'SHRUB'),
+    GROWTHHABITSUB = str_replace(GROWTHHABITSUB, 'GRAMINOID|SEDGE', 'GRASS')) %>% 
   ungroup() %>% 
-  select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE, GROWTHHABITSUB)
+  select(PLOTID, SYMBOL, BINOMIAL_ACK, FUNCTIONAL_FINE, GROWTHHABITSUB) 
 
 ```
 
@@ -173,13 +177,14 @@ nativity <- read.csv(file.path(ppro, fp[grep('Native', fp)])) %>%
     LIFECYCLE == 'ANNUAL, PERENNIAL' ~ 'ANY',
     LIFECYCLE == 'ANNUAL, BIENNIAL, PERENNIAL' ~ 'ANY',
     TRUE ~ as.character(LIFECYCLE)
-  )) 
+  )) %>% 
+  distinct()
 
-lpi <- left_join(lpi, nativity, by = 'SYMBOL') %>%
+lpi <- left_join(lpi, nativity, by = 'SYMBOL', multiple = "all") %>%
   filter(NATIVITY == 'NATIVE') %>% 
   select(-NATIVITY)
   
-spp_richness <- left_join(spp_richness, nativity, by = 'SYMBOL') %>%
+spp_richness <- left_join(spp_richness, nativity, by = 'SYMBOL', multiple = "all") %>%
   filter(NATIVITY == 'NATIVE') %>% 
   select(-NATIVITY)
 
@@ -228,7 +233,6 @@ dominant_plants <- dominant_plants %>%
     FUNCTIONAL_FINE = case_when(
       SYMBOL == 'POTEN' ~ 'PERENNIAL-FORB', 
       SYMBOL == 'ARPUL' ~ 'C4-PERENNIAL-GRASS',
-      SYMBOL == c('PLIN7', 'PECR5') ~ 'PERENNIAL-FORB',
       FUNCTIONAL_FINE == 'C3-GRASS' & LIFECYCLE == 'PERENNIAL' ~ 'C3-PERENNIAL-GRASS',
       FUNCTIONAL_FINE == 'C3-GRASS' & LIFECYCLE == 'ANNUAL' ~ 'C3-ANNUAL-GRASS',
       FUNCTIONAL_FINE == 'C4-GRASS' & LIFECYCLE == 'PERENNIAL' ~ 'C4-PERENNIAL-GRASS',
@@ -245,7 +249,7 @@ dominant_plants <- dominant_plants %>%
     str_detect(FUNCTIONAL_FINE, 'PERENNIAL-GRASS') ~ 'PG',
     str_detect(FUNCTIONAL_FINE, 'SHRUB')  ~  'SH'
   ),
-  FUNCTIONAL = if_else(SYMBOL == 'ERUM', 'SHRUB', FUNCTIONAL)) 
+  FUNCTIONAL = if_else(SYMBOL %in% c('ERUM', 'PLIN7', 'PECR5'), 'SHRUB', FUNCTIONAL)) 
 
 # total number of plant species per basic life form groups
 benchmarks <- dominant_plants %>% 
@@ -274,33 +278,106 @@ rm(esd_class)
 ```
 
 
-```{r Number of Species per Ecological Site}
+```{r Number of Species per Ecological Site Plot}
 
-lifeform_pal <- setNames(
-  c('#37C864', '#30A934', '#AE0F86', '#860FAE','#DD4513', '#D4D7D4', '#e7b013'),
-  c('AG', 'PG', 'AF', 'PF', 'T', 'SH', 'SU')
-)
+ord <- c("Annual Forb", "Perennial Forb", "Forb",
+         "C3 Annual Grass",  "C3 Perennial Grass", "C4 Perennial Grass", 
+         "Non-Resprout Shrub", "Resprout Shrub", "Shrub")
 
-lifeform_fill_pal <- setNames(
-  c('#37C864', '#30A934', '#AE0F86', '#860FAE', '#9A0F9A', '#DD4513', '#D4D7D4'),
-  c('C3-ANNUAL-GRASS', 'PG', 'ANNUAL-FORB', 'PERENNIAL-FORB', 'FORB', 'TREE', 'SHRUB')
-)
+lifeform_fill_pal <- c( '#AE0F86', '#860FAE', '#5d0a79',
+                                '#37C864', '#2b982e',  '#134314',
+                                  '#D4D7D4', '#7f817f', '#323332')
+lifeform_fill_pal <- setNames(lifeform_fill_pal, ord)
 
+benchmarks <- benchmarks %>% 
+  mutate(plotting_names = stringr::str_to_title(gsub('-', " ", FUNCTIONAL_FINE)) ,
+         plotting_names = str_replace(plotting_names, 
+                                      'Non Resprout Shrub', 'Non-Resprout Shrub'), 
+         plotting_names = factor(plotting_names, levels = ord))
+
+funct_names <- as_labeller(
+  c(`FORB` = 'Forb', `GRASS` = 'Grass', `SHRUB` = 'Shrub'))
+```
+
+```{r Number of Species per Ecological Site Plot prep, eval = F}
 benchmarks %>% 
+  filter(FUNCTIONAL_FINE != 'TREE') %>% 
   ggplot() + 
-  geom_bar(aes(x = Lifeform_count, colour = FUNC_LIFE, fill = FUNCTIONAL_FINE)) +
-  scale_fill_manual(values = lifeform_fill_pal) +
-  scale_color_manual( values = lifeform_pal) +
-  facet_wrap(~ FUNCTIONAL) +
-  theme_bw()
+  geom_bar(aes(x = Lifeform_count, fill = plotting_names)) +
+  scale_fill_manual('', values = lifeform_fill_pal) +
+  facet_wrap(~ FUNCTIONAL,
+             labeller = funct_names) +
+  theme_bw() +
+  theme(legend.position = 'bottom',
+        plot.title = element_text(hjust = 0.5),
+        legend.spacing.x = unit(1.0, 'cm')) +
+  guides(fill = guide_legend(ncol = 3, title.position="top")) +
+  labs(x = 'Species per broad Functional Group', y = 'Species per fine Functional',
+       title = 'Number of species per functional group across ESD')
 
+ggsave(plot = last_plot(),  device = 'png', height = 10, units = 'cm', 
+       path = '../plots/graphics', filename = 'spp_per_ESD.png')
+```
+
+
+\begin{wrapfigure}{l}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../plots/graphics/spp_per_ESD.png}
+  \caption{Number of Species Per Functional Groups}
+\end{wrapfigure}
+
+
+```{r Number of species observed at plots with known ESD}
+
+spp_richness_lifeform <- spp_richness %>% 
+  group_by(PLOTID, GROWTHHABITSUB) %>% 
+  select(-LIFECYCLE) %>% 
+  
+  add_count(name = 'Lifeform_count') %>% 
+  group_by(PLOTID, FUNCTIONAL_FINE) %>% 
+  add_count(name = 'Functional_count')
+  
+lpi_lifeform <- lpi %>% 
+  group_by(PLOTID, GROWTHHABITSUB) %>% 
+  select(-LIFECYCLE,  -BINOMIAL_ACK) %>% 
+  
+  add_count(name = 'Lifeform_count') %>% 
+  group_by(PLOTID, FUNCTIONAL_FINE) %>% 
+  add_count(name = 'Functional_count')
 
 ```
 
 
 
+While the plots of species per functional group exhibit a regular dispersion, we are not sure exactly how these data were collected, and use the median in lieu of the mean; which was quite similar and has negligible differences. 
+
+```{r feature engineer benchmarks for unsampled sites}
+
+feat_eng_C <- benchmarks %>% 
+  group_by(FUNCTIONAL) %>% 
+  summarise(No_spp = quantile(Lifeform_count, c(0, 0.25, 0.5, 0.75, 1)),
+            q = c(0, 0.25, 0.5, 0.75, 1))
+
+feat_eng_F <- benchmarks %>% 
+  group_by(FUNCTIONAL_FINE) %>% 
+  summarise(No_spp = quantile(Functional_count, c(0, 0.25, 0.5, 0.75, 1)), 
+            q = c(0, 0.25, 0.5, 0.75, 1))
+
+```
 
 
+```{r Plot number of species at plots without benchmarks}
+
+feat_eng_C %>% 
+  filter(FUNCTIONAL != 'TREE') %>% 
+  ggplot(aes(x = No_spp, y = No_spp, color = q)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~ FUNCTIONAL) +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+
+```
 
 
 
