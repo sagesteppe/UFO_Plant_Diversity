@@ -173,3 +173,14 @@ strata_pal <- setNames(
   
 )
 
+vegdistR <- function(x){
+  
+  # runs vegans vegdist and returns results in a tidy format
+  
+  vd <- vegan::vegdist(x)
+  vd <- as.matrix(vd)
+  vd <- reshape2::melt(vd)[reshape2::melt(upper.tri(vd))$value,]
+  names(vd) <- c('Plot1', 'Plot2', 'Sorenson')
+  return(vd)
+  
+}

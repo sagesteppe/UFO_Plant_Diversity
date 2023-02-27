@@ -48,6 +48,7 @@ ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 fp <- list.files(ppro, pattern = 'csv')
 source('functions.R')
+rm(strata_pal, ord, lifeform_fill_pal, boxplot_drawer, convex_hull_resample, theme_boxplot)
 ```
 
 
@@ -610,11 +611,11 @@ rm(spp_richness_functional_esd, spp_richness_lifeform_esd, lpi_lifeform, lpi_lif
 # library(vegan) # are both required. 
 # library(reshape2)
 
-alpha_richness <- spp_richness %>% 
+alpha_diver <- spp_richness %>% 
   group_by(PLOTID) %>% 
   count(name = 'Alpha') 
 
-gamma_richness <- spp_richness %>% 
+gamma_diver <- spp_richness %>% 
   group_by(ECO.SITE) %>% 
   distinct(SYMBOL) %>% 
   count(name = 'Gamma') %>% 
@@ -643,30 +644,38 @@ beta <- spp_richness %>%
       )  
 
 beta_est <- lapply(beta, vegdistR) %>% 
-  bind_rows()
+  bind_rows(., .id = 'ECO.SITE')
 
-rm(beta, vegdistR)
+diversity <- beta_est %>% 
+  pivot_longer(Plot1:Plot2, values_to = 'PLOTID') %>% 
+  group_by(PLOTID) %>% 
+  mutate(MeanBeta = mean(Sorenson)) %>% 
+  select(-name, -Sorenson) %>% 
+  distinct(PLOTID, .keep_all = T) %>% 
+  left_join(., gamma_diver) %>% 
+  left_join(., alpha_diver) %>% 
+  st_as_sf()
+
+rm(beta, vegdistR, alpha_diver, gamma_diver, beta_est)
 ```
 
 
 *beta diversity in species composition within each Ecological Site which has replicate plots*
 
 ```{r what is the turnover in both core functional and species richness between plots of same Ecological Site}
+library(terra)
 
-```
 
+p2carto <- '../../UFO_cartography'
+ext <- vect('../../UFO_cartography/UFO_mask/mask/mask.shp') 
 
-```{r feature engineer benchmarks for unsampled sites, eval = F}
+elev_90 <- rast(file.path(p2carto, list.files(p2carto, recursive = T, pattern = 'DEM.*tif')))
+div_v <- vect(diversity) |> project(crs(elev_90))
 
-feat_eng_C <- benchmarks %>% 
-  group_by(FUNCTIONAL) %>% 
-  summarise(No_spp = quantile(Lifeform_count, c(0, 0.25, 0.5, 0.75, 1)),
-            q = c(0, 0.25, 0.5, 0.75, 1))
+elevation <- extract(elev_90, div_v)
+names(elevation) <- 
 
-feat_eng_F <- benchmarks %>% 
-  group_by(FUNCTIONAL_FINE) %>% 
-  summarise(No_spp = quantile(Functional_count, c(0, 0.25, 0.5, 0.75, 1)), 
-            q = c(0, 0.25, 0.5, 0.75, 1))
+cbind()
 
 ```
 
