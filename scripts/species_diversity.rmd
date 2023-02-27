@@ -1,18 +1,20 @@
 ---
 title: "Plant Species Diversity"
-author: NULL
-date: NULL
 output:
   pdf_document: default
   word_document: default
+  html_document:
+    df_print: paged
 header-includes:
- - \usepackage[width=\textwidth]{caption}
- - \usepackage{wrapfig}
+- \usepackage[width=\textwidth]{caption}
+- \usepackage{wrapfig}
 always_allow_html: yes
 csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
+
+\vspace{-1cm}
 
 Diversity, which after evolution - a process inextricably linked to it, may be the penultimate topic of interest in the Natural Sciences. Diversity, the variety of form and features in each dimension of our existences, extends in myriad directions. The diversity of the natural world is recognizable to the non-specialist as a variety of habitats, *physiognomic* types of plants, and oftentimes species. The diversity of organisms may be recognized by specialists with the use of their tools to detect the presence of genes in species, and the copies of variants of these genes. Accordingly a whole slew of metrics to measure and discuss diversity exist. In this section we discuss two very simple forms of diversity.
 
@@ -36,6 +38,8 @@ knitr::opts_chunk$set(warning = F)
 
 Information on production at Ecological Sites implies some superficial, yet essential, components of plant diversity. Here we determine what proportion of species identified in ESD production tables are present at each AIM plot, how many are missing, and whether any species are uniformly missing. We also combine plots by ES to determine $\gamma-diversity$ by site, and compare the relative turn over in species composition within each Ecological Site which has replicate plots.  
 
+# Methods
+
 ```{r}
 library(tidyverse)
 library(sf)
@@ -48,7 +52,7 @@ ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 fp <- list.files(ppro, pattern = 'csv')
 source('functions.R')
-rm(strata_pal, ord, lifeform_fill_pal, boxplot_drawer, convex_hull_resample, theme_boxplot)
+rm(strata_pal, boxplot_drawer, convex_hull_resample, theme_boxplot)
 ```
 
 
@@ -99,7 +103,9 @@ spp_richness <- left_join(spp_richness, attributes, by = 'SYMBOL_AIM') %>%
   select(-FormDate, -Observer, -INVASIVE, -NATIVITY, -SYMBOL_AIM,
          SYMBOL = SYMBOL_USDA, -BINOMIAL_NAT, -PrimaryKey)
 
-rm(spp_r_header, char)
+spp_richness_clean <- nrow(spp_richness)
+
+rm(spp_r_header, char, pts)
 ```
 
 
@@ -322,6 +328,7 @@ ggsave(plot = last_plot(),  device = 'png', height = 10, units = 'cm',
        path = '../plots/graphics', filename = 'spp_per_ESD.png')
 ```
 
+In order to determine which, and how many, species are noted to be dominant members of the vegetation at an Ecological Site, all ESD's for which an AIM plot was verified to were checked. All conditions (e.g. all State/Phase combinations which were present) of the reference tables were copied from these manually into spreadsheets, and data were cleaned using R. The USDA symbols utilized in these tables, were verified to match to the look up tables which were created for our project, to ensure that the same species between the two data sources could not be 'missed' due to using different abbreviation codes. Given that only two species (*Pinus monophylla*, *Junipers osteosperma*) were ever considered to be true 'Trees' under both systems, this lifeforms was dropped from all analyses to focus on the more variable groups. 
 
 \begin{wrapfigure}{l}{0.5\textwidth}
   \centering
@@ -329,6 +336,16 @@ ggsave(plot = last_plot(),  device = 'png', height = 10, units = 'cm',
   \caption{Number of Species Per Functional Groups}
 \end{wrapfigure}
 
+In order to be able to make comparisons across functional groups, for each species present in both the ESD's and our plot based data, we ensured that they drew from the same attribute table. This was especially important for situations where sub shrubs are alternatively classified as forbs or shrubs depending on context. After performing this, we recovered both the 'coarse' functional groups used by the AIM team, which correspond largely to the botanical notion of 'lifeforms'. Subsequently, using the developed attribute tables finer functional groups, developed locally, which reflect the propensity of major groups of these lifeforms to respond to various disturbances, such as drought (e.g. C3 and C4 grasses), and fire (non-resprout and re-sprouting shrubs). In instances where more fine scale functional data were not available, such as was the case for sprouting potential of many shrub species, than species were left at this level rather than attempting to determine an appropriate group for them.
+
+The calculation of all, previously mentioned, forms of diversity were not carried out for each individual plot. All plots had $\alpha-diversity$, the number of unique species per plot calculated. However, plots which lacked Ecological Sites, were unable to have $\gamma-diversity$, and subsequently $\beta-diversity$ calculated. Ecological Sites which lacked reference tables were able to have these calculations performed, as they are independent of the Descriptions. Calculations of $\beta-diversity$, wherein only plots belonging to the same Ecological Sites were compared, were performed using the 'vegdist' function from the package 'vegan', with standard defaults and as Sorenson-Dice dissimilarity (@oksanen2022vegan, @sorensen1948method, @dice1945measures). 
+
+
+$$
+\text{Sorenson-Dice Index} = \frac{(2\times\text{No. Species Site 1} \cap \text{Site 2})}{(\text{No. Species Site 1} + \text{No. Species Site 2})}
+$$
+
+Wherein the number of species which are shared ("$\cap$") between two sites are multipled by 2, and divided by the total number of species at both sites.
 
 ```{r Number of species observed at plots with known ESD}
 
@@ -374,7 +391,7 @@ lpi_lifeform_esd <- lpi_lifeform %>%
 
 lifeform_coarse <- bind_rows(spp_richness_lifeform_esd, lpi_lifeform_esd)
 
-rm(lpi_functional_esd)
+rm(lpi_lifeform_esd)
 ```
 
 ```{r  plot number of plots meeting coarse benchmarks for known ESD, eval = F}
@@ -466,7 +483,7 @@ lpi_functional_esd <- lpi_lifeform %>%
 
 lifeform_fine <- bind_rows(spp_richness_functional_esd, lpi_functional_esd)
 
-rm(lpi_functional_esd)
+rm(lpi_functional_esd, benchmarks)
 ```
 
 ```{r fine lifeform species diverity plot, eval = F}
@@ -578,11 +595,6 @@ rm(af, pf, pg3, pg4, sh_s, sh_ns)
 ```
 
 
-
-*Here we determine what proportion of species identified in ESD production tables are present at each AIM plot*
-
-*how many are missing*
-
 ```{r Proportion of Species in Production Table Per ESD by Functional}
 
 prop_lf_c <- spp_richness_lifeform_esd %>% 
@@ -604,8 +616,6 @@ prop_lf_f <- spp_richness_functional_esd %>%
 rm(spp_richness_functional_esd, spp_richness_lifeform_esd, lpi_lifeform, lpi_lifeform_esd)
 ```
 
-*We also combine plots by ES to determine $\gamma-diversity$ by site*
-
 ```{r gamma diversity by ESD}
 
 # library(vegan) # are both required. 
@@ -621,7 +631,7 @@ gamma_diver <- spp_richness %>%
   count(name = 'Gamma') %>% 
   filter(ECO.SITE != 'UNKNOWN')
 
-# beta diversity for many sites, Sorenson dissimilarity
+# beta diversity for many sites, Sorenson-Dice dissimilarity
 
 beta <- spp_richness %>% 
   st_drop_geometry() %>% 
@@ -653,18 +663,17 @@ diversity <- beta_est %>%
   select(-name, -Sorenson) %>% 
   distinct(PLOTID, .keep_all = T) %>% 
   left_join(., gamma_diver) %>% 
-  left_join(., alpha_diver) %>% 
-  st_as_sf()
+  right_join(., alpha_diver) %>% 
+  st_as_sf() %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(N_plots = n(), .before = 'geometry')
 
-rm(beta, vegdistR, alpha_diver, gamma_diver, beta_est)
+rm(beta, vegdistR, gamma_diver, alpha_diver, beta_est)
 ```
 
 
-*beta diversity in species composition within each Ecological Site which has replicate plots*
-
-```{r what is the turnover in both core functional and species richness between plots of same Ecological Site}
+```{r what is the turnover in both core functional and species richness between plots of same Ecological Site, eval = F}
 library(terra)
-
 
 p2carto <- '../../UFO_cartography'
 ext <- vect('../../UFO_cartography/UFO_mask/mask/mask.shp') 
@@ -673,10 +682,17 @@ elev_90 <- rast(file.path(p2carto, list.files(p2carto, recursive = T, pattern = 
 div_v <- vect(diversity) |> project(crs(elev_90))
 
 elevation <- extract(elev_90, div_v)
-names(elevation) <- 
+names(elevation) <- c('id', 'elev')
 
-cbind()
+diversity1 <- bind_cols(diversity, 'elev' =  elevation[,2])
 
+summary( lm(Alpha ~ elev, data = diversity1) )
+
+ggplot() +
+  geom_point(data = diversity1, aes(x = N_plots, y = Gamma)) +
+  geom_smooth()
+
+rm(p2carto, ext, elev_90, div_v, diversity1)
 ```
 
 
@@ -684,7 +700,7 @@ cbind()
 rm(f, fp, funct_names, lifeform_fill_pal, ord, ppro, praw)
 ```
 
-# Results 
+# Discussion
 
 \begin{wrapfigure}{l}{0.6\textwidth}
   \centering
@@ -692,16 +708,28 @@ rm(f, fp, funct_names, lifeform_fill_pal, ord, ppro, praw)
   \caption{Number of Species Per Coarse Functional Groups}
 \end{wrapfigure}
 
-
-```{r clear writing variables from environment}
-rm(lifeform_esd.png)
+```{r}
+m <- diversity %>% 
+  distinct(ECO.SITE, .keep_all = T) %>% 
+  st_drop_geometry() %>% 
+  drop_na() %>% 
+  ungroup()
 ```
 
+Species richness data contained a total `r no_records_full` records, which after removal of unidentified material left `r spp_richness_clean` `r sum(diversity$Alpha)` species records at `r nrow(diversity)` plots which were verified to Ecological Sites. `r nrow(m)` Ecological Sites had more than two AIM plots located in them, and had $\beta-diversity$ calculated for all plots `r sum(m$N_plots)` located in them.
 
+While the species within any one reference table in an Ecological Site Descriptions are noted to represent the dominant species across a gradient which stratifies the Ecological Site, such as elevation, many of our plots contained an adequate number of these species per functional group. In fact, when considering the richness data, which we suspect is a more apt dataset for comparing to the ESD taxa, many of our plots had the number of species expected in the reference table, for both the Forb and Shrub functional groups. For Shrubs it appears that the Ecological Sites which are meant to have the greatest number of shrub species do not reach these goals; and that perhaps only for these sites is the species representing the gradients of the Ecological Site utilized. Accordingly, it is unlikely that these tables represent variables collected in a consistent manner; regardless they offer clear insights. The number of grass species, in only a handful of plots, meets or exceeds the numbers of grass species noted present in reference conditions in all ESD's. Anecdotally, grass species which appear to be missing from expanses of the field office include two species of *Sporobolus* (*C. airoides*, and *C. cryptandrus*), *Koeleria macrantha*, with noted declines in *Hesperostipa comata* in areas as well. 
 
+The number of identified plant species varied widely by plot, from `r min(diversity$Alpha)` - `r max(diversity$Alpha)` (Med = `r median(diversity$Alpha)`), with a simple linear model indicating that elevation was a strong predictor. The number of plant species per ecological site varied mostly as a function of the number of plots which had been sampled per Ecological Site. This, alongside rarefaction curves, indicating that we do not yet have enough replicates per Ecological Site to identify their capacity to hold amounts of species. Currently, two Ecological sites with `r slice_max(m, N_plots, n = 2, with_ties = F) |> pull(N_plots) |> toString()` sampled plots contain `r slice_max(m, N_plots, n = 2, with_ties = F) |> pull(Gamma) |> toString()` unique identified species. Estimates of $\beta-diversity$ appear less influenced by the number of plots sampled and $\gamma-diversity$, or surprisingly elevation. The mean beta diversity, that is the dissimilarity between plots varied from `r round(min(m$MeanBeta),2)` - `r round(max(m$MeanBeta),2)`, with lower values indicating greater differences between plots; and where the Ecological site with the most dissimilar plots, on average, contain just over half `r round(min(m$MeanBeta),2)` of the same species as each other. 
 
+```{r clear writing variables from environment}
+rm(lifeform_esd, no_records_full, diversity, dominant_plants,
+   lifeform_coarse, lifeform_fine, lpi, prop_lf_c, prop_lf_f, spp_richness,
+   spp_richness_lifeform, spp_richness_clean)
 
+```
+
+\newpage
 
 # References
-
 
