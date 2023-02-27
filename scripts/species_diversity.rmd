@@ -47,6 +47,7 @@ praw <- '../data/raw'
 ppro <- '../data/processed'
 f <- list.files(praw, pattern = 'csv')
 fp <- list.files(ppro, pattern = 'csv')
+source('functions.R')
 ```
 
 
@@ -372,7 +373,7 @@ lpi_lifeform_esd <- lpi_lifeform %>%
 
 lifeform_coarse <- bind_rows(spp_richness_lifeform_esd, lpi_lifeform_esd)
 
-rm(lpi_lifeform_esd, spp_richness_lifeform_esd)
+rm(lpi_functional_esd)
 ```
 
 ```{r  plot number of plots meeting coarse benchmarks for known ESD, eval = F}
@@ -442,7 +443,6 @@ ggsave(plot = last_plot(),  device = 'png', height = 12, units = 'cm',
 rm(plot, s, g, f)
 ```
 
-
 ```{r number of plots meeting fine benchmarks for known ESD}
 
 spp_richness_functional_esd <- spp_richness_lifeform %>% 
@@ -465,9 +465,8 @@ lpi_functional_esd <- lpi_lifeform %>%
 
 lifeform_fine <- bind_rows(spp_richness_functional_esd, lpi_functional_esd)
 
-rm(lpi_functional_esd, spp_richness_functional_esd)
+rm(lpi_functional_esd)
 ```
-
 
 ```{r fine lifeform species diverity plot, eval = F}
 
@@ -577,9 +576,87 @@ ggsave(plot = last_plot(),  device = 'png', height = 15, units = 'cm',
 rm(af, pf, pg3, pg4, sh_s, sh_ns)
 ```
 
-While the plots of species per functional group exhibit a regular dispersion, we are not sure exactly how these data were collected, and use the median in lieu of the mean; which was quite similar and has negligible differences. 
 
-```{r feature engineer benchmarks for unsampled sites}
+
+*Here we determine what proportion of species identified in ESD production tables are present at each AIM plot*
+
+*how many are missing*
+
+```{r Proportion of Species in Production Table Per ESD by Functional}
+
+prop_lf_c <- spp_richness_lifeform_esd %>% 
+  rowwise() %>% 
+  mutate(Expected = replace_na(Expected, 0),
+         Proportion = if_else(Observed < Expected, Observed/Expected, 1)) %>% 
+  group_by(ECO.SITE, FUNCTIONAL_C) %>% 
+  reframe(qs = quantile(Proportion, c(0.25, 0.75)), prob = c(0.25, 0.75), 
+          n = n(), med = median(Proportion))
+
+prop_lf_f <- spp_richness_functional_esd %>% 
+  rowwise() %>% 
+  mutate(Expected = replace_na(Expected, 0),
+         Proportion = if_else(Observed < Expected, Observed/Expected, 1)) %>% 
+  group_by(ECO.SITE, FUNCTIONAL_FINE) %>% 
+  reframe(qs = quantile(Proportion, c(0.25, 0.75)), prob = c(0.25, 0.75), 
+          n = n(), med = median(Proportion))
+
+rm(spp_richness_functional_esd, spp_richness_lifeform_esd, lpi_lifeform, lpi_lifeform_esd)
+```
+
+*We also combine plots by ES to determine $\gamma-diversity$ by site*
+
+```{r gamma diversity by ESD}
+
+# library(vegan) # are both required. 
+# library(reshape2)
+
+alpha_richness <- spp_richness %>% 
+  group_by(PLOTID) %>% 
+  count(name = 'Alpha') 
+
+gamma_richness <- spp_richness %>% 
+  group_by(ECO.SITE) %>% 
+  distinct(SYMBOL) %>% 
+  count(name = 'Gamma') %>% 
+  filter(ECO.SITE != 'UNKNOWN')
+
+# beta diversity for many sites, Sorenson dissimilarity
+
+beta <- spp_richness %>% 
+  st_drop_geometry() %>% 
+  filter(ECO.SITE != 'UNKNOWN') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(Replicates = n_distinct(PLOTID),
+         PRESENCE = 1) %>% 
+  filter(Replicates >= 2) %>% 
+  ungroup() %>% 
+  select(PLOTID, SYMBOL, ECO.SITE, PRESENCE) %>% 
+  split(.$ECO.SITE) %>% 
+  map(. %>%     # arrange data into a binary matrix format required for the
+        select(-ECO.SITE) %>%  # function
+        pivot_wider(
+          names_from = 'SYMBOL',
+          values_from = PRESENCE, 
+          values_fill = 0, 
+          values_fn = function(x) 1) %>% 
+        column_to_rownames('PLOTID') 
+      )  
+
+beta_est <- lapply(beta, vegdistR) %>% 
+  bind_rows()
+
+rm(beta, vegdistR)
+```
+
+
+*beta diversity in species composition within each Ecological Site which has replicate plots*
+
+```{r what is the turnover in both core functional and species richness between plots of same Ecological Site}
+
+```
+
+
+```{r feature engineer benchmarks for unsampled sites, eval = F}
 
 feat_eng_C <- benchmarks %>% 
   group_by(FUNCTIONAL) %>% 
@@ -600,16 +677,11 @@ rm(f, fp, funct_names, lifeform_fill_pal, ord, ppro, praw)
 
 # Results 
 
-
 \begin{wrapfigure}{l}{0.6\textwidth}
   \centering
     \includegraphics[width=0.5\textwidth]{../plots/graphics/lifeform_esd.png}
   \caption{Number of Species Per Coarse Functional Groups}
 \end{wrapfigure}
-
-
-
-
 
 
 ```{r clear writing variables from environment}

@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.16)  24 FEB 2023 16:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.2.26)  27 FEB 2023 08:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **species_diversity.tex
 (./species_diversity.tex
 LaTeX2e <2022-11-01> patch level 1
-L3 programming layer <2023-02-07> (/home/sagesteppe/.TinyTeX/texmf-dist/tex/latex/base/article.cls
+L3 programming layer <2023-02-22> (/home/sagesteppe/.TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
 (/home/sagesteppe/.TinyTeX/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
@@ -451,36 +451,196 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 [1
 
 {/home/sagesteppe/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<../plots/graphics/spp_per_ESD.png, id=55, 505.89pt x 284.5029pt>
+<../plots/graphics/spp_per_ESD.png, id=59, 505.89pt x 284.5029pt>
 File: ../plots/graphics/spp_per_ESD.png Graphic file (type png)
 <use ../plots/graphics/spp_per_ESD.png>
 Package pdftex.def Info: ../plots/graphics/spp_per_ESD.png  used on input line 208.
 (pdftex.def)             Requested size: 234.88132pt x 132.09277pt.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 219.
+(/home/sagesteppe/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+Overfull \hbox (135.49965pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ## # A tibble: 379 x 7[] 
+ []
 
-Package wrapfig Warning: Collision between wrapping environments on input line 212.
 
-<../plots/graphics/lifeform_esd.png, id=56, 526.8483pt x 341.3553pt>
+Overfull \hbox (88.24979pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ## # Rowwise:[] 
+ []
+
+
+Overfull \hbox (403.24887pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##    PLOTID FUNCTIONAL_C Observed ECO.SITE    Expected METHOD Proportion[] 
+ []
+
+
+Overfull \hbox (403.24887pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##    <chr>  <chr>           <int> <chr>          <int> <chr>       <dbl>[] 
+ []
+
+
+Overfull \hbox (387.49892pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  1 PJ-133 SHRUB               3 R036XY284CO       10 LPI        0.3[] 
+ []
+
+
+Overfull \hbox (392.7489pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  2 PJ-133 GRASS               2 R036XY284CO        8 LPI        0.25[] 
+ []
+
+
+Overfull \hbox (387.49892pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  3 PJ-132 SHRUB               2 R036XY284CO       10 LPI        0.2[] 
+ []
+
+
+Overfull \hbox (397.99889pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  4 SS-221 GRASS               4 R036XY114CO       11 LPI        0.364[] 
+ []
+
+
+Overfull \hbox (397.99889pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  5 SS-221 FORB                2 R036XY114CO       14 LPI        0.143[] 
+ []
+
+
+Overfull \hbox (397.99889pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  6 SS-221 SHRUB               2 R036XY114CO       16 LPI        0.125[] 
+ []
+
+
+Overfull \hbox (397.99889pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  7 PJ-131 SHRUB               4 R036XY289CO        9 LPI        0.444[] 
+ []
+
+
+Overfull \hbox (403.24887pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  8 SD-325 FORB                1 R034BY404CO       13 LPI        0.0769[] 
+ []
+
+
+Overfull \hbox (397.99889pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ##  9 SD-325 GRASS               2 R034BY404CO        6 LPI        0.333[] 
+ []
+
+
+Overfull \hbox (387.49892pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ## 10 SD-325 SHRUB               4 R034BY404CO        8 LPI        0.5[] 
+ []
+
+
+Overfull \hbox (161.74957pt too wide) in paragraph at lines 235--235
+ []\T1/lmtt/m/n/10 ## # ... with 369 more rows[] 
+ []
+
+
+Overfull \hbox (135.49965pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ## # A tibble: 578 x 7[] 
+ []
+
+
+Overfull \hbox (250.99931pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ## # Groups:   PLOTID, FUNCTIONAL_FINE [578][] 
+ []
+
+
+Overfull \hbox (434.74878pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##    PLOTID FUNCTIONAL_FINE    Observed ECO.SITE    Expected METHOD Proportion[] 
+ []
+
+
+Overfull \hbox (434.74878pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##    <chr>  <chr>                 <int> <chr>          <int> <chr>       <dbl>[] 
+ []
+
+
+Overfull \hbox (418.99883pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  1 PJ-133 NON-RESPROUT-SHRUB        3 R036XY284CO       10 LPI        0.3[] 
+ []
+
+
+Overfull \hbox (424.24881pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  2 PJ-133 C3-PERENNIAL-GRASS        2 R036XY284CO        8 LPI        0.25[] 
+ []
+
+
+Overfull \hbox (418.99883pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  3 PJ-132 SHRUB                     2 R036XY284CO       10 LPI        0.2[] 
+ []
+
+
+Overfull \hbox (429.4988pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  4 SS-221 C3-PERENNIAL-GRASS        4 R036XY114CO       11 LPI        0.364[] 
+ []
+
+
+Overfull \hbox (429.4988pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  5 SS-221 PERENNIAL-FORB            2 R036XY114CO       14 LPI        0.143[] 
+ []
+
+
+Overfull \hbox (429.4988pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  6 SS-221 SHRUB                     2 R036XY114CO       16 LPI        0.125[] 
+ []
+
+
+Overfull \hbox (408.49886pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  7 PJ-131 SHRUB                     4 R036XY289CO        0 LPI        1[] 
+ []
+
+
+Overfull \hbox (429.4988pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  8 PJ-131 NON-RESPROUT-SHRUB        4 R036XY289CO        9 LPI        0.444[] 
+ []
+
+
+Overfull \hbox (429.4988pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ##  9 PJ-131 RESPROUT-SHRUB            4 R036XY289CO        9 LPI        0.444[] 
+ []
+
+
+Overfull \hbox (434.74878pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ## 10 SD-325 PERENNIAL-FORB            1 R034BY404CO       13 LPI        0.0769[] 
+ []
+
+
+Overfull \hbox (161.74957pt too wide) in paragraph at lines 253--253
+ []\T1/lmtt/m/n/10 ## # ... with 568 more rows[] 
+ []
+
+[2 <../plots/graphics/spp_per_ESD.png>]
+
+Package wrapfig Warning: Collision between wrapping environments on input line 266.
+
+<../plots/graphics/lifeform_esd.png, id=68, 526.8483pt x 341.3553pt>
 File: ../plots/graphics/lifeform_esd.png Graphic file (type png)
 <use ../plots/graphics/lifeform_esd.png>
-Package pdftex.def Info: ../plots/graphics/lifeform_esd.png  used on input line 214.
+Package pdftex.def Info: ../plots/graphics/lifeform_esd.png  used on input line 268.
 (pdftex.def)             Requested size: 234.87685pt x 152.18127pt.
-[2 <../plots/graphics/spp_per_ESD.png> <../plots/graphics/lifeform_esd.png>] [3] (./species_diversity.aux)
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 273.
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 278.
+
+[3 <../plots/graphics/lifeform_esd.png>] [4] (./species_diversity.aux)
 Package rerunfilecheck Info: File `species_diversity.out' has not changed.
-(rerunfilecheck)             Checksum: D9C48C3189EC20540C8B61A17CBB4C05;94.
+(rerunfilecheck)             Checksum: 0A7B9B6D662FEF6B4AF91A097E542ABC;173.
  ) 
 Here is how much of TeX's memory you used:
- 11940 strings out of 477989
- 191460 string characters out of 5838955
- 1868346 words of memory out of 5000000
- 31926 multiletter control sequences out of 15000+600000
- 555842 words of font info for 69 fonts, out of 8000000 for 9000
+ 11988 strings out of 477984
+ 192192 string characters out of 5838807
+ 1873388 words of memory out of 5000000
+ 31972 multiletter control sequences out of 15000+600000
+ 556161 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,6n,76p,322b,478s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on species_diversity.pdf (3 pages, 841139 bytes).
+ 75i,5n,76p,322b,480s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/sagesteppe/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}</home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/sagesteppe/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on species_diversity.pdf (4 pages, 874113 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
- 90 compressed objects within 1 object stream
- 26 named destinations out of 1000 (max. 500000)
- 19 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 126 PDF objects out of 1000 (max. 8388607)
+ 101 compressed objects within 2 object streams
+ 29 named destinations out of 1000 (max. 500000)
+ 27 words of extra memory for PDF output out of 10000 (max. 10000000)
 
