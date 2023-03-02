@@ -1,6 +1,6 @@
 # UFO_Plant_Diversity
 
-These scripts serve as the heart of the interpretations of an AIM sample design. Their are four main scripts, each with a major focus which warrants a chapter in a report.
+These scripts serve as the heart of the interpretations of an AIM sample design. Their are four main scripts, each with a major focus which warrants a chapter (Functional Diversity, Species Diversity, Rare Species, Floristic Quality Index) in a report.
 
 One script deals with whether the vegetation on site is in reference condition, at the level of major life form. E.g. Tree, Shrub, Forbs, Grasses. This is the most fundamental of interpretations of AIM data.
 
