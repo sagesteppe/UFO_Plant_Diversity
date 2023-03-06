@@ -415,17 +415,28 @@ To identify rare plants via the conceptual Rabinowitz framework the concepts of 
 ```{r install gbif, eval = F}
 install.packages("rgbif")
 user <- "steppe" # your gbif.org username 
-pwd <- "blmquery" # your gbif.org password
+pwd <- "blmquery" # your gbif.org password # this one is now old and serves as an example
 email <- "reedbenkendorf27@gmail.com" # your email 
+```
+
+
+```{r Gather Plant Records I}
+set.seed(1989)
+co_nat <- CO_plants %>% filter(NATIVITY == 'Native')
+ss <- 750
+ss_perc <- paste0(round((ss / length(unique(co_nat$BINOMIAL_NAT))) * 100, 1), '%')
 ```
 
 ```{r Prepare GBIF queries, eval = F}
 library(rgbif)
 
+spp_v <- sample(unique(co_nat$BINOMIAL_NAT), ss)
+
 gbif_taxon_keys <- spp_v %>% 
   name_backbone_checklist()  %>% 
   filter(!matchType == "NONE") %>% 
   pull(usageKey)
+gbif_taxon_keys
 
 dl_key <- occ_download(
   pred_in("taxonKey", gbif_taxon_keys),
@@ -439,39 +450,68 @@ dl_key <- occ_download(
 d <- occ_download_get( dl_key ) %>%
     occ_download_import()
 
+# these data were then downloaded via the GUI to a folder on lightscape and
+# copied over onto the drive. 
+# The column fields do not match very well, and you may need to load it in a
+# spreadsheet manager such as the open source (free) libre calc
+
 ```
 
 
+```{r Subset GBIF records of non target species, eval = F}
 
-```{r Gather Plant Records I}
-set.seed(1989)
-co_nat <- CO_plants %>% filter(NATIVITY == 'Native')
-ss <- 750
-ss_perc <- paste0(round((ss / length(unique(co_nat$BINOMIAL_NAT))) * 100, 1), '%')
+# step 1 only grab records not already downloaded in the last query
+spp_occ <- data.table::fread(
+  file.path( praw, 'GBIF_Query_Random/occurrence.txt'),
+  sep="\t",  header=TRUE, stringsAsFactors=FALSE, quote=""
+  )[, c('gbifID', 'publisher', 'basisOfRecord', 'recordedBy', 
+        'recordNumber', 'occurrenceStatus', 'month', 
+        'day', 'year', 'continent', 'decimalLatitude', 'decimalLongitude', 
+        'coordinateUncertaintyInMeters', 'taxonID', 'acceptedNameUsageID',
+        'acceptedScientificName', 'order', 'family', 'genus', 'species', 'specificEpithet',
+        'infraspecificEpithet', 'acceptedTaxonKey', 'taxonRank', 'verbatimScientificName'
+        )]
+
+spp_occ <- spp_occ[occurrenceStatus == 'PRESENT', ][year >= 1900, ][coordinateUncertaintyInMeters < 10000,][continent != 'OCEANIA',]
+spp_occ[spp_occ==''|spp_occ==' ']<-NA
+spp_occ <- na.omit(spp_occ, cols = 'specificEpithet') %>% 
+  distinct(decimalLongitude, decimalLatitude, species, .keep_all = TRUE)
+
+# filter for species actually in Colorado, the DB has some slippage on queries 
+# I cannot figure out, and alot of the synonyms are unrecoverable
+
+target_binom <- unique(c(CO_plants$BINOMIAL_ACKER, CO_plants$BINOMIAL_NAT))
+spp_occ <- spp_occ %>% 
+  filter(species %in% target_binom)
+
+spp_occ_large <- spp_occ %>%
+  group_by(acceptedTaxonKey) %>% 
+  filter(n() > 2500) %>% 
+  slice_sample(n = 2500)
+spp_occ <- spp_occ %>%
+  group_by(acceptedTaxonKey) %>% 
+  filter(n() < 2500) %>% 
+  bind_rows(., spp_occ_large)
+
+write.csv(spp_occ, file.path(praw, 'GBIF_Query_Random/occurrence_sub.txt'), row.names = F)
+
+rm(target_binom, spp_occ_large)
 ```
 
-```{r Gather Plant Records II, eval = F}
-spp_v <- sample(unique(co_nat$BINOMIAL_NAT), ss)
-occurrences <- BIEN::BIEN_occurrence_species(
-  spp_v, political.boundaries = F, new.world = T)
-
-occurrences <- occurrences %>% 
-  mutate(date_collected = as.Date(date_collected)) %>% 
-  filter(date_collected > '1900-01-01') %>% 
-  select(-datasource_id, -collection_code, -is_new_world)
-
-write.csv(occurrences, file.path( praw, 'BIEN_occurrences.csv'), row.names = F)
-```
 
 ```{r Gather Focal Plant Records - First Pass, eval = F}
 
-# step 1 only grab records not already downloaded in the last query
 
-spp_occ <- read.csv(file.path( praw, 'BIEN_occurrences.csv')) %>% 
-  distinct(scrubbed_species_binomial) %>% 
-  left_join(., 
-            CO_plants, by = c('scrubbed_species_binomial' =  'BINOMIAL_NAT')) %>% 
-  pull(SYMBOL)
+focal <- data.table::fread(file.path(praw, 'GBIF_Query_Random/occurrence_sub.txt')) 
+focal <- unique(focal, by = 'acceptedTaxonKey')
+
+target_binom <- unique(c(CO_plants$BINOMIAL_ACKER, CO_plants$BINOMIAL_NAT))
+
+all_species_UFO <- left_join(records, CO_plants,
+                             by = c('SYMBOL_USDA' = 'SYMBOL')) %>% 
+  pull() ############### here need to remove already found records from here...
+
+
 
 spp2query_bien <- spp_clean %>% 
   distinct(SYMBOL_USDA) %>% 

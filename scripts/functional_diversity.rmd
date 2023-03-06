@@ -46,6 +46,8 @@ library(hrbrthemes)
 library(waffle)
 library(sf)
 library(kableExtra)
+
+select <- dplyr::select
 ```
 
 ```{r Import AIM LPI Data}
@@ -70,7 +72,7 @@ lpi <- read.csv( file.path(praw, 'LPIRAW.csv') ) %>%
 ```{r Calculate Individual Covers based on updated hits}
 
 attributes <- read.csv(file.path(ppro, files[grep('Attribute.*Table-RCB', files)]) )
-lpi_sub <-  left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+lpi_sub <-  left_join(lpi, attributes, by = 'SYMBOL_AIM', multiple = 'all') %>% 
   mutate(Intercept = factor(
     Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface'))) %>% 
   mutate(FUNCTIONAL2 = if_else(FUNCTIONAL == 'NonNoxSubShrubCover', 'NonNoxShrubCover', FUNCTIONAL)) %>% 
@@ -119,7 +121,7 @@ rm(summary)
 agg <- read.csv(file.path(praw, f[grep('Func_', f)]) ) %>% 
   filter(!FUNCTIONAL_AGGREGATE %in% c('PerenForb', 'PerenGrass'))
 
-lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM', multiple = 'all') %>% 
   mutate(Intercept = factor(
     Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface')),
     FUNCTIONAL = str_trim(FUNCTIONAL)) %>% 
@@ -208,7 +210,7 @@ rm(off, compare_agg, mismatch_cor, all_cor, pairs, terradat_calc)
 
 native_esd_grps <- read.csv( file.path(praw, f[grep('native_esd_covers', f)])) 
 
-lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM') %>% 
+lpi_agg <- left_join(lpi, attributes, by = 'SYMBOL_AIM', multiple = 'all') %>% 
   mutate(Intercept = factor(
     Intercept, c('TopCanopy', paste0(rep('Lower', 4), 1:4), 'SoilSurface')),
     FUNCTIONAL = str_trim(FUNCTIONAL)) %>% 
@@ -314,7 +316,7 @@ esg_cover <- read.csv(file.path(praw, f[grep('EcologicalSiteGroup', f)])) %>%
          ESG = str_replace(ESG, 'SAC-Saline_Sandy_Loamy_Finer_Uplands', 
                            'SAC-Finer_Uplands')
          ) %>% 
-  left_join(., esg_lkp_tab)
+  left_join(., esg_lkp_tab, multiple = 'all')
 
 # make long to bind together, combine both esd names and esg names
 
@@ -366,7 +368,7 @@ site_esd <- site_esd %>%
 
 # this inner join is killing me, missing many GR- why ? leading 0's  ?
 
-all_hits_nat <- full_join(site_esd, all_hits_nat, by = 'PrimaryKey') %>% 
+all_hits_nat <- full_join(site_esd, all_hits_nat, by = 'PrimaryKey', multiple = "all") %>% 
   mutate(ECO.SITE = str_replace(ECO.SITE, 'SAC-Loamy_Uplands', 'SAC-Finer_Uplands'),
          ECO.SITE = str_replace(ECO.SITE, 'SAW-Sandy_Uplands_and_Loamy_Uplands', 
                                 'SAW_Sandy_&_Loamy'),
@@ -407,10 +409,10 @@ wghts <- read.csv( file.path(praw, f[grep('Weights', f)])) %>%
 
 all_hits_nat <- read.csv(file.path(praw, f[grep('Interence', f)])) %>% 
   select(PLOTID = Plot.ID, AoInference, xcoord, ycoord) %>% 
-  right_join(., all_hits_nat) %>% 
+  right_join(., all_hits_nat, multiple = 'all') %>% 
   rowwise() %>% 
   mutate(STRATUM = str_remove(str_extract(PLOTID, '^.*-'), '-')) %>% 
-  left_join(., wghts, by = c('STRATUM','AoInference'))  %>% 
+  left_join(., wghts, by = c('STRATUM','AoInference'), multiple = "all")  %>% 
   mutate(AoInference = str_replace(AoInference, '-NM', '-NCA')) %>% 
   rename(COVER_TYPE = Variable) %>% 
   st_as_sf(coords = c('xcoord', 'ycoord'), crs = 4269) %>% 
@@ -447,8 +449,8 @@ reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>%
          PLOTID == 'MC-068' ~ 2,
          TRUE ~ lyr1))
          
-all_hits_nat <- left_join(all_hits_nat, reclass, by = 'PLOTID') %>% 
-  left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
+all_hits_nat <- left_join(all_hits_nat, reclass, by = 'PLOTID', multiple = "all") %>% 
+  left_join(., lc_lkp, by = c('lyr1' = 'layer'), multiple = "all") %>% 
   select(-lyr1) %>% 
   relocate(stratum, .before = geometry) %>% 
   st_as_sf() %>% 
@@ -470,7 +472,7 @@ bmf <- benchmarks %>%
   filter(COVER_TYPE == 'Forb', ESTIMATE == 'LOWER') %>%
   rename('TARGET' = COVER) 
 
-all_hits_forb <- left_join(all_hits_forb, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+all_hits_forb <- left_join(all_hits_forb, bmf, by = c('ECO.SITE', 'COVER_TYPE'), multiple = "all") %>% 
   mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
 
 forb <- spsurvey::cat_analysis(
@@ -478,8 +480,7 @@ forb <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 ahf <- select(all_hits_forb, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot ) %>% 
-  st_drop_geometry()
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot ) 
 
 rm(bmf)
 ```
@@ -562,7 +563,7 @@ bm_sd <- benchmarks %>%
   
 salt_des_shrub <- all_hits_shrub %>% 
   filter(stratum ==  'Salt_Desert') %>% 
-  left_join(., bm_sd, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+  left_join(., bm_sd, by = c('ECO.SITE', 'COVER_TYPE'), multiple = "all") %>% 
   mutate(Meeting = if_else(stratum ==  'Salt_Desert' & Cover_HB >= COVER,  T, F))
 
 bmf <- benchmarks %>% 
@@ -571,7 +572,7 @@ bmf <- benchmarks %>%
 all_hits_shrub <- all_hits_shrub %>% 
   filter((stratum != "Salt_Desert")
          %>% replace_na(TRUE)) %>% 
-  left_join(., bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+  left_join(., bmf, by = c('ECO.SITE', 'COVER_TYPE'), multiple = "all") %>% 
   mutate(Meeting = if_else(Cover_HB <= COVER,  T, F)) %>% 
   bind_rows(., salt_des_shrub) %>% 
   rename('TARGET' = COVER) 
@@ -581,8 +582,7 @@ shrub <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 ahs <- select(all_hits_shrub, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
-  st_drop_geometry()
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) 
 
 rm(bmf, salt_des_shrub, bm_sd)
 ```
@@ -638,6 +638,7 @@ Whereas shrubs are expected to be greatly reduced in the Salt Desert, especially
 \begin{center}
 {\section{Tree Cover}}
 \end{center}
+
 ```{r calculate land meeting benchmark tree results}
 
 all_hits_tree <- all_hits_nat %>% 
@@ -647,7 +648,8 @@ bmf <- benchmarks %>%
   filter(COVER_TYPE == 'Tree', ESTIMATE == 'UPPER' | SET == 'ESG') %>%
   rename('TARGET' = COVER) 
 
-all_hits_tree <- left_join(all_hits_tree, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+all_hits_tree <- left_join(all_hits_tree, bmf, by = c('ECO.SITE', 'COVER_TYPE'), 
+                           multiple = "all") %>% 
   mutate(Meeting = if_else(Cover_HB <= TARGET, T, F))
 
 tree <- spsurvey::cat_analysis(
@@ -655,8 +657,7 @@ tree <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 aht <- select(all_hits_tree, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
-  st_drop_geometry()
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) 
 
 rm(bmf)
 ```
@@ -724,7 +725,8 @@ bmf <- benchmarks %>%
   filter(COVER_TYPE == 'Grass', ESTIMATE == 'LOWER' | SET == 'ESG') %>%
   rename('TARGET' = COVER) 
 
-all_hits_grass <- left_join(all_hits_grass, bmf, by = c('ECO.SITE', 'COVER_TYPE')) %>% 
+all_hits_grass <- left_join(all_hits_grass, bmf, by = c('ECO.SITE', 'COVER_TYPE'), 
+                            multiple = "all") %>% 
   mutate(Meeting = if_else(Cover_HB >= TARGET, T, F))
 
 grass <- spsurvey::cat_analysis(
@@ -732,8 +734,7 @@ grass <- spsurvey::cat_analysis(
   subpops = 'AoInference',  weight = 'WghtPerPlot', vartype = 'Local', conf = 80)
 
 ahg <- select(all_hits_grass, 
-       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) %>% 
-  st_drop_geometry()
+       PLOTID, AoInference, Meeting, COVER_TYPE, ECO.SITE, WghtPerPlot) 
 
 rm(bmf)
 ```
@@ -796,8 +797,9 @@ mogrify -trim *.png
 
 ### Metrics Combined
 
-Few clear trends emerge regarding which Ecological Sites are failing to meet certain benchmarks, and the relationships between the functional diversity benchmarks which they are no t meeting. It is evident that few plots in few Ecological Sites are meeting either forb of grass cover benchmarks, and the only Ecological Sites which appear notably different here are those with only a single plot which was sampled in them. In general most ecological sites were achieving benchmark goals for shrub and tree cover, with the few exceptions being ecological sites which lacked replicates. This illustrating a notion that woody encroachment is not a large issue in the area of analysis, but rather that the loss of non-woody species within the remaining inter-spatial areas is concerning. 
+![The Proportion of Plots in Each ESD which are meeting Reference Benchmarks](../plots/graphics/PropPlotsMeetBenchmarks.png){width=5%,height=5%}
 
+Few clear trends emerge regarding which Ecological Sites are failing to meet certain benchmarks, and the relationships between the functional diversity benchmarks which they are no t meeting. It is evident that few plots in few Ecological Sites are meeting either forb of grass cover benchmarks, and the only Ecological Sites which appear notably different here are those with only a single plot which was sampled in them. In general most ecological sites were achieving benchmark goals for shrub and tree cover, with the few exceptions being ecological sites which lacked replicates. This illustrating a notion that woody encroachment is not a large issue in the area of analysis, but rather that the loss of non-woody species within the remaining inter-spatial areas is concerning. 
 
 ```{r prep real data for overall ESD conditions}
 
@@ -811,9 +813,15 @@ achieving <- bind_rows(ahf, ahs, aht, ahg) %>%
 rm(ahf, ahs, aht, ahg)
 ```
 
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+    \includegraphics[width=0.45\textwidth]{../plots/graphics/benchmark_areas.png}
+  \caption{Total area of each stratum and the overall status of benchmarks}
+\end{wrapfigure}
+
 The feature engineered cover of a lower forb benchmarks are used across all plots in lieu of the mean values from ESG's, which we felt was too high of a value relative to the other forb benchmark values included in the Ecological Sites Descriptions. The use of the median value means that more plots are passing benchmark conditions, than were under the pure ESG schema (original results not pictured here).
 
-```{r write out results of whether meeting benchmarks or not, eval=FALSE}
+```{r write out results of whether meeting benchmarks or not, eval= FALSE}
 
 achieving %>% 
   select(PLOTID, AoInference, Meeting, CATEGORY = LIFEFORM, ECO.SITE) %>% 
@@ -827,10 +835,9 @@ achieving %>%
 
 Each individual Ecological Site, or Ecological Group, varies in the proportion of all plots located in them which are within reference condition. Once a greater number of replicate plots are sampled per Ecological Site (see Figure XX, panel 5 *(right most)*), and combined with digitized management records, these data may form an approach towards understanding the resilience of different Ecological Sites in the UFO to management actions. The Ecological Sites are arranged via descending order of the total proportion of vegetation types and plots which are achieving benchmarks. These results currently largely reflect the 
 
-```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, fig.height=4, fig.cap = 'The Proportion of Plots in Each ESD which are meeting Reference Benchmarks'}
+```{r Overall Vegetation Benchmarks Chart Broken Down to ESD, eval = F}
 
 yn <- achieving
-
 yn <- yn %>% 
   add_count(ACHIEVING, name = 'dummy')  %>% 
   mutate(dummy = jitter( (dummy/4) / SAMPLE )) %>% 
@@ -839,14 +846,15 @@ yn_levls <- yn %>%
   distinct(ECO.SITE) %>% 
   pull(ECO.SITE)
 yn <- yn %>% 
-  mutate(ECO.SITE = factor(ECO.SITE, levels = yn_levls))
-
+  group_by(ECO.SITE) %>% 
+  mutate(ECO.SITE = factor(ECO.SITE, levels = yn_levls), 
+         PROP_ACHIEVE = sum(if_else(ACHIEVING == 'Y', 1, 0))/n())
 
 sfm <- c('Y' = 'Yes', 'N' = 'No')
 sfm_values = c('Y' = '#1FE032', 'N' = '#E0321F')
 new_labels <- c('FORB' = 'Forb', 'GRASS' =  'Grass', 'SHRUB' =  'Shrub', 'TREE' =  'Tree')
 
-p1 <- ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) + 
+p1 <- ggplot(yn, aes(y = fct_reorder(ECO.SITE, PROP_ACHIEVE), fill = ACHIEVING)) + 
   facet_wrap(~LIFEFORM, nrow = 1) + #, 
            #  labeller = as_labeller(new_labels)) +
   geom_bar(position = "fill", width = 1) +
@@ -877,7 +885,7 @@ l1 <- cowplot::get_legend( ggplot(yn, aes(y = ECO.SITE, fill = ACHIEVING)) +
 )
 
 yn$title <- 'Number Plots'
-p2 <- ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) +
+p2 <- ggplot(yn, aes(y = fct_reorder(ECO.SITE, PROP_ACHIEVE), x = 1, fill = SAMPLE)) +
   facet_grid(. ~ title) +
   geom_tile() +
   scale_fill_continuous('n', low="#8ecae6", high="#321FE0") +
@@ -904,18 +912,18 @@ l2 <- cowplot::get_legend ( ggplot(yn, aes(y = ECO.SITE, x = 1, fill = SAMPLE)) 
 combineLegend <- plot_grid(l1, l2, nrow = 1, rel_widths = c(0.5, 0.5),
                                     rel_heights = c(0.6, 0.4))
 plots <- plot_grid(p1, p2, rel_widths = c(0.81, 0.19))
-plotLeg <- plot_grid(plots, combineLegend, rel_heights = c(0.9, 0.1), nrow = 2)
-
+plotLeg <- plot_grid(plots, NULL, combineLegend, NULL, rel_heights = c(1, 0.1, 0.01, 0.1), nrow = 4, ncol = 1)
+plotLeg
 title <- ggdraw() + 
   draw_label("Proportion of Plots Meeting Benchmark", size = 12)
 
-cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
+f_plot <- cowplot::plot_grid(title, plotLeg, ncol = 1, rel_heights = c(0.1, 1))
 
-rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, sfm, sfm_values,
-   new_labels, yn_levls)
+save_plot('../plots/graphics/PropPlotsMeetBenchmarks.png', f_plot)
+
+# rm(title, combineLegend, l2, l1, plots, plotLeg, p1, p2, yn, sfm, sfm_values,
+ #   new_labels, yn_levls, f_plot)
 ```
-
-\newpage
 
 We can combine the number of plots, and their weight acres, within each stratum which had all four major functional groups within reference to develop a sense of how well the RMP objectives are being meet (Figure 6). 
 
@@ -940,8 +948,8 @@ reclass <- terra::extract(r, pts, method = 'simple', bind = T) %>%
          PLOTID %in% c('SS-306') ~ 6,
          TRUE ~ lyr1)) 
          
-achieving <- left_join(achieving, reclass, by = 'PLOTID') %>% 
-  left_join(., lc_lkp, by = c('lyr1' = 'layer')) %>% 
+achieving <- left_join(achieving, reclass, by = 'PLOTID', multiple = "all") %>% 
+  left_join(., lc_lkp, by = c('lyr1' = 'layer'), multiple = "all") %>% 
   select(-lyr1) %>% 
   st_as_sf()
 
@@ -1016,7 +1024,6 @@ rm(ach_forb, ach_shrub, ach_tree, ach_grass)
 
 ```{r Overall Vegetation Benchmarks By Major Stratum, eval = F}
 
-
 lkp <- data.frame(
   old = c('Sage_Brush', 'Salt_Desert', 'Mixed_Mountain_Shrub', 'Pinon_Juniper',
           'Aspen'), 
@@ -1074,11 +1081,6 @@ ggsave(plot = last_plot(), filename = '../plots/graphics/benchmark_areas.png',
 rm(lkp, waff_dat2, zerofourPal, zerofourVal)
 ```
 
-\begin{wrapfigure}{l}{0.5\textwidth}
-  \centering
-    \includegraphics[width=0.5\textwidth]{../plots/graphics/benchmark_areas.png}
-  \caption{Total area of each stratum and the overall status of benchmarks}
-\end{wrapfigure}
 
 ```{r Total Area Meeting Benchmarks by Management Unit Table}
 
@@ -1102,22 +1104,6 @@ r1 <- r%>%
   select(Management = Subpopulation, Plots, Functional, Land_Meeting) 
 ```
 
-
-```{r table metrics in numbers}
-
-bind_cols(r1, Goal = 
-            c(
-              paste0(rep(80, times = 12), '%'), paste0(rep(70, times = 4), '%')
-              )) %>%  
-  relocate(Goal, .before = Management) %>% 
-  knitr::kable(., align = c("c", "c", "c", "l", "c"),
-               booktabs = TRUE, linesep = "") %>% 
-  kableExtra::kable_styling(position = "float_right") %>% 
-  collapse_rows()
-
-rm(r1)
-```
-
 ```{r some writing metrics}
 
 shrub1 <- shrub %>% 
@@ -1138,15 +1124,30 @@ de_nca <- toString(
 
 r <- r %>% 
   cbind(., Goal = c(rep(80, times = 12), rep(70, times = 4)))
-
-filter(r, UCB80Pct.P > Goal) %>% 
-  nrow()
 ```
 
 Results by management areas in general do not differ significantly. From a broad perspective, roughly a quarter of land across the entire field office is either meeting standards for forb or grass cover, with the exception of Gunnison Gorge National Conservation Area which has no land meeting objectives for forb cover (Table 1). While their were relatively few plots sampled at Gunnison Gorge NCA, XX, that each individual plot failed this benchmark is unlikely to be due to chance, as is reflected by the Areas of Critical Environmental Concern. No areas are meeting the benchmarks for Tree cover either, although most management areas have roughly one half of their land achieving. Aspects regarding the nature of perennial forbs are discussed further in section XX, but given the timing of sampling relative to the drought section XX, are not suprising. A more worrisome metric would relate to the species composition of forbs which are present at plots, rather than collective cover of them during periods of drought. 
   This indicates the need to explore tree thinning, or removal, operations in certain areas, as funding permits and needs require, to benefit wildlife via modification of habitat or to decrease the threats of wildfires to adjacent human population base. Given the historic reductions in fire cycle this is an issue which requires a great many decades before coming back into resolution, but given the current awareness of the problem, management actions are now underway which will do so. Roughly half to two-thirds of land are achieving shrub cover objectives, and two areas have confidence intervals which do (`r acec_meet`), of very nearly (`r de_nca`), include the land cover targets. 
   On the whole, the results taken together indicate that the study area is failing to meet metrics for plant functional diversity, with only areas `r filter(r, UCB80Pct.P > Goal) %>% nrow()` having confidence intervals which even overlap the management objectives. However, grasses form comprise the functional group of the most serious concern. The median estimate of land within any area meeting objectives for cover of grasses is `r paste0(round( median(grass[grass$Category == TRUE,'Estimate.P']), 1), '%')`, across the entirety of the field office the estimate of lands meeting objectives for grasses is a low `r paste0(round(grass[grass$Category == TRUE & grass$Subpopulation == 'SampleFrame', 'Estimate.P'], 1), '%')`, the ^2nd^ lowest proportion of land out of all benchmarks and areas. 
 
+```{r table metrics in numbers}
+
+cname <- c('Goal', 'Management', 'Plots', 'Functional Group', '% Land Meeting')
+
+bind_cols(r1, Goal = 
+            c(
+              paste0(rep(80, times = 12), '%'), paste0(rep(70, times = 4), '%')
+              )) %>%  
+  relocate(Goal, .before = Management) %>% 
+  knitr::kable(., align = c("c", "c", "c", "l", "c"),
+               col.names = cname,
+               booktabs = TRUE, linesep = "", 
+               caption = "Land Meeting Benchmarks by Administrative Unit") %>% 
+#  kableExtra::kable_styling(position = "float_right") %>% 
+  kableExtra::collapse_rows()
+
+rm(r1, cname)
+```
 
 ```{r}
 

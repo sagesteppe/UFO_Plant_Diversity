@@ -50,5 +50,11 @@ BIEN_occurrences.csv
 LPIRAW.csv
 BIEN_focal_occurrences.csv
 predicted_FQI.tif
+GBIF_Query_Random.zip
+GBIF_Query_Random/
+occurrence.txt
+
+
+
 
 
