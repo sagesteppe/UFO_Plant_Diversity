@@ -43,6 +43,7 @@ Information on production at Ecological Sites implies some superficial, yet esse
 ```{r}
 library(tidyverse)
 library(sf)
+library(cowplot)
 ```
 
 
@@ -309,6 +310,7 @@ funct_names <- as_labeller(
 ```
 
 ```{r Number of Species per Ecological Site Plot prep, eval = F}
+
 benchmarks %>% 
   filter(FUNCTIONAL_FINE != 'TREE') %>% 
   ggplot() + 
@@ -444,19 +446,39 @@ s <- lifeform_coarse %>%
   
   theme_bw() +
   ylim(0,30) +
-  theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
-        legend.position = "none",
-        plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
+  theme(
+    axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+    legend.position = "none",
+    plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(hjust = 0.5)) +
   labs(title = 'Shrub', y = NULL, x = NULL)
 
-plot <-plot_grid(f, g, s, nrow = 1, align='vh', vjust=1, scale = 1)
-ggdraw(add_sub(plot, "Ecological Site",  vpadding=grid::unit(0,"lines"), 
-               y=4.8, x=0.5, vjust=4.5))
+legend <- get_legend(
+  
+  lifeform_coarse %>% 
+  ggplot(aes(x= ECO.SITE, y = Expected))  + 
+  geom_jitter(aes(y = Observed, color = METHOD), width = 0.2, alpha = 0.4) + 
+  scale_color_manual('Method', values = c('#e54c09', '#237cd4')) +
+  theme(legend.key=element_blank(),
+        legend.background=element_blank())
+  
+)
 
-ggsave(plot = last_plot(),  device = 'png', height = 12, units = 'cm', 
+plot <- plot_grid(f, g, s, nrow = 1, align='vh', vjust=1, scale = 1)
+plot <- plot_grid(plot, legend, ncol = 2, rel_widths = c(1, 0.15))
+
+title <- ggdraw() + draw_label("Species Observed per AIM Plot", size = 16)
+x_axis <- ggdraw() + draw_text('Ecological Site', size = 14)
+
+plot_titles <- cowplot::plot_grid(
+  title,
+  plot, 
+  x_axis, 
+  ncol = 1, rel_heights = c(0.1, 1, 0.1))
+
+ggsave(plot_titles,  device = 'png', height = 12, units = 'cm', 
        path = '../plots/graphics', filename = 'lifeform_esd.png')
   
 rm(plot, s, g, f)
