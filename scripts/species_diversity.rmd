@@ -411,6 +411,9 @@ f <- lifeform_coarse %>%
   theme_bw() +
   theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
         legend.position = "none", 
+        panel.background = element_rect(fill='transparent'),
+        plot.background = element_rect(fill='transparent', color=NA),
+        rect = element_rect(fill = "transparent"),
         plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
         plot.title = element_text(hjust = 0.5)) +
   ylim(0,30) +
@@ -428,6 +431,9 @@ g <- lifeform_coarse %>%
   theme_bw() +
   theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
         legend.position = "none",
+        panel.background = element_rect(fill='transparent'),
+        rect = element_rect(fill = "transparent"),
+        plot.background = element_rect(fill='transparent', color=NA),
         plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
@@ -448,6 +454,9 @@ s <- lifeform_coarse %>%
   ylim(0,30) +
   theme(
     axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
+    rect = element_rect(fill = "transparent"),
+    panel.background = element_rect(fill='transparent'),
+    plot.background = element_rect(fill='transparent', color=NA),
     legend.position = "none",
     plot.margin = unit(c(0.2,0.2,0.2,0.2), "lines"),
     axis.text.y = element_blank(),
@@ -478,7 +487,7 @@ plot_titles <- cowplot::plot_grid(
   x_axis, 
   ncol = 1, rel_heights = c(0.1, 1, 0.1))
 
-ggsave(plot_titles,  device = 'png', height = 12, units = 'cm', 
+ggsave(plot_titles,  device = 'png', height = 12, units = 'cm', bg = 'transparent',
        path = '../plots/graphics', filename = 'lifeform_esd.png')
   
 rm(plot, s, g, f)
