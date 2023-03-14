@@ -1069,7 +1069,6 @@ waff_dat2 <- waff_dat2 %>%
 rm(ach_forb, ach_shrub, ach_tree, ach_grass)
 ```
 
-
 ```{r Overall Vegetation Benchmarks By Major Stratum, eval = F}
 
 lkp <- data.frame(
@@ -1128,7 +1127,6 @@ ggsave(plot = last_plot(), filename = '../plots/graphics/benchmark_areas.png',
 
 rm(lkp, waff_dat2, zerofourPal, zerofourVal)
 ```
-
 
 ```{r Total Area Meeting Benchmarks by Management Unit Table}
 
