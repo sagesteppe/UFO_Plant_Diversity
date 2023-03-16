@@ -1,10 +1,10 @@
 ---
 title: "Floristic Quality Index"
 output:
-  word_document: default
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
+  word_document: default
 header-includes:
 - \usepackage[width=\textwidth]{caption}
 - \usepackage{enumitem}
@@ -47,7 +47,7 @@ FQA scores are tied to the regional list of C-values, accordingly they cannot be
 
 # Methods
 
-Cleaned AIM species richness data were imported from TerrAdat and joined to the CNHP c-values using the lookup keys developed for the Functional Diversity section. All species from the plot based species richness which were not unamibgiously identified to terminal taxon were droppped from analysis. The Mean Coefficient of Conservatism and Floristic Quality Index were calculated via the formulation in the appendix. To determine whether their were bias in the MCoC values between the strata, a linear model with a single set categorical predictors and a single continuous response (an 'ANOVA'; Analysis of Variance) was used, with a Kruskall-Wallis Post-hoc test with 95% Confidence Intervals. The strata used for detecting differences were those developed in **SECTION XXX**.
+Cleaned AIM species richness data were imported from TerrAdat and joined to the CNHP c-values using the lookup keys developed for the Functional Diversity section. All species from the plot based species richness which were not unamibgiously identified to terminal taxon were droppped from analysis. The Mean Coefficient of Conservatism and Floristic Quality Index were calculated via the formulation in the appendix. To determine whether their were bias in the Mean-CoC values between the strata, a linear model with a single set categorical predictors and a single continuous response (an 'ANOVA'; Analysis of Variance) was used, with a Kruskall-Wallis Post-hoc test with 95% Confidence Intervals. The strata used for detecting differences were those developed in **SECTION XXX**.
 
 ```{r load libraries and define functions}
 library(sf)
@@ -222,7 +222,13 @@ ggsave(plot = last_plot(), device = 'png', height = 9, units = 'cm',
 rm(fqi_weights_sub, theme_boxplot, boxplot_drawer, strata_pal)
 ```
 
-The floristic quality index data are theoretically independent of ecological sites. Accordingly, we can create a statistical model using the plots which were sampled, and using this model predict the values of floristic quality across the field office onto a map. Based on the map above (*FIGURE 1*), and our field experience collecting these data, we suspected that the variables which most strongly predict FQI scores, and which we could readily acquire or create were: 1) distance to nearest road, 2) patch size of federal public lands, 3) the human population density within ~ 10 km (~6 miles), 4) elevation. These analyses occurred across the extent of the mapped area in Figure 1), at a resolution of 90 meters. All of these variables were used as predictors of FQI scores in our statistical model. To calculate the distance of each pixel of BLM land from the nearest road, the U.S. Census Bureau's 'roads' data set was acquired through 'tigris' and simplified using 'st_simplify'; the distance function of 'terra' was used to calculate the distance from each pixel to the nearest road (@walker2022tigris, @hijman2022terra, @pebesma2018sf). The U.S. Census Bureau roads data set contains nearly all of 'major' dirt and gravel roads across the field office, included many used for historic mining activities. To calculate the patch size of federal lands, i.e. all area across BLM, Forest Service, and National Park Service management areas etc., federal lands were queried from the PAD-US database and then areas dissected by roads were erased; the area of each parcel were then calculated using 'st_area' from sf, and converted from meters squared to hectares (@gergely2013pad). The patches were then converted into a raster using 'rasterize' from terra, and the size was saved as an attribute. To create estimates of population density within a distance of ~ 10km of each pixel of BLM Land, population density data at 30m resolution were downloaded from HDX, and summed to 90m resolution; these values were then summed using rolling windows in terra (@tiecke2017mapping). 90 meter resolution elevation data were acquired from EarthEnv (@tuanmu2014global). All data sets were cropped and re-sampled to a template to ensure optimal alignment of raster cells. 
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \centering
+    \includegraphics[width=0.5\textwidth]{../plots/maps/FQI-plots.png}
+  \caption{FQI Values observed at AIM Plots}
+\end{wrapfigure}
+
+The floristic quality index data are theoretically independent of ecological sites. Accordingly, we can create a statistical model using the plots which were sampled, and using this model predict the values of floristic quality across the field office onto a map. Based on Figure 1, and our field experience collecting these data, we suspected that the variables which most strongly predict FQI scores, and which we could readily acquire or create were: 1) distance to nearest road, 2) patch size of federal public lands, 3) the human population density within ~ 10 km (~6 miles), 4) elevation. These analyses occurred across the extent of the mapped area in Figure 1), at a resolution of 90 meters. All of these variables were used as predictors of FQI scores in our statistical model. To calculate the distance of each pixel of BLM land from the nearest road, the U.S. Census Bureau's 'roads' data set was acquired through 'tigris' and simplified using 'st_simplify'; the distance function of 'terra' was used to calculate the distance from each pixel to the nearest road (@walker2022tigris, @hijman2022terra, @pebesma2018sf). The U.S. Census Bureau roads data set contains nearly all of 'major' dirt and gravel roads across the field office, included many used for historic mining activities. To calculate the patch size of federal lands, i.e. all area across BLM, Forest Service, and National Park Service management areas etc., federal lands were queried from the PAD-US database and then areas dissected by roads were erased; the area of each parcel were then calculated using 'st_area' from sf, and converted from meters squared to hectares (@gergely2013pad). The patches were then converted into a raster using 'rasterize' from terra, and the size was saved as an attribute. To create estimates of population density within a distance of ~ 10km of each pixel of BLM Land, population density data at 30m resolution were downloaded from HDX, and summed to 90m resolution; these values were then summed using rolling windows in terra (@tiecke2017mapping). 90 meter resolution elevation data were acquired from EarthEnv (@tuanmu2014global). All data sets were cropped and re-sampled to a template to ensure optimal alignment of raster cells. 
 
 ```{r Predict FQI across field office - prepare covariates, eval = F}
 library(terra)
@@ -410,14 +416,14 @@ fqa_rast_vals <- fqa_rast_vals[complete.cases(fqa_rast_vals),]
 oop <- options(na.action = "na.fail")
 
 full_model <- glm(mcoc_r ~ ., data = fqa_rast_vals)
-optimal_models <- dredge(full_model)
+optimal_models <- dredge(full_model, evaluate = T, rank = AICc)
 # optimal_models
 
 # gather the actual terms from the top performing models, to see what worked.
 model_terms <- get.models(optimal_models, subset = T)
 
 # if top models have dAIC < 2.0, than 'stack' the models
-stacked_model <- model.avg(optimal_models, subset = delta < 2.15, fit = T)
+stacked_model <- model.avg(optimal_models, subset = delta < 2.11, fit = T)
 
 # these provides the estimates of our coefficients
 # stacked_model$coefficients
@@ -428,15 +434,13 @@ rm(full_model)
 ```
 
 
-In order to determine if any predictor variables were collinear, and would violate assumptions of independence, hence could not be used as predictors together, variance inflation factors were calculated using the 'function' vifstep in the package usdm with a theta cut off 10 (@naimi2014usdm). This function was used on a subset of 5000 random pixels regularly dispersed across the extent of the sample area. No theta scores were high enough that they suggested any combination of variables should be removed from the analysis, but notable collinearity existed between 'elevation' and 'x coordinates'; this is likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains, which follows a longitudinal (West to East) trend. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework (@Barton2022mumin). All tops models, those with $\Delta$AIC < 2.0, were each selected for further analyses. Each model was checked for the effect of spatial autocorrelation in the residuals by identifying neighboring points using 'graph2nb'  and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering (@bivand2022spdep). Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that the term was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with $\Delta$AIC <= 2.13 were checked for spatial autocorrelation, using the same methods as the models above. The general rule of thumb for only utilizing models with $\Delta$AIC < 2, was bent in order to accommodate two more models which incorporated terms we have observed to be ecologically relevant, and are well supported in the landscape ecology primary literature. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more easy to interpret, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
+In order to determine if any predictor variables were collinear, and would violate assumptions of independence, hence could not be used as predictors together, variance inflation factors were calculated using the 'function' vifstep in the package usdm with a theta cut off 10 (@naimi2014usdm). This function was used on a subset of 5000 random pixels regularly dispersed across the extent of the sample area. No theta scores were high enough that they suggested any combination of variables should be removed from the analysis, but notable collinearity existed between 'elevation' and 'x coordinates'; this is likely due to the increase in elevation from the Colorado Plateau into the Rocky Mountains, which follows a longitudinal (West to East) trend. In order to create a model which could capture the variation in our data and generalize them, a maximal model of the term _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation * xcoord * ycoord)_ was created. This model was then fed into the 'dredge' function from the package MuMIn, which creates all smaller models, and evaluates them in an information theoretic framework (@Barton2022mumin). All tops models, those with $\Delta$AIC < 2.0, were each selected for further analyses. Each model was checked for the effect of spatial autocorrelation in the residuals by identifying neighboring points using 'graph2nb'  and converting them into three neighbor lists using 'nb2listw' (both functions from 'spdep'), the Moran's Index for each model was very low, despite the Moran's Index for the predictor variables being very high and showing significant clustering (@bivand2022spdep). Subsequent to the interpretation of the maps produced by the stacked model outputs, and considering that the model including the coordinates, did not suffer from autocorrelation, and that the X coordinate was often selected as a predictor in top models, we believe that collinearity between the X coordinate and the strongest predictor Elevation indicated that the term was redundant. Accordingly both coordinate terms were removed and a new a full model in the form _glm(mcoc_r ~ road_dist * pop_density * patch_size * elevation)_ was passed to MuMIn. The results of the tops models, those with $\Delta$AIC <= 2.11 were checked for spatial autocorrelation, using the same methods as the models above. The general rule of thumb for only utilizing models with $\Delta$AIC < 2, was bent in order to accommodate two more models which incorporated terms we have observed to be ecologically relevant, and are well supported in the landscape ecology primary literature. After evaluation of the stacked prediction map from these top models, it was used for the final analysis, in part because removal of the x-coordinates made it more easy to interpret, and it was able to utilize the other predictors which are known to affect species compositions, both universally and strongly. 
 
 All six of these candidate AIC models were predicted into space, and the weighted means, based on each models weight in a final combination model, were used to generate an ensembled prediction layer (@Barton2022mumin, @dormann2018model). The ensembled prediction was then clipped to the extent of UFO BLM administered lands. Spatial predictions of the statistical model were performed using terra @hijman2022terra.
 
 ```{r report top models, eval = F}
-
 summary(stacked_model)
 sw(optimal_models)
-
 ```
 
 ```{r stack the top models}
@@ -511,7 +515,7 @@ rm(xy, nb.gab, listw.gabv, listw.d1, listw.d2, m_list, listw.gab, dlist)
 ```
 
 ```{r remove some modelling variables}
-rm(fqa_rast_vals, optimal_models, pred_stack, x_rast, y_rast, fqi_weights, 
+rm(fqa_rast_vals, pred_stack, x_rast, y_rast, fqi_weights, 
    elev_90, popDen, patch, roadDist, fqa_results_V)
 ```
 
@@ -519,18 +523,17 @@ rm(fqa_rast_vals, optimal_models, pred_stack, x_rast, y_rast, fqi_weights,
 
 p2carto <- '../../UFO_cartography'
 vector_data <- list.files(p2carto, recursive = T, pattern = 'shp$')
-ufo_land <- vect(file.path(p2carto, vector_data[grep('Grazing', vector_data)])) |>
+ufo_land <- vect(file.path(p2carto, vector_data[grep('*Surface*', vector_data)])) |>
   aggregate()
 
 top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, overwrite = T, 
                       filename = '../results/predicted_FQI_noXY.tif')
 
-top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, 
+top_pred_crop <- crop(top_pred_r, ufo_land, mask = T, overwrite= T,
                       filename = '../results/predicted_FQI.tif')
 
 rm(ufo_land, p2carto, vector_datatop_pred_r, top_pred_crop)
 ```
-
 
 ```{r}
 rm(top_pred_r)
@@ -545,22 +548,25 @@ my_range <- function(x, col){
 }
 ```
 
-
 \begin{wrapfigure}{r}{0.5\textwidth}
   \centering
     \includegraphics[width=0.5\textwidth]{../plots/graphics/Mcoc_boxplot.png}
   \caption{Comparision of median values by Stratum}
 \end{wrapfigure}
 
-The mean C-Values varied by stratum (Analysis of Variance (ANOVA)), follow-up tests (Kruskall-Wallis) indicated that Salt Desert and Sagebrush sites did not differ from each other, nor Mixed Mountain Shrub and Pinon-Juniper from each other (Figure 1). Results indicate that all members of these two groups differed across them, e.g. Sagebrush differed from both Mixed Mountain Shrub and Pinon-Juniper and *vice versa*.  The two lower elevation strata, Salt Desert and Sagebrush, are generally more accessible and have higher recreational land uses, and thus had the lowest C-Vals. While the values did vary, the extent of the variation was minor, with the range of variation from the median values `r my_range(fqa_meds, 'med_C')` and a mean range of `r my_range(fqa_meds, 'mean_C')`, given that these values occur over a range of 0-10, we considered this to be a negligible difference, not indicative of major biases in the C-values ascribed to plants themselves, but rather indicative of actual land conditions. 
+The mean-CoC values varied by stratum (Analysis of Variance (ANOVA)), follow-up tests (Kruskall-Wallis) indicated that Salt Desert and Sagebrush sites did not differ from each other, nor Mixed Mountain Shrub and Pinon-Juniper from each other (Figure 1). Results indicate that all members of these two groups differed across them, e.g. Sagebrush differed from both Mixed Mountain Shrub and Pinon-Juniper and *vice versa*.  The two lower elevation strata, Salt Desert and Sagebrush, are generally more accessible and have higher recreational land uses, and thus had the lowest mean-CoC. While the values did vary, the extent of the variation was minor, with the range of variation from the median values `r my_range(fqa_meds, 'med_C')` and a mean range of `r my_range(fqa_meds, 'mean_C')`, given that these values occur over a range of 0-10, we considered this to be a negligible difference, not indicative of major biases in the C-values ascribed to plants themselves, but rather indicative of actual land conditions. 
 
-The generalized linear models were used to predict the floristic quality of un-sampled areas of BLM Land. Based on AIC model selection a total of `r nrow(stacked_model$msTable)` top models were retained, and these were then combined into a single model, of which the weights used to make an ensembled prediction of the Mean Coefficient of Conservatism. The results from these top models indicate that all predictors, elevation, human population density, Federal lands patch size, and distance to nearest road, affect the FQI, but that by far the strongest predictor is elevation. Elevation was such a useful predictor, that under certain statistical paradigms our models may be simplified to include it as the only predictor, and still give very good results. The other predictors had the expected effect on FQI as expected, FQI slowly increases as nearby human population density decreases, and FQI slowly increases as the size of the patch of natural lands and the distance from the nearest road increase. 
+The generalized linear models were used to predict the floristic quality of un-sampled areas on BLM Land. Based on AIC model selection a total of `r nrow(stacked_model$msTable)` top models were retained, and these were then combined into a single model, of which the weights used to make an ensembled prediction of the Mean Coefficient of Conservatism. The results from these top models indicate that all predictors, elevation, human population density, Federal lands patch size, and distance to nearest road, affect the FQI, but that by far the strongest predictor is elevation(Figure 4, Appendix). Elevation was such a useful predictor, that under certain statistical paradigms our models may be simplified to include it as the only predictor. The other predictors had the expected effect on FQI as expected, FQI slowly increases as nearby human population density decreases, and FQI slowly increases as the size of the patch of natural lands and the distance from the nearest road increase. 
 
-From the predicted FQI values we can infer that habitat quality varies across the field office. In general, the lowest elevation sites display the lowest values of FQI and Mean CoC, which is a direct result of low species diversity and composition. This is especially apparent between Montrose and Grand Junction on Highway 50,. These and several other areas of the Salt Desert shrublands along Highway 50, and near Crawford are areas of concern. However, not all Salt Desert is inherently in this condition as can be seen from the values for a moderately sized parcel of BLM managed land immediately Southeast of Montrose; indicating that human uses of theses areas may be causal factors for these low values. Areas with low FQI values represent highlight potential restoration needs and the FQI prediction model can be a tool to help prioritize such actions. The highest elevation portions of BLM managed land are in the best habitat condition, and very good conditions range into Pinon-Juniper, including most of the disturbed areas around historic mining in the West End. By these metrics considerable portions of the sagebrush habitat occupied by Gunnison sage-grouse near Crawford are also in good condition
+\begin{wrapfigure}{r}{0.6\textwidth}
+  \centering
+    \includegraphics[width=0.6\textwidth]{../plots/maps/FQI-prediction.png}
+  \caption{Consensus predictions of FQI Values across the UFO Field Office (excluding lands East of Paonia along the North Fork of the Gunnison}
+\end{wrapfigure}
+
+From the predicted FQI values we can infer that habitat quality follows a consistent trend across the field office (Figure 2). In general, the lowest elevation sites display the lowest values of FQI and Mean-CoC, which is a direct result of low species diversity and composition. This is especially apparent between Montrose and Grand Junction on Highway 50. These and several other areas of the Salt Desert shrublands along Highway 50, and near Crawford are areas of concern. However, not all Salt Desert is inherently in this condition as can be seen from the values for a moderately sized parcel of BLM managed land immediately Southeast of Montrose; indicating that human uses of theses areas may be causal factors for these low values. Areas with low FQI values represent highlight potential restoration needs and the FQI prediction model can be a tool to help prioritize such actions. The highest elevation portions of BLM managed land are in the best habitat condition, and very good conditions range into Pinon-Juniper, including most of the disturbed areas around historic mining in the West End. By these metrics considerable portions of the sagebrush habitat occupied by Gunnison sage-grouse near Crawford are also in good condition
 
 Subjective interpretation suggests these results seem very similar to those generated by the much more time intensive comparison of Ecological Sites to Benchmarks. This relationships considers serious consideration in the use of FQA as a proxy of site condition, and may warrant applications for rapid surveys prior to certain land use decisions, in time frames when AIM cannot be implemented. It also provides a second independent set of data which may help to contextualize sites which were unable to have their Ecological Sites correlated, have lacking Ecological Site Descriptions, or are difficult to interpret.
-
-![Consensus predictions of FQI Values across the UFO Field Office (excluding lands East of Paonia along the North Fork of the Gunnison)](../plots/maps/FQI.png){height=5%,width=5%}
 
 ```{r remove the remaining variables}
 rm(f, fp, no_CVAL_match, no_records_full, p2carto, ppro, praw, rf, rp, unks, my_range)
@@ -571,13 +577,10 @@ rm(f, fp, no_CVAL_match, no_records_full, p2carto, ppro, praw, rf, rp, unks, my_
 ## Appendix A - Indices
 
 <br>    
-<br>    
-<br>    
-<br>    
+<br>     
 
 **Mean Coefficient of Conservatism** 
-<br>     
-<br>    
+<br>       
 
 $$
 \overline{C} = \frac{\sum{} C_i}{S}
@@ -592,17 +595,10 @@ Where:
 \end{enumerate}
 
 <br>    
-<br>    
-<br>    
-<br>    
-<br>    
-<br>    
-<br>    
-<br>    
+<br>      
 
 **Floristic Quality Index** 
 <br>    
-<br>   
 
 $$
 FQI = \overline{C} * \sqrt{S}
@@ -617,14 +613,12 @@ Where:
 <br>    
 <br>    
 <br>    
-<br>    
-<br>    
-<br>    
-<br>    
-<br>    
-
 Equations from @swink1994plants, and modified for simpler formulations. 
 
+```{r optimal_models, out.width="50%", fig.cap= 'Contributions of each term to each model, and each model sized by contributions to ensemble prediction'}
+plot(optimal_models, col.mode = 1)
+rm(optimal_models)
+```
 
 
 \newpage
