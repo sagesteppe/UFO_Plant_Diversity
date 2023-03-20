@@ -760,7 +760,7 @@ beta_coarse_f <- lapply(bc, vegdistR) %>%
 rm(bc)
 ```
 
-In order to determine whether enough plots have been sampled to reliably estimate the number of species which are present per Ecological Site ($\gamma-diversity$), rarefaction and extrapolation curves from the iNEXT package were used with confidence intervals of 0.8 (@Hsieh2022iNEXT, @Chao2014iNEXT).
+In order to determine whether enough plots have been sampled to reliably estimate the number of species which are present per Ecological Site ($\gamma-diversity$), rarefaction and extrapolation curves from the iNEXT package were used with confidence intervals of 0.8, and 50 bootstrap replicates (@Hsieh2022iNEXT, @Chao2014iNEXT).
 
 ```{r Rarefaction by Ecological site - how many species are extrapolated}
 
@@ -785,7 +785,7 @@ rarefaction <- spp_richness %>%
         t()
       )  
 
-rarefaction <- i_report(rarefaction, conf.int = 0.8, k = 25)
+rarefaction <- i_report(rarefaction, conf = 0.8, k = 25)
 ```
 
 
