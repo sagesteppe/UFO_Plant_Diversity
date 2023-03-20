@@ -184,3 +184,38 @@ vegdistR <- function(x){
   return(vd)
   
 }
+
+#' This wrapper runs the iNEXT function and returns estimates of species richness
+#' 
+#' The purposes of this function is to estimate sample coverage, the number of 
+#' species which are present at each site,  and the number of plots per site.
+#' 
+#' @param x a list of dataframes to submit to iNext
+#' @param ... other arguments passed onto iNEXT (?iNEXT)
+
+i_report <- function(x, ...){
+  
+  nexter <- iNEXT::iNEXT(x, q = 0, datatype="incidence_raw")
+  
+  estimates <- nexter[['AsyEst']] %>% 
+    dplyr::filter(str_detect(Diversity,'Species')) %>% 
+    dplyr::select(Eco.Site = Assemblage, SpeciesObserved = Observed, 
+                  SpeciesEstimator = Estimator, LCL, UCL)
+  
+  coverage <- nexter[['DataInfo']]  %>% 
+    dplyr::mutate(SampleCoverage = SC * 100) %>% 
+    dplyr::select(Eco.Site = Assemblage, SampleCoverage) 
+  
+  
+  plots <- do.call(rbind, lapply(rarefaction, FUN = ncol)) |> 
+    as.data.frame() |>
+    tibble::rownames_to_column('Eco.Site')
+  colnames(plots) <- c('Eco.Site', 'NoPlots')
+  
+  results <- dplyr::left_join(estimates, coverage, by = 'Eco.Site') %>% 
+    dplyr::left_join(., plots, by = 'Eco.Site') %>% 
+    dplyr::select(Eco.Site, NoPlots, SpeciesObserved, SampleCoverage, 
+                  SpeciesEstimator, LCL, UCL)
+  return(results)
+  
+}

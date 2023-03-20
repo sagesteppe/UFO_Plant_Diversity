@@ -726,6 +726,35 @@ rm(p2carto, ext, elev_90, div_v, diversity1)
 ```
 
 
+
+```{r Rarefaction by Ecological site - how many species are extrapolated}
+
+rarefaction <- spp_richness %>% 
+  st_drop_geometry() %>% 
+  filter(ECO.SITE != 'UNKNOWN') %>% 
+  group_by(ECO.SITE) %>% 
+  mutate(Replicates = n_distinct(PLOTID),
+         PRESENCE = 1) %>% 
+  filter(Replicates >= 2) %>% 
+  ungroup() %>% 
+  select(PLOTID, SYMBOL, ECO.SITE, PRESENCE) %>% 
+  split(.$ECO.SITE) %>% 
+  map(. %>%     # arrange data into a binary matrix format required for the
+        select(-ECO.SITE) %>%  # function
+        pivot_wider(
+          names_from = 'SYMBOL',
+          values_from = PRESENCE, 
+          values_fill = 0, 
+          values_fn = function(x) 1) %>% 
+        column_to_rownames('PLOTID') %>% 
+        t()
+      )  
+
+rarefaction <- i_report(rarefaction, conf.int = 0.8, k = 25)
+
+```
+
+
 ```{r Clear methods environment }
 rm(f, fp, funct_names, lifeform_fill_pal, ord, ppro, praw)
 ```
