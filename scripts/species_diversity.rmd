@@ -22,11 +22,6 @@ Evolution, the process largely mediating the maintenance of diversity, is surviv
 
 While Ecological Site Descriptions do not provide true measures of $\alpha-diversity$ many of them do contain lists of taxa which may be considered *dominant* or *subordinate* at a site (@avolio2019demystifying, @grime1998benefits). In general, it seems that the Shrubs, Trees, and Grasses at an Ecological Site would be considered *dominant*, and the forbs *subordinate*; keep in mind these terms refer to immediate ecosystem cycling effects, and the services offered by forbs to insects and then larger animals remain substantial (@avolio2019demystifying). These species which have high amounts of biomass, and ground cover, may be thought of as a core groups of species which are essential for the functioning of an ecosystem (@grime1998benefits), and each of the dominant species have been theorized to have conceptual effects as large as their cover. When dominant and subordinate species are lost from an area, it also has effects on the remaining species - most of which are relatively uncommon across the landscape (@grime1998benefits, @whittaker1965dominance). Considerable research has shown that having a diverse suite of plant species allows areas to: 1) Produce more forage in both a single year, and across different weather scenarios (@vogel2012grassland, @hoover2014resistance), 2) recover from disturbances such as fire, or compaction (@tilman1994biodiversity) 3) and resist degradation such as from the encroachment of noxious weeds (@weisser2017biodiversity, @avolio2019demystifying, @allan2011more, @gaitan2014vegetation, @sheley2010resistance, @isbell2011high, @oakley2013plant, *and reviewed in* @maestre2016structure, @oliver2015biodiversity). 
 
-Recruitment of native species back following drought may have issues pertaining to seed recruitment... @tilman1992drought .. although soil seeds banks in arid systems well.
-
-Given the generally high % abundance of the taxa listed in the species tables ESD's it is unlikely that they are truly lost, and should at least show in species richness meanders which have higher probability of uncovering more microhabitats, areas which individuals may have more access to water or other ... @hooper2005effects
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(dpi = 300) 
@@ -212,7 +207,7 @@ dominant_plants <- read.csv(file.path(ppro, fp[grep('Associations', fp)])) %>%
   # WILL BE USED FOR REMAINING UNMATCHED RECORDS. 
 dp1 <- dominant_plants %>% 
   select(ECO.SITE:UPPER, FUNCTIONAL) %>% 
-  left_join(., attributes, by = c('SYMBOL' = 'SYMBOL_USDA')) %>% 
+  left_join(., attributes, by = c('SYMBOL' = 'SYMBOL_USDA'), multiple = "all") %>% 
   drop_na(BINOMIAL_NAT) %>% 
   distinct() %>% 
   relocate(any_of(c("PHOTOSYNTHETIC", "RESPROUT", "DURATION", 'GROWTHHABITSUB')), 
@@ -643,7 +638,7 @@ prop_lf_f <- spp_richness_functional_esd %>%
   reframe(qs = quantile(Proportion, c(0.25, 0.75)), prob = c(0.25, 0.75), 
           n = n(), med = median(Proportion))
 
-rm(spp_richness_functional_esd, spp_richness_lifeform_esd, lpi_lifeform, lpi_lifeform_esd)
+rm(spp_richness_functional_esd, spp_richness_lifeform_esd, lpi_lifeform)
 ```
 
 ```{r gamma diversity by ESD}
@@ -811,7 +806,7 @@ m <- diversity %>%
 
 Species richness data contained a total of `r no_records_full` records, which after removal of unidentified material left `r sum(diversity$Alpha)` species records at `r nrow(diversity)` plots which were verified to Ecological Sites. `r nrow(m)` Ecological Sites had more than two AIM plots located in them, and had $\beta-diversity$ calculated for all plots `r sum(m$N_plots)` located in them.
 
-While the species within any one reference table in an Ecological Site Descriptions are noted to represent the dominant species across a gradient which stratifies the Ecological Site, such as elevation, many of our plots contained an adequate number of these species per functional group. In fact, when considering the richness data, which we suspect is a more apt dataset for comparing to the ESD taxa, many of our plots had the number of species expected in the reference table, for both the Forb and Shrub functional groups. For Shrubs it appears that the Ecological Sites which are meant to have the greatest number of shrub species do not reach these goals; and that perhaps only for these sites is the species representing the gradients of the Ecological Site utilized. Accordingly, it is unlikely that these tables represent variables collected in a consistent manner; regardless they offer clear insights. The number of grass species, in only a handful of plots, meets or exceeds the numbers of grass species noted present in reference conditions in all ESD's. Anecdotally, grass species which appear to be missing from expanses of the field office include two species of *Sporobolus* (*S. airoides*, and *S. cryptandrus*), *Koeleria macrantha*, with noted declines in *Hesperostipa comata* and *Aristidia purpurea* in areas as well. 
+While the species within any one reference table in an Ecological Site Descriptions are noted to represent the dominant species across a gradient which stratifies the Ecological Site, such as elevation, many of our plots contained an adequate number of these species per functional group. In fact, when considering the richness data, which we suspect is a more apt data set for comparing to the ESD taxa, many of our plots had the number of species expected in the reference table, for both the Forb and Shrub functional groups (Figure 2). For Shrubs it appears that the Ecological Sites which are meant to have the greatest number of shrub species do not reach these goals; and that perhaps only for these sites is the species representing the gradients of the Ecological Site utilized. Below we will make several comparisons of the number of species per plot to 3/4 of the number of species in each functional group in the production table. It appears unlikely that the production tables represent variables collected in a consistent manner; however they offer clear, and useful, insights. 
 
 ```{r alpha diversity results}
 
@@ -858,13 +853,13 @@ ad_lfl <- lifeform_fine %>%
 
 ```
 
-The number of identified plant species varied widely by plot, from `r min(diversity$Alpha)` - `r max(diversity$Alpha)` (Med = `r median(diversity$Alpha)`). The `r nrow(alphaD)` plots with the most species in them were in `r nrow(unique(alphaD[!is.na(alphaD$ECO.SITE), 'ECO.SITE']))` Ecological Sites, this subset of plots had a minimum of `r min(alphaD$Alpha)` species per plot. Of the top `r nrow(alphaD)` plot subset `r nrow(ad)` the Ecological Sites with the highest observed $\alpha-diversity$ were: `r toString(ad)`. `r toString(ad_lfc)`of all plots had less than three-quarters as many species of forbs, grasses, and shrubs observed as were present in the production tables. `r toString(pull(ad_lfl[grep('FORB', ad_lfl$FUNCTIONAL_FINE), 'Obs']))` of all plots had fewer than three-quarters Annual Forbs, and Perennial Forbs, than expected. `r toString(pull(ad_lfl[grep('GRASS', ad_lfl$FUNCTIONAL_FINE), 'Obs']))` of all plots had fewer Annual C3 Grasses, Perennial C3 Grasses, C4 Perennial Grasses than expected. `r toString(pull(ad_lfl[grep('SHRUB', ad_lfl$FUNCTIONAL_FINE), 'Obs']))` of all plots had fewer Non-Resprouting Shrubs, Resprouting, and unclassified shrubs than expected. As previously mentioned no benchmarks can be formed from the attribute tables, however the lack of grasses is concerning, and indicates that not only is there a lack of cover of the functional cover (SECTION X.X.), but that this may be related to a lack of functional diversity brought on by a lack of species diversity. Concerns regarding the species composition of shrubs may be related to the prevalence of a few, weedy shrubs, notably *Guiterrhiza sarothae* perhaps preventing colonization of other shrubs across the landscapes.
+In regards to $\alpha-diversity$ , the number of identified plant species varied widely by plot, from `r min(diversity$Alpha)` - `r max(diversity$Alpha)` (Med = `r median(diversity$Alpha)`). The `r nrow(alphaD)` plots with the most species in them were in `r nrow(unique(alphaD[!is.na(alphaD$ECO.SITE), 'ECO.SITE']))` Ecological Sites, this subset of plots had a minimum of `r min(alphaD$Alpha)` species per plot. Of the top `r nrow(alphaD)` plot subset `r nrow(ad)` the Ecological Sites with the highest observed $\alpha-diversity$ were: `r toString(ad)`. The percent of all plots which had less than three-quarters the number of species noted, as were in the production table `r toString(ad_lfc)` for forbs, grasses, and shrubs respectively (Figure 2). The percent of all plots which had fewer than three-quarters the number of Annual and Perennial Forb species than in the production table were `r toString(pull(ad_lfl[grep('FORB', ad_lfl$FUNCTIONAL_FINE), 'Obs']))` (Figure 1).  The percent of all plots which had fewer than three-quarters the number of Annual C3 Grasses, Perennial C3 Grasses, C4 Perennial Grasses species in the production table were `r toString(pull(ad_lfl[grep('GRASS', ad_lfl$FUNCTIONAL_FINE), 'Obs']))`. The percent of plots with fewer than three-quarters Non-Resprouting Shrubs, Resprouting, and unclassified shrubs species as in the production table were `r toString(pull(ad_lfl[grep('SHRUB', ad_lfl$FUNCTIONAL_FINE), 'Obs']))`. As previously mentioned no benchmarks can be formed from the attribute tables, however the lack of grasses is concerning, and indicates that not only is there a lack of cover of the functional cover *(SECTION X.X.)*, but that this may be related to a lack of functional diversity brought on by a lack of species diversity. Concerns regarding the species composition of shrubs may be related to the prevalence of a few, weedy shrubs, notably *Guiterrhiza sarothae* preventing colonization of other shrubs across the landscapes. 
 
 ```{r beta diversity results}
 
 betaD <- diversity %>% 
   ungroup() %>% 
-  slice_max(MeanBeta, n = 25) %>% 
+  slice_min(MeanBeta, n = 25) %>% 
   st_drop_geometry() %>% 
   group_by(ECO.SITE) %>% 
   add_count()
@@ -873,7 +868,7 @@ bd <- betaD %>%
   ungroup() %>% 
   drop_na(ECO.SITE) %>% 
   distinct(ECO.SITE, .keep_all = T) %>% 
-  slice_max(n, n = 5) %>% 
+  slice_min(n, n = 5) %>% 
   mutate(
     PlotsTop = paste0(ECO.SITE, ' (', n, ')') ) %>% 
   pull(PlotsTop)
@@ -892,17 +887,13 @@ bcf <- beta_cf_sum %>%
   group_by(FUNCTIONAL) %>% 
   summarize(med = median(median)) %>% 
   mutate(
-    bd_c = paste0(FUNCTIONAL, ' (', round(med, digits = 2), ')') ) %>% 
+    bd_c = paste0(tolower(FUNCTIONAL), ' (', round(med, digits = 2), ')') ) %>% 
   pull(bd_c)
 
 rm(ad, alphaD, ad_lfl, ad_lfc)
 ```
 
-The mean beta diversity, that is the dissimilarity between plots varied from `r round(min(m$MeanBeta),2)` - `r round(max(m$MeanBeta),2)`, with lower values indicating greater differences between plots; and where the Ecological site with the most dissimilar plots, on average, contained just over half (`r round(min(m$MeanBeta),2)`) of the same species as each other. The range of Sorenson-Dice values for the `r nrow(betaD)` most dissimilar plots were from `r min(betaD$MeanBeta)` - `r max(betaD$MeanBeta)`.  The `r nrow(betaD)` most dissimilar plots were in `r nrow(unique(betaD[!is.na(betaD$ECO.SITE), 'ECO.SITE']))`, with the following Ecological Sites having the most plots in them: `r toString(bd)`. The median of beta-diversity of the major functional groups varied from `r toString(bcf)`,  indicating that turnover in forbs is much greater than for the other two groups. This is to be expected given that there are a greater number of forb species than grasses and shrubs. Given the low amounts of $\alpha-diversity$ observed for grasses, these results may indicate that the same few grass species are being observed across plots. The turnover in species composition for the minor functional groups was not analyzed as more replicates appear to be required. 
-
-Estimates of $\beta-diversity$ appear less influenced by the number of plots sampled and $\gamma-diversity$, or surprisingly elevation. The discord between elevation is surprising given that $\beta-diversity$ was initially conceived to largely operate along elevation gradients, and oftentimes does (CITE). 
-
-~ GAMMA DIVERSITY HERE ~
+The mean $\beta-diversity$, that is the dissimilarity between plots varied from `r round(min(m$MeanBeta),2)` - `r round(max(m$MeanBeta),2)`, with lower values indicating greater differences between plots; and where the Ecological site with the most dissimilar plots, on average, contained just over half (`r round(min(m$MeanBeta),2)`) of the same species as each other. The range of Sorenson-Dice values for the `r nrow(betaD)` most dissimilar plots were from `r round(min(betaD$MeanBeta), 2)` - `r round(max(betaD$MeanBeta),2)`.  The `r nrow(betaD)` most dissimilar plots were in `r nrow(unique(betaD[!is.na(betaD$ECO.SITE), 'ECO.SITE']))` Ecological Sites, with the following  having the most plots in them: `r toString(bd)`. The median of beta-diversity of the major functional groups varied from `r toString(bcf)`,  indicating that turnover in forbs is much greater than for the other two groups. This is to be expected given that there are a greater number of forb species than grasses and shrubs. Given the low amounts of $\alpha-diversity$ observed for grasses, these results may indicate that the same few grass species are being observed across plots. The turnover in species composition for the minor functional groups was not analyzed as more replicates appear to be required. 
 
 ```{r Gamma diversity results}
 NoSppGamma <- rarefaction %>% 
@@ -953,19 +944,17 @@ gbs_f <- gamma_by_site %>%
 rm(bcf, beta_cf_sum, bd, betaD, beta_coarse_f)
 ```
 
-Ecological Sites varied in the number of species which were observed in them. However, the accuracy of the current estimates of $\gamma-diversity$ are limited by the number of replicates per Ecological Site. The estimated Sample coverage per Ecological Site ranged from `r min(rarefaction$SampleCoverage)` to `r max(rarefaction$SampleCoverage)` with a median of `r median(rarefaction$SampleCoverage)`, 80% confidence interval; in general it appears only 3-4 plots are required to gain Sample coverage estimates about 50%. In other words, we do not yet have enough replicates per Ecological Site to make definitive statements regarding the species richness of each site, but clear trends have emerged. The Ecological Sites with the greatest number of species are `r toString(NoSppGamma$NoSppObs)`. The predicted estimates of the number of species which are to be expected, in the UFO, at these sites with further sampling are: `r toString(NoSppGamma$NoSppPred)` (80% confidence intervals).
+The $\gamma-diversity$ of Ecological Sites varied widely in the number. However, the accuracy of the current estimates of $\gamma-diversity$ are limited by the number of replicates per Ecological Site. The estimated Sample coverage per Ecological Site ranged from `r min(rarefaction$SampleCoverage)` to `r max(rarefaction$SampleCoverage)` with a median of `r median(rarefaction$SampleCoverage)`, 80% confidence interval; in general it appears only 3-4 plots are required to gain Sample coverage estimates about 50%. In other words, we do not yet have enough replicates per Ecological Site to make definitive statements regarding the species richness of each site, but clear trends have emerged. The Ecological Sites with the greatest number of species are `r toString(NoSppGamma$NoSppObs)`. The predicted estimates of the number of species which are to be expected, in the UFO, at these sites with further sampling are: `r toString(NoSppGamma$NoSppPred)` (80% confidence intervals). It appears that the high rates of $\gamma-diversity$  observed at two Ecological sites: R036XY114CO, R036XY326CO, are likely to relate to the large geographic expanses of them, rather than high rates of $\beta-diversity$.  While for the other sites, as expected $\beta-diversity$, is the primary factor fostering high rates of $\gamma-diversity$.  
 
-**Most of these sites are likely to have the highest number of estimated  species, due to the size of their geographic expanses, fostering high rates of $\beta-diversity$ rather than high $\alpha-diversity$.**
+The Ecological Sites above, which have the greatest net number of species have `r toString(gbs_c)` species per functional group. The number of forbs at these ecological sites range from `r toString(gbs_f[grep('forb', gbs_f)])`. The number of grasses at these sites range from `r toString(gbs_f[grep('grass', gbs_f)])`. The number of shrubs vary from `r toString(gbs_f[grep('shrub', gbs_f)])`, (Figure 1).
 
-The Ecological Sites with the greatest number of species have `r toString(gbs_c)` species per functional group. The number of forbs at these ecological sites range from `r toString(gbs_f[grep('forb', gbs_f)])`. The number of grasses at these sites range from `r toString(gbs_f[grep('grass', gbs_f)])`. The number of shrubs vary from `r toString(gbs_f[grep('shrub', gbs_f)])`.
-
-Currently, two Ecological sites with `r slice_max(m, N_plots, n = 2, with_ties = F) |> pull(N_plots) |> toString()` sampled plots contain `r slice_max(m, N_plots, n = 2, with_ties = F) |> pull(Gamma) |> toString()` unique identified species. Given the total number of plants observed on AIM plots (Section X.X), this constitute environments holding nearly a 1/3 of this $\alpha-diversity$ themselves. 
+In summary, it appears that grass functional and taxonomic diversity are much lower than expected. It also appears that shrub diversity is wanting. Monitoring of forb diversity should be followed up several years post drought to determine if it rebounds. Returning to grasses, the number of species, in only a handful of plots, meets or exceeds the numbers of grass species noted present in reference conditions in all ESD's. Observations suggest that the grass species which appear to be missing from expanses of the field office include two species of *Sporobolus* (*S. airoides*, and *S. cryptandrus*), *Koeleria macrantha*, with noted declines in *Hesperostipa comata* and *Aristidia purpurea* in areas as well. 
 
 ```{r clear writing variables from environment}
-rm(lifeform_esd, no_records_full, diversity, dominant_plants,
+rm(diversity, dominant_plants,
    lifeform_coarse, lifeform_fine, lpi, prop_lf_c, prop_lf_f, spp_richness,
    spp_richness_lifeform, spp_richness_clean, NoSppGamma, no_records_full, m, 
-   rarefaction, i_report)
+   rarefaction, i_report, gbs_f, gbs_c, gamma_by_site)
 ```
 
 \newpage
