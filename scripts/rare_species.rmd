@@ -404,11 +404,6 @@ rm(hl, quint_single, abundant_species)
 
 The number of plots which a species was recorded at were counted. This list was filtered for species which only occurred at a single plot, our ecological version of the botanical 'singletons' collection. This list also had the 25^th^ quantile calculated on it using the 'quantile' function from base R.
 
-## Rabinowitz Thought Experiment
-
-To identify rare plants via the conceptual Rabinowitz framework the concepts of the Rare7 package were used, but implemented entirely separately. 
-
-##### Geographic Range - 
 
 ```{r install gbif, eval = F}
 install.packages("rgbif")
@@ -591,16 +586,9 @@ write.csv(occurrences_geographic,
 rm(focal_occurrences, focal_occurrences_l, occurrences_ch, occurrences_geographic)
 ```
 
-In order to produce an estimate of the geographic ranges which species occurred over in the New World, `r ss` (`r ss_perc`) of the  `r nrow(co_nat)` native species present in the Flora of Colorado were randomly sampled. To acquire geographic information on each of these species they were submitted to the 'Botanical Information and Ecology Network' (BIEN) database. All downloaded records from North America from the year 1900 onward were maintained for subsequent analyses.
-
-To estimate the total geographic range which the species covers, minimum convex hulls were produced for each individual species using 500 *jacknife resampling* events; this approach was utilized to reduce the effects a single widely *disjunct* mis-identified record could have on results. The median of all re-sampling events was then used as the geographic range estimate. 
-
 ```{r}
 rm(co_nat, ss)
 ```
-
-##### Occupancy - 
-To determine how often species occurred across these geographic ranges, a minimum convex hull of the full occurrence data set was 'rasterfied' i.e. turned into a gridded dataset, at a 4km^2^ resolution. This raster dataset was overlaid with two other datasets to remove areas which specifically precluded the occurrence of plants records. Grid cells which contained > 75% large bodies of water, agriculture, or land which has been developed into urban areas  (or a combination thereof) (EarthEnv Tuanmu & Jetz 2014), underwent 'focal operations' to unite cells into unsuitable habitat. The cells of unsuitable habitat were then removed from the range maps. The number of occupied 4km^2^ cells within the geographic range were then counted. These values were then re-scaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
 
 ```{r Prepare exclusion surfaces for geographic range records, eval = F}
 
@@ -714,15 +702,6 @@ ggplot() +
   theme_bw()
 ```
 
-
-##### Population Size -
-To create a broad binomial estimation of population size the BIEN data were split into two constituent portions. The first being records which were contributed from herbaria, and the other being records collected via survey based monitoring work. Raster cells were made more coarse, to 16km^2^, to avoid having many 0 records. All plot based records from across all species were combined, and each raster cell which contained the presence of a plot was used for future analyses. For each species, if a plot based record was located in a cell, it was classified as having a high population, if only an herbarium collection was present it was classified as having a low population.
-
-##### Habitat Range -
-To produce a local spectrum of the range of habitats which a species occurs in all records had Omernik level 4 regions extracted to the them, and the proportion of habitats were calculated. $ NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
-
-To better understand the relationship between habitat range both in Colorado and abroad, the values of habitat range were multiplied by the values of occupancy. The consensus values were used for further analyses. 
-
 ```{r Rasterfy habitat Ranges and extract to point, eval = F}
 
 l4eco <- vect(file.path(praw, list.files(praw, recursive = T, pattern = 'l4.*shp$')))
@@ -757,7 +736,6 @@ rm(e)
 ```{r Calculate the Rabinowitz consensus of rarity}
 ```
 
-
 ```{r remove method related variables}
 rm(f, fed, files, ppro, praw)
 ```
@@ -791,14 +769,6 @@ rm(esa, fws_esa, blm, blm_ss, state, global, global_sub, state_sub,
    spp_dirty, tracked, unks, spp_richness, n_w_syn, no_records_full)
 ```
 
-__When we remove these `r` known and documented, by CNHP, rare species from the subsequent analyses of rarity, the use of the composite Rabinowitzs Index identifies `r` taxa as rare. To determine whether this metric was capable of detecting species which have been identified as rare by the CNHP, the list of species ... was compared to the output from the function ... and chi-square results SAY ... Indicating that...
-
-```{r}
-
-```
-
-
- Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.__
 
 # References
 
