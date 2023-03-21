@@ -3,10 +3,8 @@ title: "Rare Species"
 author: NULL
 date: NULL
 output:
-  word_document: default
   pdf_document: default
-  html_document:
-    df_print: paged
+  word_document: default
 header-includes:
 - \usepackage[width=\textwidth]{caption}
 - \usepackage{wrapfig}
@@ -15,6 +13,8 @@ csl: ../citations/citations/apa.csl
 bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
+
+\vspace{-1cm}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
@@ -27,11 +27,11 @@ knitr::opts_chunk$set(warning = F)
 >
 > `r tufte::quote_footer('--- V.H. Heywood 1988')`
 
-In general, a connotation where rare species are synonymous with legal protections exists in popular culture (@kruckeberg1985biological, @gaston1994rarity). However, rarity is the normal condition under which a vast multitude of species in all kingdoms of life exist, and only a subset of these species are at risk of extinction (@enquist2019commonness, @flather2007species). Rare species are inherently organisms which are difficult to detect in nature relative to other 'common' species (@rabinowitz1981seven), but see @kondratyeva2019reconciling for elaborations on rarity. One of the most consistently supported, both empirically and theoretically, observations in ecology is that the majority of species in any one location are represented by only a few individuals (@preston1948commonness, @stohlgren2005patterns, @manzitto2022most). 
+A connotation where rare species are synonymous with legal protections exists in popular culture (@kruckeberg1985biological, @gaston1994rarity). However, rarity is the normal condition under which an enormous amount, if not the majority, of species in all kingdoms of life exist, and only a subset of these species are at risk of extinction (@enquist2019commonness, @flather2007species). By definition rare species are organisms which are inherently difficult to detect in nature relative to 'common' species (@rabinowitz1981seven), but see @kondratyeva2019reconciling for elaborations on rarity. One of the most consistently supported observations in ecology, both empirically and theoretically, is that the majority of species in any one location are represented by only a few individuals (@preston1948commonness, @stohlgren2005patterns, @manzitto2022most). 
 
-Rare species encode enormous amounts of functional diversity to an area and have been shown in multiple cases to imbue an ability to respond to disturbance (@isbell2011high, @leitao2016rare, @mouillot2013rare, @oliver2015biodiversity). While we focus on large functional groups in SECTION XX, each of these groups has enormous variation within them, and due to the sheet number of rare species, they comprise most of the variation within these groups (@kondratyeva2019reconciling,  @mouillot2013rare). Rare species are also capable of reducing the possibility and severity of biological invasions (@lyons2001rare, @oakley2013plant). 
+Rare species encode enormous amounts of functional diversity to an area and have been shown in multiple cases to imbue an ability of areas to respond to disturbance (@isbell2011high, @leitao2016rare, @mouillot2013rare, @oliver2015biodiversity). While we focus on large functional groups in **SECTION XX**, each of these groups has enormous variation within them, and due to the sheet number of rare species, they comprise most of the variation within these groups (@kondratyeva2019reconciling,  @mouillot2013rare). In addition to allowing areas to respond to disturbance, they are also capable of reducing the possibility and severity of biological invasions (@lyons2001rare, @oakley2013plant). 
 
-A popular conceptual framework to discuss these species may be considered which contains three dimensions, 1) the geographic expanse of the species, 2) their relative restriction to particular habitats, 3) and the number of individuals per population 'size' (@rabinowitz1981seven). Collectively the interaction between these traits can result in a matrix with eight cells along these axises (Table 1), seven of these cells being rare species, six of which occur more frequently (@rabinowitz1981seven). The rare species which receive most of the attention, are those which are restricted to particular habitats across narrow geographical extents, *'narrow (local) endemics'* (Table 1 & 2) (@kruckeberg1985biological). In general narrow endemics tend to be the species which require special legal protection to ensure their habitats undergo minimal alterations (@harnik2012long, AND AND ).  However, the remaining types of rarity still call for documentation by land management agencies. 
+A popular conceptual framework to discuss rare species may be considered which contains three dimensions, 1) the geographic expanse of the species, 2) their relative restriction to particular habitats, 3) and the number of individuals per population -  'size' (@rabinowitz1981seven). Collectively the interaction between these traits can result in a matrix with eight cells along three axis (Table 1). Seven of these cells represent traits associated with rare species, six of which frequently occur, and one which is seldom -if ever- observed (@rabinowitz1981seven). The rare species which receive most of the attention, are those which are restricted to particular habitats across narrow geographical extents, *'narrow (local) endemics'* (Table 1 & 2) (@kruckeberg1985biological). In general narrow endemics tend to be the species which require special legal protection to ensure their habitats undergo minimal alterations (@harnik2012long).  However, the remaining types of rarity still call for documentation by land management agencies. 
 
 ```{r Create Rabinowitz table, eval = F}
 library(gt)
@@ -139,7 +139,7 @@ rab_tab_examples <- rabinowitz_examples %>%
               table.border.bottom.color = "white",
               table_body.hlines.color = "white",
               heading.padding = 0,
-              row_group.padding = 0)
+              row_group.padding = 0) 
 
 gtsave(rab_tab_examples, "../results/rab_tab_examples.png")
 ```
@@ -153,11 +153,13 @@ knitr::include_graphics("../results/rab_tab.png")
 > _"Many species are abundant in portions of their range, but uncommon in others @brown1995spatial, @ter2016discovery"_
 > `r tufte::quote_footer('--- Enquist et al. 2021')`
 
-Using the conceptual model in Figure 1 we see that a majority of species in the UFO field office which would be considered rare are likely to have 'Large' Geographic Ranges (left two columns, note the upper left most entry represents common species). These three cells of rare species are less likely to be have federal protections, although at the edges of their ranges may have state protections, as they fundamentally at lower risk of extinction (Figure 2) (@flather2007species). Biologically, these taxa may have interesting properties, relating to their relative positions in the range of the species distribution. As the land which the UFO administers represents only a subset of the range of variation which exists in Western Colorado. An obvious example is that we lack both alpine, and many types of forests. Accordingly, species which may be common on Forest Service Land, may be rare on UFO land. Naturally these species are not of concern for identifying lands which need enhanced protections as would be offered under regulatory protocols, but they provide opportunities for distributing reproductive material to adjacent sites.
+Considering the conceptual model in Figure 1 we see that a majority of species in the Uncompahgre Field Office which would be considered rare are likely to have 'Large' Geographic Ranges (left two columns, note the upper left most entry represents common species). I argue this is common of  the rare species in the temperate. 
 
-In particular, they may be species which are at the edges of their distributions, populations of species at the edges of distributions - either geographically or climatically - these populations often have notably different genetic constitutions than populations near the centers (@hampe2005conserving, @oldfather2020range, reviewed in @PeclGrettaT2017Bruc). Populations which are expanding into new geographic ranges, largely following shifts in climates are termed *leading edges*, and those populations persisting at the edge of the extent geographic ranges are noted as *trailing edges*. Conserving trailing edge populations at the local level is important as they may contain many forms of genes which are pre-disposed to adapting to climate change associated variables (@hampe2005conserving). Further these populations may end up being essential for adaption on up-slope Forest Service Lands, where our border with them faces alterations associated with severe fires and which may require immediate seed sourcing to recover a stable state (@parks2019living). Theoretically the lowlands of the UFO are capable of receiving migrants to them from a *leading edge*, however the up slope travel required to enter the basins (e.g. Paradox), slows steady-state dispersal, reducing the chances of immigrants to relatively infrequent events, such as seeds being stuck to muddy bird feet (@nathan2008mechanisms, @jordano2017long). While these events have largely shaped the global distribution of biodiversity, their infrequent occurrence generally means they occur on timescales outside of land management (@nathan2008mechanisms). 
+These three cells of rare species are less likely to be have federal protections because as a species they are fundamentally at lower risk of extinction due to the decreased likelihood of all populations going extinct via the same causes (Figure 2) (@flather2007species). However, at edges of there geographic ranges these species are likely to have state protections, because the species may lose the few populations (local extinction) which exist in those administrative units. Biologically, these widespread rare taxa may have interesting properties, relating to their relative positions in the range of the species distribution.
 
-Recently approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index). Here we attempt to leverage this index, along with another more traditional metric - which defines rarity as records under teh 25th quantile (@gaston1994rarity), to identify plants which are locally rare within the Field Offices administrative areas. 
+In particular, these common rare species, especially when at the edges of their distributions, either geographically or climatically - often have populations which have notably different genetic constitutions than populations near the centers (@hampe2005conserving, @oldfather2020range, reviewed in @PeclGrettaT2017Bruc). Populations which are expanding into new geographic ranges, largely following shifts in climates are termed *leading edges*, and those populations persisting at the edge of the extent geographic ranges are noted as *trailing edges*. Conserving trailing edge populations at the local level is important as they may contain many forms of genes which are pre-disposed to adapting to climate change (@hampe2005conserving). Further these populations may end up being essential for adaption on up-slope Forest Service Lands, where our border with them faces alterations associated with severe fires and which may require immediate seed sourcing to recover a stable state (@parks2019living). Theoretically the lowlands of the UFO are capable of receiving migrants to them from a *leading edge*, however the up slope travel required to enter the basins (e.g. the Paradox Valley), slows steady-state dispersal, reducing the chances of immigrants to relatively infrequent events, such as seeds being stuck to muddy bird feet (@nathan2008mechanisms, @jordano2017long). While these events have largely shaped the global distribution of biodiversity, their infrequent occurrence generally means they occur on timescales outside of land management considerations (@nathan2008mechanisms). However, that many species which are in the field office via long-distance dispersal, but which are currently uncommon, but may greatly expand under climate change is probable.
+
+Recently approaches to develop a consensus index of Rabinowitzs sense of rarity exist (@maciel2020rare7, @maciel2021index). Here we attempt to leverage this index, along with another more traditional metric - which defines rarity as records under the 25th quantile (@gaston1994rarity), to identify plants which are locally rare within the Field Offices administrative areas. 
 
 ```{r Display Rabinowitz table with examples}
 knitr::include_graphics("../results/rab_tab_examples.png")
@@ -216,7 +218,6 @@ no_records_full <- nrow(spp_richness)
 rm(pts, char, spp_r_header)
 ```
 
-
 ```{r minor cleaning species richness}
 
 # remove unknowns here, only 118 records total across 5 years, pretty impressive!
@@ -269,7 +270,6 @@ tracked <- read.csv(file.path(ppro, files[grep('Rare_Plants_BLM', files)]))
     \includegraphics[width=0.3\textwidth]{../plots/graphics/quint_single.png}
   \caption{The Commonness of Rarity; This plot shows the number of times which a species was encountered at an AIM Plot. Both the 'singletons' and Gastons Quintile are on the red line. A randomly selected subset of more abundant species are selected to contextualize the few abundant species}
 \end{wrapfigure}\leavevmode
-
 
 ### Rare Species of Known Conservation Concern
 
@@ -338,7 +338,6 @@ spp_clean <- spp_clean %>%
 
 rm(m_gyp, meth)
 ```
-
 
 ```{r Indentification of Singletons}
 
@@ -457,7 +456,6 @@ d <- occ_download_get( dl_key ) %>%
 
 ```
 
-
 ```{r Subset GBIF records of non target species, eval = F}
 
 # step 1 only grab records not already downloaded in the last query
@@ -497,7 +495,6 @@ write.csv(spp_occ, file.path(praw, 'GBIF_Query_Random/occurrence_sub.txt'), row.
 
 rm(target_binom, spp_occ_large)
 ```
-
 
 ```{r Gather Focal Plant Records - First Pass, eval = F}
 
@@ -554,7 +551,6 @@ focal
 
 ```
 
-
 ```{r Calculate total geographic expanse - reference, eval = F}
 
 occurrences <- read.csv(file.path( praw, 'BIEN_occurrences.csv'))
@@ -579,7 +575,6 @@ write.csv(occurrences_geographic, file.path(praw, 'reference_occurrence_geograph
 rm(occurrences_l, occurrences_ch, occurrences)
 ```
 
-
 ```{r Calculate total geographic expanse - UFO, eval = F}
 
 focal_occurrences <- read.csv(file.path(praw, 'BIEN_focal_occurrences.csv'))
@@ -596,7 +591,6 @@ write.csv(occurrences_geographic,
 
 rm(focal_occurrences, focal_occurrences_l, occurrences_ch, occurrences_geographic)
 ```
-
 
 In order to produce an estimate of the geographic ranges which species occurred over in the New World, `r ss` (`r ss_perc`) of the  `r nrow(co_nat)` native species present in the Flora of Colorado were randomly sampled. To acquire geographic information on each of these species they were submitted to the 'Botanical Information and Ecology Network' (BIEN) database. All downloaded records from North America from the year 1900 onward were maintained for subsequent analyses.
 
@@ -657,7 +651,6 @@ ggplot(impervious_sf) +
 
 rm(impervious, impervious_vect)
 ```
-
 
 ```{r grid creation and occurrence counting, eval = F}
 
@@ -724,7 +717,7 @@ ggplot() +
 
 
 ##### Population Size -
-To create a broad binomial estimation of population size the BIEN data were split into two constituent portions. The first being records which were contributed from herbaria, and the other being records collected via survey based monitoring work. Raster cells were made more coarse, to 16km^2^, to avoid having many 0 records. All plot based records from across all species were combined, and each raster cell which contained the presence of a plot was used for future analyses. For each species, if a plot based record was located in a cell, it was classified as having a high population, if only an herbarium collection was present it was classified as having a low population. The total number of $
+To create a broad binomial estimation of population size the BIEN data were split into two constituent portions. The first being records which were contributed from herbaria, and the other being records collected via survey based monitoring work. Raster cells were made more coarse, to 16km^2^, to avoid having many 0 records. All plot based records from across all species were combined, and each raster cell which contained the presence of a plot was used for future analyses. For each species, if a plot based record was located in a cell, it was classified as having a high population, if only an herbarium collection was present it was classified as having a low population.
 
 ##### Habitat Range -
 To produce a local spectrum of the range of habitats which a species occurs in all records had Omernik level 4 regions extracted to the them, and the proportion of habitats were calculated. $ NumberHabitats/NumberPoints  $ these were then rescaled to maximize the variance between 0-1, so that species across more habitats had values closer to 1, while species in fewer habitats had scores closer to 0.
@@ -771,12 +764,11 @@ rm(e)
 rm(f, fed, files, ppro, praw)
 ```
 
-
 # Results 
 
 The original AIM Species Richness data set contained `r no_records_full` plot based observations from `r length(unique(spp_richness$PLOTID))` plots. After removing `r unks` morphotypes which were not identified (`r paste0(round(((unks/no_records_full) * 100),2), '%')` of all records), dropping the `r nrow(spp_dirty)` records which were not identified beyond genus (`r paste0(round(((nrow(spp_dirty)/no_records_full) * 100),2), '%')` of all records), and removing `r (n_w_syn - nrow(spp_clean))` synonymous taxa at the same plot (`r paste0(round(((n_w_syn - nrow(spp_clean)) / nrow(spp_clean) * 100), 2), '%')`), `r nrow(spp_clean)` records were left. These records represented `r nrow(records)` distinct terminal taxa, i.e. final taxonomic units - species were not double-counted with infra species, which are more or less in accord with the states most current Floristic treatments, and the USDA. 
 
-The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r nrow(tracked)`, different organizations and agencies have different criteria for interpreting and classifying susceptibility of a species to extinction and loss of populations. The most rigorous and selective conditions are enforced the United States Fish and Wildlife Service (USFWS), whom maintain the only official registries and implement the evaluation procedures for 'Threatened' and 'Endangered' species. These categories represent species of the highest concern regarding their continued existence, with Endangered Species being the more severe category of the two. Colorado contains `r nrow(esa)` species tracked by the USFWS, `r nrow(esa[esa$USESA=='LT',])` of these species are threatened with extinction, and `r nrow(esa[esa$USESA=='LE',])` are immediately endangered. Of the species tracked under the Endangered Species Act `r nrow(distinct(fws_esa, BINOMIAL_NAT))` species, `r unique(fws_esa$BINOMIAL_NAT)`, was found at `r length(unique(fws_esa$PLOTID))` plots. 
+The CNHP rankings include many species which are considered rare by agencies with different focuses and intentions from the BLM. While their initial list is comprised of `r nrow(tracked)` taxa, different organizations and agencies have different criteria for interpreting and classifying susceptibility of a species to extinction and loss of populations. The most rigorous and selective conditions are enforced the United States Fish and Wildlife Service (USFWS), whom maintain the only official registries and implement the evaluation procedures for 'Threatened' and 'Endangered' species. These categories represent species with high probabilities of extinction in the wild, in the near future, due to anthropogenic changes; Endangered Species represent the more severe category of the two. Colorado contains `r nrow(esa)` species tracked by the USFWS, `r nrow(esa[esa$USESA=='LT',])` of these species are threatened with extinction, and `r nrow(esa[esa$USESA=='LE',])` are immediately endangered. Of the species tracked under the Endangered Species Act `r nrow(distinct(fws_esa, BINOMIAL_NAT))` species, `r unique(fws_esa$BINOMIAL_NAT)`, was found at `r length(unique(fws_esa$PLOTID))` plots. 
 
 The Bureau of Land Management officially tracks plants which are of conservation concern on their lands, and which may be petitioned to be elevated to the more stringent categories implemented by the Fish and Wildlife Service, but which are mostly undergoing further assessment. As the BLM is contained within the government, these tracked taxa do not contain any redundancies with the Endangered Species Act list. BLM Colorado has `r nrow(blm)` sensitive species. Of the BLM sensitive species `r length(unique(blm_ss$BINOMIAL_NAT))`,  `r toString(unique(blm_ss$BINOMIAL_NAT))`, were found at a total of `r length(unique(blm_ss$PLOTID))` plots. 
 
@@ -810,12 +802,6 @@ __When we remove these `r` known and documented, by CNHP, rare species from the 
 
 
  Of these species `r` are known from the general area of the UFO, and `r` have been documented on UFO administered land. AIM crews observed the presence of `r` of these taxa, at `r` AIM sites. `r` of these sightings served as revisits to known *elemental occurrences* (EO's) and serve to document that the taxon was still extent in an established EO. `r` of these sightings, for `r` taxa, qualified as new *EOs* - or at least finally provide the essential official written documentation of a population. For the first time ever, AIM crews documented the existence of `r` species on UFO BLM administered lands.__
- 
-
-# Discussion
-
-
-\newpage
 
 # References
 
