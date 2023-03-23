@@ -1,5 +1,5 @@
 ---
-title: "Functional Diversity and Benchmarks"
+title: "Plant Functional Diversity - Cover"
 output:
   pdf_document: default
   word_document: default
@@ -16,19 +16,17 @@ link-citations: yes
 
 \vspace{-1cm}
 
-While each plant functions differently in an ecosystem context, the degrees of dissimilarity which exist between all species are unequal allowing them to clump together into groups. This observation has given rise to the notion of *Plant Functional Types*, shared attributes which unite similar species, and which bind how they affect ecosystems. Plant functional types are often the easiest form of vegetation data to measure, and accordingly great amounts of work have been conducted on how they affect ecosystem function. 
+While each plant functions differently in an ecosystem context, the degrees of dissimilarity which exist between all species are unequal, allowing them to form natural groups. This observation has given rise to the notion of *Plant Functional Types*, shared attributes which unite similar species, and which bind how they affect ecosystems. Plant functional types are often the easiest form of vegetation data to measure, hence great amounts of work have been conducted on how they affect ecosystem function. 
 
-In Western Colorado, five plant functional types are often used to evaluate range conditions. These forms are: Trees, Shrubs, Grasses, and Forbs (or herbs), and each has been linked to affecting rangelands in multiple ways; theoretically their distributions and abundances are driven by variations in soil moisture throughout horizons (@sala199711). Accordingly, in nearly all instances a mix of each of these groups, less trees, is best to maintain ecosystem services on BLM Land. In the UFO which features extensive Pinon-Juniper Woodlands, trees when present, are included in this mix on ecological sites where they represent the climax vegetation community.
+In Western Colorado, four plant functional types are often used to evaluate rangeland conditions. These forms are: Trees, Shrubs, Grasses, and Forbs (or herbs), and each has been linked to affecting rangelands in multiple ways; theoretically their distributions and abundances are driven by variations in soil moisture throughout horizons (@sala199711). Accordingly, in nearly all instances a mix of each of these groups, less trees, is best to maintain ecosystem services on BLM Land. In the UFO which features extensive Pinon-Juniper Woodlands, trees when present, are included in this mix on ecological sites where they represent the climax vegetation community.
 
 Semi-arid lands which are utilized as rangelands across the world are experiencing several common issues relating to shifts in the composition of their plant functional types (@archer2014ecosystem, @eldridge2016ecosystem, @maestre2016structure, @diaz2007plant, @dalgleish2010can). Namely, decreases in grasses whilst increases in woody species are occurring, and a decrease in the cover and number of species of perennial forbs while annual forbs increase (@diaz2007plant, @west2006long). In certain areas, the increases - or encroachment  of - woody species may be split into encroachment of trees, and the transition to a shrub state in ecological sites which do not support trees. 
 
-The current increases in shrub cover relative to the cover of the herbaceous components of vegetation are problematic for a variety of reasons. The increase in trees within mixed grass-shrubland sites may decrease water available to grasses, forbs, and shrubs which favors non-native annual grasses (@mciver2022pinon), as domestic livestock and wildlife depend on palatable grasses, forbs, and shrubs these decrease the ability of our lands to support either. Increases in shrubs at the expense of perennial grasses and forbs may increase the severity of site level drought (@wilson2018functional), further shrubs and trees may foster higher severity fires (CITE). Increases in shrubs decrease soil stability, allowing increased erosion, increasing 'dust on snow', and poor air quality (@munson2011responses). Decreases in perennial grass may reduce competition with non-native annuals from overtaking sites @sheley2010resistance, @corbin2004competition, and a diversity of grass species may be the most effective prevention (@belnap2008soil). A decrease in forbs adversely affect wildlife both directly and indirectly, by decreasing the quality of habitats for species such as the Gunnison Sage-Grouse  (@pennington2016sagebrush). 
+The current increases in shrub cover relative to the cover of the herbaceous components of vegetation are problematic for a variety of reasons. The increase in trees within mixed grass-shrubland sites may decrease water available to grasses, forbs, and shrubs which favors non-native annual grasses (@mciver2022pinon), as domestic livestock and wildlife depend on palatable grasses, forbs, and shrubs these decrease the ability of our lands to support either. Increases in shrubs at the expense of perennial grasses and forbs may increase the severity of site level drought (@wilson2018functional), further shrubs and trees may foster higher severity fires. Increases in shrubs decrease soil stability, allowing increased erosion, increasing 'dust on snow', and poor air quality (@munson2011responses). Decreases in perennial grass may reduce competition with non-native annuals from overtaking sites @sheley2010resistance, @corbin2004competition, and a diversity of grass species may be the most effective prevention (@belnap2008soil). A decrease in forbs adversely affect wildlife both directly and indirectly, by decreasing the quality of habitats for species such as the Gunnison Sage-Grouse  (@pennington2016sagebrush). 
 
-While the major functional groups are capable of capturing considerable variation which predicts rangeland responses, they often maintain large amounts of variation with them (@lavorel2007plant, @funk2017revisiting). And we believe that additional functional groups warrant attention in our area. As mentioned above C3 and C4 grasses have different responses to many environmental cues. Sprouting and non-sprouting shrubs differ widely in their responses to wildfire, and sites require different post fire management strategies. Annual and perennial forbs (life cycles), differ in their responsiveness to precipitation, with annuals declining rapidly in times of low precipitation.  
+## Methods
 
-# Methods
-
-Numerous inconsistencies exist between what the NRCS species list classifies a shrub, sub-shrub, or forb relative to how ecological sites classify them into functional groups. These inconsistencies are thus permeated into the Colorado state species list utilized by AIM to calculate the plant functional group cover summaries. To appropriately compare conditions on the ground to ecological sites or ecological site groups we had to reassign certain plant species to the appropriate functional group. 
+Numerous inconsistencies exist between what the USDA Plants database species list classifies a shrub, sub-shrub, or forb relative to how ecological sites classify them into functional groups. These inconsistencies are permeated into the Colorado state species list utilized by AIM to calculate the plant functional group cover summaries. To appropriately compare conditions on the ground to ecological sites or ecological site groups we had to reassign certain plant species to the appropriate functional group. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
@@ -188,16 +186,15 @@ ggsave(plot = last_plot(), device = 'png', height = 9, units = 'cm',
        path = '../plots/graphics', filename = 'regression.png')
 ```
 
+Very good agreement existed between our species reclassification summaries and TerrAdat plant functional group summaries (Figure 1), however outliers existed within the shrub and forb functional groups. Species outliers from Figure 1 were manually investigated for their functional classification in Ecological Sites and were reassigned.  A total of `r nrow(off) + nrow(compare_agg)` site functional group pairs were utilized for this process. By the end of the process  `r nrow(compare_agg)` of these pairs had identical values when rounded to 1 decimal point (a tenth of a percent), of the remaining `r nrow(off)` records, `r nrow(off[off$difference < 1,])` had less than a one percent difference in cover, and  `r nrow(off[off$difference < 1.5,])` were less than a 1.5% difference. By the end of the process the Pearson correlation coefficient for trees (n = `r pairs[1,'Tree']`, *r* =  `r round(all_cor[1,'Tree'], 5)`) and grass (n = `r pairs[1,'Grass']`, *r* =  `r round(all_cor[1,'Grass'], 5)`) indicated the values were essentially identical, and most likely diverged merely according to rounding during internal computations.  We further added the groups of Sedges (Cyperaceae), and Rushes (Juncaceae), into our calculations of grass cover. This is important as they are included in Interpreting Indicators of Rangeland Health (IIRH), and hence the ESD cover estimates, and are likely to be included in the ESG estimates. They are likely to make a notable difference in higher elevations sites, Mixed-Mountain Shrub & Aspen, where Elk Sedge (*Carex geyeri*) may be abundant. 
 
-\begin{wrapfigure}{l}{0.3\textwidth}
+\begin{wrapfigure}{l}{0.27\textwidth}
   \centering
-    \includegraphics[width=0.3\textwidth]{../plots/graphics/regression.png}
-  \caption{Comparision official and in house calculations}
+    \includegraphics[width=0.27\textwidth]{../plots/graphics/regression.png}
+  \caption{Comparision of calculations}
 \end{wrapfigure}
 
-Very good agreement existed between our species reclassification summaries and TerrAdat plant functional group summaries (Figure 1), however outliers existed within the shrub and forb functional groups. Species outliers from Figure 1 were then manually investigated for their functional classification in Ecological Sites and were reassigned.  A total of `r nrow(off) + nrow(compare_agg)` site functional group pairs were utilized for this process. By the end of the process  `r nrow(compare_agg)` of these pairs had identical values when rounded to 1 decimal point (a tenth of a percent), of the remaining `r nrow(off)` records, `r nrow(off[off$difference < 1,])` had less than a one percent difference in cover, and  `r nrow(off[off$difference < 1.5,])` were less than a 1.5% difference. By the end of the process the Pearson correlation coefficient for trees (n = `r pairs[1,'Tree']`, *r* =  `r round(all_cor[1,'Tree'], 5)`) and grass (n = `r pairs[1,'Grass']`, *r* =  `r round(all_cor[1,'Grass'], 5)`) indicated the values were essentially identical, and most likely diverged merely according to rounding during internal computations.  We further added the groups of Sedges (Cyperaceae), and Rushes (Juncaceae), into our calculations of grass cover. This is important as they are included in Interpreting Indicators of Rangeland Health (IIRH), and hence the ESD cover estimates, and are likely to be included in the ESG estimates. They are likely to make a notable difference in higher elevations sites, Mixed-Mountain Shrub & Aspen, where Elk Sedge (*Carex geyeri*) may be abundant. 
-
-For Forbs and Shrubs there was a consistent discrepancy regarding a single abundant species, *Gutierrezia sarothrae* (Broom Snakeweed). Based on a review of ESD’s, most authors considered this a sub-dominant shrub, a group which is combined into their estimates for Shrub Cover. Accordingly, we utilized this assessment of Gutierrezia sarothrae and included it as a shrub in our recalculations. As a result, we have a slightly larger discrepancy between our estimates and the TerrAdat estimate of shrub cover  (n = `r pairs[1,'Shrub']`, *r* = `r round(all_cor[1,'Shrub'], 5)`). Since many ecological sites also consider succulents, specifically the genus Opuntia, a shrub in their shrub cover estimates we also included it in our calculations of Shrub cover. This also leads to a discrepancy associated with estimates of forb cover  (n = `r pairs[1,'Forb']`, *r* = `r round(all_cor[1,'Forb'], 5)`). However, a greater number of values diverge between the TerrAdat summary of cover and our reclassified summaries, of the `r nrow(off)` records which diverge by > 0.1% cover, `r nrow(off[off$Variable=='Shrub',])` of them are associated with Shrubs, and the correlation here is much lower at *r* = `r round(mismatch_cor[1,'Shrub'], 5)`. 
+The difference between the remaining functional groups was greater due to whether a species was considered in one group or the other. For Forbs and Shrubs there was a consistent discrepancy regarding a single abundant species, *Gutierrezia sarothrae* (Broom Snakeweed). Based on a review of ESD’s, most authors considered this a sub-dominant shrub, a group which is combined into their estimates for Shrub Cover. Accordingly, we utilized this assessment of *Gutierrezia sarothrae* and included it as a shrub in our recalculations. As a result, we have a slightly larger discrepancy between our estimates and the TerrAdat estimate of shrub cover  (n = `r pairs[1,'Shrub']`, *r* = `r round(all_cor[1,'Shrub'], 5)`). Since many ecological sites also consider succulents, specifically the genus *Opuntia*, a shrub in their shrub cover estimates we also included it in our calculations of Shrub cover. This also leads to a discrepancy associated with estimates of forb cover  (n = `r pairs[1,'Forb']`, *r* = `r round(all_cor[1,'Forb'], 5)`). However, a greater number of values diverge between the TerrAdat summary of cover and our reclassified summaries, of the `r nrow(off)` records which diverge by > 0.1% cover, `r nrow(off[off$Variable=='Shrub',])` of them are associated with Shrubs, and the correlation here is much lower at *r* = `r round(mismatch_cor[1,'Shrub'], 5)`. We were unable to match up the functional groups from these two sources beyond this point.
 
 
 ```{r}
@@ -394,12 +391,13 @@ benchmarks <- benchmarks %>%
 rm(site_esd, site_esg, esg_plots)
 ```
 
-# Results 
+\vspace{40mm}
+
+## Results & Discussion
 
 \begin{center}
 {\section{Forb Cover}}
 \end{center}
-
 
 ```{r add weights to each functional group and plot owernship combo}
 
@@ -457,7 +455,6 @@ all_hits_nat <- left_join(all_hits_nat, reclass, by = 'PLOTID', multiple = "all"
 
 rm(r, pts, reclass, lc_lkp)
 ```
-
 
 
 ```{r calculate land meeting benchmark forb results}
@@ -525,12 +522,11 @@ forb_achieve <- forb[forb$Category == 'TRUE',]
 fa <- forb_achieve[forb_achieve$Subpopulation == 'SampleFrame', c('Estimate.P', 'LCB80Pct.P', 'UCB80Pct.P')]
 ```
 
-Across all BLM land which is not managed as an NCA, WSA, or ACEC, the estimate of the total amount of land which is achieving benchmarks is  `r paste0(round(fa$Estimate.P, 1), '%')` (LCB = `r round(fa$LCB80Pct.P, 1)`%, UCB = `r round(fa$UCB80Pct.P, 1)`%), similar to the estimates for all ACEC-WSA areas  `r paste0(round(forb_achieve[forb_achieve$Subpopulation == 'ACEC-WSA', 'Estimate.P'], 1), '%')`, and the Dominguez-Escalente NCA `r paste0(round(forb_achieve[forb_achieve$Subpopulation == 'DE-NCA', 'Estimate.P'], 1), '%')`. Results for the Gunnison Gorge are much lower, none of the `r forb[forb$Subpopulation == 'GG-NCA' & forb$Category == 'Total', 'nResp']` sampled sites were meeting benchmarks, indicating none of the land is. That roughly only 1/3 of all BLM administered land is meeting these objectives was unexpected.
+Across all BLM land which is not managed as an NCA, WSA, or ACEC, the estimate of the total amount of land which is achieving benchmarks is `r paste0(round(fa$Estimate.P, 1), '%')` (LCB = `r round(fa$LCB80Pct.P, 1)`%, UCB = `r round(fa$UCB80Pct.P, 1)`%), similar to the estimates for all ACEC-WSA areas  `r paste0(round(forb_achieve[forb_achieve$Subpopulation == 'ACEC-WSA', 'Estimate.P'], 1), '%')`, and the Dominguez-Escalente NCA `r paste0(round(forb_achieve[forb_achieve$Subpopulation == 'DE-NCA', 'Estimate.P'], 1), '%')`. Results for the Gunnison Gorge are much lower, none of the `r forb[forb$Subpopulation == 'GG-NCA' & forb$Category == 'Total', 'nResp']` sampled sites were meeting benchmarks, indicating none of the land is. That roughly only 1/3 of all BLM administered land is meeting these objectives was unexpected.
 
 ```{r}
 rm(forb_achieve, fa)
 ```
-
 
 While nearly all plants produce less above-ground biomass during drought, the largest reduction in forb cover may be due to natural and climate induced mortality of individuals and the lack of recruitment of perennial forbs from the soil seed bank which replenishes local populations (@eziz2017drought, @casper1996demographic @munson2022primary). In other words, many individual plants are dying, and new individuals are not being recruited from seed during the prolonged drought. The establishment of both long and short lived forbs seems hampered during drought periods, and it may take several years after the cessation of a drought for the cover of perennial forbs to return to pre-drought conditions (@anderson2001landscape). 
 
@@ -540,25 +536,23 @@ While nearly all plants produce less above-ground biomass during drought, the la
   \caption{Benchmarks and Observed Values}
 \end{wrapfigure}
 
-It is probable that short lived perennial forbs, which generally only live a total of 2-4 years past their germination (@dalgleish2010can) have widely decreased in areas during the drought (@torang2010linking, @anderson2001landscape). Many perennial forbs seem to generally persist for one to two decades (but up to four are noted), and once established (i.e. they reach reproductive maturity) are able to survive disturbances, such as drought (@treshow1974longevity, @lauenroth2008demography, @morris2008longevity). However, given the duration of the current drought, and the merely episodic periods of normal moisture (**SECTION XX**) it is possible many of the long lived perennials have suffered non-drought induced mortality. Because of these conditions forbs have not recruited individuals from the seed bank. Recovery of the above ground cover of both forms of perennial forbs may require periods of from 2-5 years, or more, in mesic habitats (@anderson2001landscape) and longer in xeric habitats (Figure 2).
+It is probable that short lived perennial forbs, which generally only live a total of 2-4 years past their germination (@dalgleish2010can), have widely decreased in areas during the drought (@torang2010linking, @anderson2001landscape). Many long-lived perennial forbs seem to generally persist for one to two decades (but up to four are noted), and once established (i.e. they reach reproductive maturity) are able to survive disturbances, such as drought (@treshow1974longevity, @lauenroth2008demography, @morris2008longevity). However, given the duration of the current drought, and the merely episodic periods of normal moisture (Section 6) it is possible many of the long lived perennials have suffered non-drought induced mortality. Because of these conditions forbs have not recruited individuals from the seed bank. Recovery of the above ground cover of both forms of perennial forbs may require periods of from 2-5 years, or more, in mesic habitats (@anderson2001landscape) and longer in xeric habitats (Figure 2).
 
 Areas in the field office which may be the most affected by forb declines may be those ecological sites with inherently lower water holding capacity; such as those with skeletal soils, high clay content, and shallow depths to bedrock, e.g. Salt Desert and considerable portions of Pinyon-Juniper Woodland. Soil depth can be a highly influential factor on survival of perennial forbs during times of drought  (@davison2010demographic, @nicole2011interdependent). Accordingly, ecological sites supporting Wyoming Big-Sage, e.g. Gunnison Sage-Grouse habitat, are less affected due to greater soil depth and higher water holding capacity. When a lack of forbs is observed at these sites, is likely to be stemming from issues other than drought. 
 
-Aspects regarding the nature of perennial forbs are discussed further in section **XX**, but given the timing of sampling relative to the drought (**SECTION XX**), these results are not surprising. A more worrisome metric would relate to the species composition of forbs which are present at plots, rather than collective cover of them during periods of drought. This is because forbs have been shown to recover after droughts, granted they are initially present in the soil seed bank, partially because they have seeds which tend to have strong longevity, and partially because most species can produce some seed even under adverse conditions (@laforgia2018seed, @loydi2021extreme). If these forbs are even present patchily throughout an area, than it appears secondary dispersal (e.g. movement of seeds by an animal) of their seeds will allow a number of them to reach suitable micro-sites for possible reestablishment of individuals and then a population under climatically favorable conditions (@olano2012soil). 
+Aspects regarding the nature of perennial forbs are discussed further in section 12, but given the timing of sampling relative to the drought (Section 6), these results are not surprising. A more worrisome metric would relate to the species composition of forbs which are present at plots, rather than collective cover of them during periods of drought. This is because forbs have been shown to recover after droughts, granted they are initially present in the soil seed bank, partially because they have seeds which tend to have strong longevity, and partially because most species can produce some seed even under adverse conditions (@laforgia2018seed, @loydi2021extreme). If these forbs are even present patchily throughout an area, than it appears secondary dispersal (e.g. movement of seeds by an animal) of their seeds will allow a number of them to reach suitable micro-sites for possible reestablishment of individuals and then a population under climatically favorable conditions (@olano2012soil). 
 
 \begin{center}
 {\section{Woody Plant Encroachment}}
 \end{center}
 
-The cover of woody plants, both shrubs and trees, is as observed to be at the upper end or beyond the reference benchmark values for cover at nearly all Ecological Sites (FIGURE XX). Greater cover of woody plants relative to reference condition is a common occurrence in nearly all arid and semi-arid rangelands globally (@bestelmeyer2018grassland, @archer2017woody). While some disagreement over the exact mechanistic causes of increases in woody plant cover exist in the literature commonly attributed causal factors include: 1) An altered fire-cycle, 2) increasing atmospheric CO~2~, 3) improper grazing by livestock  (@bestelmeyer2018grassland). These initial drivers may lead to feedback loops enforced by changes to soil fertility which cause the shrub and or tree-encroached status of these sites to perpetuate (@bestelmeyer2018grassland).
+The cover of woody plants, both shrubs and trees, is observed to be at the upper end or beyond the reference benchmark values for cover at nearly all Ecological Sites (Figure 3 & 4). Greater cover of woody plants relative to reference condition is a common occurrence in nearly all arid and semi-arid rangelands globally (@bestelmeyer2018grassland, @archer2017woody). While some disagreement over the exact mechanistic causes of increases in woody plant cover exist in the literature, commonly attributed causal factors include: 1) An altered fire-cycle, 2) increasing atmospheric CO~2~, 3) improper grazing by livestock  (@bestelmeyer2018grassland). These initial drivers may lead to feedback loops enforced by changes to soil fertility which cause the shrub and or tree-encroached status of these sites to perpetuate (@bestelmeyer2018grassland).
 
-Drought and insect induced mortality in sagebrush and pinion juniper woodland ecological sites have been locally apparent in the field office, and across the Southwest, over the last 20+ years (@gaylord2013drought, @floyd2009relationship). Where mortality has occurred it threatens to create conditions which allow for high severity wildfire or diminished ecological function(@baker2004fire). While the species of shrubs and trees which grow in semi-arid lands are considered less responsive to droughts than forbs and grasses, due to depths which many of their roots are able to reach to draw soil moisture, it predisposes them to insect induced mortality and die back (@@gaylord2013drought, @winkler2019shrub). Shrubs and trees are considerably longer lived than either forbs and grasses, and recruitment of these species are limited during dry periods, the effects of background mortality on plant cover may have marginal effects at the time scales over which the current drought is occurring, and current reductions are likely to be the direct results of drought (@shinneman2009historical). 
+Drought and insect induced mortality in Sagebrush and Pinyon-Juniper woodland ecological sites have been locally apparent in the field office, and across the Southwest, over the last 20+ years (@gaylord2013drought, @floyd2009relationship). Where mortality has occurred it threatens to create conditions which allow for high severity wildfire or diminished ecological function (@baker2004fire). While the species of shrubs and trees which grow in semi-arid lands are considered less responsive to droughts than forbs and grasses, due to depths which many of their roots are able to reach to draw soil moisture, drought predisposes them to insect induced mortality and die back (@gaylord2013drought, @winkler2019shrub). Shrubs and trees are considerably longer lived than either forbs and grasses, and recruitment of these species are limited during dry periods, the effects of background mortality on plant cover is likely to have only marginal effects at the time scales over which the current drought is occurring, and current reductions are likely to be the direct results of drought (@shinneman2009historical). 
 
-A lack of self thinning processes and the competition between densely colonizing trees for limited water is likely to result in considerable mortality in areas with very dense stands of similarly aged trees (@baker2004fire). These areas are often times the result of historic vegetation treatments, or other severe disturbances which led to a very large cohort of shrub and trees species germinating and attempting to develop simultaneously. Given the high density of these individuals and the long time which it takes for them to decompose, if a source of ignition occurs these areas are likely to allow fires to spread rapidly and burn 'hot'. Conditions which lead to wildfire's which are difficult to manage. 
+Areas with dense stands of similarly aged trees are likely to experience high mortality due to a lack of self thinning processes and the competition between densely colonizing trees for limited water (@baker2004fire). These dense stands are often times the result of historic vegetation treatments, or other severe disturbances which led to a very large cohort of shrub and trees species germinating and attempting to develop simultaneously. Given the high density of these individuals and the long time which it takes for them to decompose, if a source of ignition occurs these areas are likely to allow fires to spread rapidly and burn 'hot'. Conditions which lead to wildfire's which are difficult to manage. 
 
-We suspect that ecological sites which are being encroached upon by Pinon-Junipers, will have more mortality than those sites, which have them as the climax vegetation. It has been observed that their encroachment more commonly occurs at the lower elevation sage-brush sites, than mixed-mountain sites. Since the sage-brush habitat is generally closer to towns, and important for sage-grouse, these areas represent those which funding and management efforts can be focused towards. Further, as few of the sage-brush species re0sprout, fires can have longer lasting impacts there than in several other areas.
-
-\newpage
+We suspect that ecological sites which are being encroached upon by Pinon-Junipers, will have more mortality than those sites, which have them as the climax vegetation. It has been observed that their encroachment more commonly occurs at the lower elevation sage-brush sites, than mixed-mountain sites. Since the sage-brush habitat is generally closer to human habitations, and important for sage-grouse, these areas represent those which funding and management efforts can be focused towards. Further, as few of the sage-brush species resprout, fires can have longer lasting impacts there than in several other areas.
 
 \begin{center}
 {\section{Shrub Cover}}
@@ -633,30 +627,28 @@ ggsave(plot = last_plot(), device = 'png', height = 21, units = 'cm',
 rm(all_hits_shrub)
 ```
 
+```{r}
+shrub_achieve <- shrub[shrub$Category == 'TRUE',]
+sh <- shrub_achieve[shrub_achieve$Subpopulation == 'SampleFrame', c('Estimate.P', 'LCB80Pct.P', 'UCB80Pct.P')]
+```
+
+Across all BLM land which is not managed as an NCA, WSA, or ACEC, the estimate of the total amount of land which is achieving benchmarks is  `r paste0(round(sh$Estimate.P, 1), '%')` (LCB = `r round(sh$LCB80Pct.P, 1)`%, UCB = `r round(sh$UCB80Pct.P, 1)`%), similar to the estimate for the Gunnison Gorge NCA `r paste0(round(shrub_achieve[shrub_achieve$Subpopulation == 'GG-NCA', 'Estimate.P'], 1), '%')`. Both the ACEC-WSA areas  `r paste0(round(shrub_achieve[shrub_achieve$Subpopulation == 'ACEC-WSA', 'Estimate.P'], 1), '%')`, and the Dominguez-Escalente NCA `r paste0(round(shrub_achieve[shrub_achieve$Subpopulation == 'DE-NCA', 'Estimate.P'], 1), '%')`, had higher estimates of land meeting benchmarks, and the confidence intervals slightly overlapped the goal of having 80% of these lands being within the realm of natural variability, for this particular indicator. Accordingly overall, between one half and two thirds of all BLM lands were meeting this benchmark. 
+
+```{r}
+rm(shrub_achieve, sh)
+```
+
+We observed that despite the drought, and except for Salt Desert areas, nearly all plots across all Ecological Sites will have shrub covers exceeding the reference benchmarks (Figure 3). Further the extent of Ecological Sites which have elevated shrub cover are expected to be greater than for trees for multiple reasons. Chief among them are that, in the study area, shrubs have faster growth rates than trees, and a greater number of shrub species than trees species allow them to grow in more numerous habitat types. Further we expect that a great number of re-sprouting shrubs compose considerable amounts of this cover, in lieu of non-resprouting shrubs such as most of our species of sagebrush. 
+
+Reductions in shrubby plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and success varies considerably by ecological site (@ding2022success). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return. In shrub sites, like sagebrush, where non-woody shrubs species are now dominant restoration should emphasize reestablishing the balance in functional groups cover and composition while minimizing soil impacts due to erosion that has happened or may with soil disturbing approaches.
+
 \begin{wrapfigure}{l}{0.5\textwidth}
   \centering
     \includegraphics[width=0.5\textwidth]{../results/benchmarks/shrub_benchmark.png}
   \caption{Benchmarks and Observed Values}
 \end{wrapfigure}
 
-
-```{r}
-shrub_achieve <- shrub[shrub$Category == 'TRUE',]
-sh <- shrub_achieve[shrub_achieve$Subpopulation == 'SampleFrame', c('Estimate.P', 'LCB80Pct.P', 'UCB80Pct.P')]
-```
-
-Across all BLM land which is not managed as an NCA, WSA, or ACEC, the estimate of the total amount of land which is achieving benchmarks is  `r paste0(round(sh$Estimate.P, 1), '%')` (LCB = `r round(sh$LCB80Pct.P, 1)`%, UCB = `r round(sh$UCB80Pct.P, 1)`%), similar to the estimate for the Gunnison Gorge NCA `r paste0(round(shrub_achieve[shrub_achieve$Subpopulation == 'GG-NCA', 'Estimate.P'], 1), '%')`. Both the 
-ACEC-WSA areas  `r paste0(round(shrub_achieve[shrub_achieve$Subpopulation == 'ACEC-WSA', 'Estimate.P'], 1), '%')`, and the Dominguez-Escalente NCA `r paste0(round(shrub_achieve[shrub_achieve$Subpopulation == 'DE-NCA', 'Estimate.P'], 1), '%')`, had higher estimates of land meeting benchmarks, and the confidence intervals slightly overlapped the goal of having 80% of these lands being within the realm of natural variability, for this particular indicator. Accordingly overall, between one half and two thirds of all BLM lands were meeting this benchmark. 
-
-```{r}
-rm(shrub_achieve, sh)
-```
-
-We observed that despite the drought, and except for Salt Desert areas, nearly all plots across all Ecological Sites will have shrub covers exceeding the reference benchmarks (Figure 3). Further the extent of Ecological Sites which have elevated shrub cover is expected to be greater than for trees for multiple reasons. Chief among them are that in the study area shrubs have faster growth rates than trees, and a greater number of shrub species than trees species allow them to grow in more numerous habitat types. Further we expect that a great number of re-sprouting shrubs compose considerable amounts of this cover, in lieu of non-resprouting shrubs such as most of our species of sagebrush. 
-
-Reductions in shrubby plant cover, while maintaining and enhancing other functional groups, is difficult to implement at a landscape scale, and success varies considerably by ecological site (@ding2022success). Accordingly, we expect that many areas of the field office which had been treated before the advent of the current Ecological Sites have already had shrub cover return. In shrub sites, like sagebrush, where non-woody shrubs species are now dominant restoration should emphasize reestablishing the balance in functional groups cover and composition while minimizing soil impacts due to erosion that has happened or may with soil disturbing approaches.
-
-This is the sole functional diversity metric which is computed in two manners. For sites which are in the Salt Desert Stratum, per the spatial product created in (**SECTION XX**), we consider plots to be failing if they do not have cover of shrubs meeting the lower benchmark boundaries, and do not penalize sites which may have cover's exceeding the upper benchmark value. For sites outside of the salt desert stratum, they are considered to be out of reference only if there observed covers exceed the upper benchmarks. 
+This is the sole functional diversity metric which is computed in two manners. For sites which are in the Salt Desert stratum, per the spatial product created in (Section 2), we consider plots to be failing if they do not have cover of shrubs meeting the lower benchmark boundaries, and do not penalize sites which may have cover's exceeding the upper benchmark value. For sites outside of the salt desert stratum, they are considered to be out of reference only if there observed covers exceed the upper benchmarks. 
 
 Ecological sites where shrubs are greatly reduced i.e. Salt Desert ecological sites, especially areas which have historically been composed primarily of shadscale (saltbush) (*Atriplex* spp.), require restoration by re-introducing more shrubs. Cover of most palatable species of shrubs, especially winterfat (*Krascheninnikovia*) & sages (*Artemisia*), in these areas was greatly reduced by improper livestock utilization upwards of a century ago (@Blaisdell_1984). While passive efforts have been made to facilitate the establishment of shrubs at these sites, the very slow re-generative process, combined with invasive annuals, climate and seasonal effects on usage, have not always shown the desired results (@jonas2018restoration). 
 
@@ -860,12 +852,6 @@ achieving <- bind_rows(ahf, ahs, aht, ahg) %>%
 
 rm(ahf, ahs, aht, ahg)
 ```
-
-\begin{wrapfigure}{r}{0.45\textwidth}
-  \centering
-    \includegraphics[width=0.45\textwidth]{../plots/graphics/benchmark_areas.png}
-  \caption{Total area of each stratum and the overall status of benchmarks}
-\end{wrapfigure}
 
 The feature engineered cover of a lower forb benchmarks are used across all plots in lieu of the mean values from ESG's, which we felt was too high of a value relative to the other forb benchmark values included in the Ecological Sites Descriptions. The use of the median value means that more plots are passing benchmark conditions, than were under the pure ESG schema (original results not pictured here).
 
@@ -1085,7 +1071,8 @@ waff_dat2 <- waff_dat2 %>%
   mutate(Stratum = factor(Stratum, levels = c('Sagebrush', 'Mtn. Shrub',
                                                'Salt Desert', 'Pinon-Juniper'))) %>% 
   select(Stratum, Estimate = estimate, Percent = diff, Prop_area) %>% 
-  mutate(n = (Percent * Prop_area) / 10)
+  mutate(n = (Percent * Prop_area) / 10,
+         n = n * 0.888)
 
 waff_dat2 <- data.table::setorder(waff_dat2, Estimate)
 
@@ -1172,13 +1159,21 @@ r <- r %>%
   cbind(., Goal = c(rep(80, times = 12), rep(70, times = 4)))
 ```
 
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+    \includegraphics[width=0.45\textwidth]{../plots/graphics/benchmark_areas.png}
+  \caption{Total area of each stratum and the overall status of benchmarks}
+\end{wrapfigure}
+
 Results by management areas in general do not differ greatly. From a broad perspective, roughly a quarter of lands in the field office is meeting standards for forb or grass cover, except for the Gunnison Gorge National Conservation Area which has no land meeting objectives for forb cover (Table 1). While there were relatively few plots sampled in the Gunnison Gorge NCA, **XX**, all plots sampled failed to achieve minimum benchmark cover values a result that is unlikely to be due to chance, as is reflected by the Areas of Critical Environmental Concern (Table 1). No areas are meeting the benchmarks for Tree cover either, although most management areas have roughly one half of their land achieving. 
   This indicates the need to explore tree thinning, or removal, operations in certain areas, as funding permits and needs require, to benefit wildlife via modification of habitat or to decrease the threats of wildfires to adjacent human population base (@baker2004fire, @shinneman2009historical). Given the historic reductions in fire cycle this is an issue which requires a great many decades before coming back into resolution, but given the current awareness of the problem, management actions are now underway which will do so. Roughly half to two-thirds of land are achieving shrub cover objectives, and two areas have confidence intervals which do (`r acec_meet`), of very nearly (`r de_nca`), include the land cover targets. 
   On the whole, the results taken together indicate that the study area is failing to meet metrics for plant functional diversity, with only areas `r filter(r, UCB80Pct.P > Goal) %>% nrow()` having confidence intervals which even overlap the management objectives. However, the perennial grass functional group presents the  most serious concern. The median estimate of land within any area meeting objectives for cover of perennial grasses is `r paste0(round( median(grass[grass$Category == TRUE,'Estimate.P']), 1), '%')`, across the entirety of the field office the estimate of lands meeting objectives for grasses is a low `r paste0(round(grass[grass$Category == TRUE & grass$Subpopulation == 'SampleFrame', 'Estimate.P'], 1), '%')`, the ^2nd^ lowest proportion of land out of all benchmarks and areas. 
 
+\newpage 
+
 ```{r table metrics in numbers}
 
-cname <- c('Goal', 'Management', 'Plots', 'Functional Group', '% Land Meeting')
+cname <- c('Goal', 'Management', 'Plots', 'Group', '% Land Meeting')
 
 bind_cols(r1, Goal = 
             c(
@@ -1189,8 +1184,7 @@ bind_cols(r1, Goal =
                col.names = cname,
                booktabs = TRUE, linesep = "", 
                caption = "Land Meeting Benchmarks by Administrative Unit") %>% 
-#  kableExtra::kable_styling(position = "float_right") %>% 
-  kableExtra::collapse_rows()
+  kableExtra::collapse_rows() 
 
 rm(r1, cname)
 ```
@@ -1205,12 +1199,12 @@ achieving %>%
   mutate(across(.cols = everything(), toupper))  %>% 
   arrange(PLOTID) %>% 
   write.csv(., row.names = F, 
-          '../data/processed/functional_diversity_meeting_benchmarks.csv')
+          '../data/processed/functional_diversity_meeting_benchmarks.csv') 
 
 ```
 
-
-
-\newpage
+\newpage 
 
 # References 
+
+\small
