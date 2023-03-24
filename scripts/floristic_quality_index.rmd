@@ -15,6 +15,7 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+\pagenumbering{gobble}
 \vspace{-1cm}
 
 ```{r setup, include=FALSE}
@@ -625,7 +626,7 @@ rm(stacked_model)
 
 \newpage
 
-# References
+## References
 
 \small
  

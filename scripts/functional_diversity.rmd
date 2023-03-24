@@ -14,6 +14,7 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+\pagenumbering{gobble}
 \vspace{-1cm}
 
 While each plant functions differently in an ecosystem context, the degrees of dissimilarity which exist between all species are unequal, allowing them to form natural groups. This observation has given rise to the notion of *Plant Functional Types*, shared attributes which unite similar species, and which bind how they affect ecosystems. Plant functional types are often the easiest form of vegetation data to measure, hence great amounts of work have been conducted on how they affect ecosystem function. 
@@ -1207,6 +1208,6 @@ achieving %>%
 
 \newpage 
 
-# References 
+## References 
 
 \small

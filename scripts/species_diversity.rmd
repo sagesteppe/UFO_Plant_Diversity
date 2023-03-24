@@ -14,6 +14,7 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+\pagenumbering{gobble}
 \vspace{-1cm}
 
 In this section we discuss the three major forms of diversity. *Alpha-diversity* - or species richness, is simply the number of species in a space at a point in time. The scale at which we discuss $\alpha-diversity$ is usually up to a few football fields in size. This metric refers to areas which we are intimately familiar with and may traverse readily on foot. *Gamma-Diversity*, represents the richness of species in a larger area, generally a landscape. For example, we may readily discuss the $\gamma-diversity$ of the Dominguez-Escalente National Monument. In all instances the $\alpha-diversity$ of sites are nested within the gamma diversity of an area. $\gamma-diversities$ -in this case the number of species- exceed those of $\alpha  -diversities$, both due to the relative uncommonness of many species, these uncommon species are often not present across the entirety of the landscape, and due to the large changes in the type of species supported by differing habitat types. These turnovers across the alpha diversity of sites, the difference in species present at sites, comprise *beta-diversity*. High rates of $\beta-diversity$, or dissimilarity of sites, foster high rates of gamma-diversity (@whittaker1972evolution).
@@ -962,6 +963,6 @@ rm(diversity, dominant_plants,
 
 \newpage
 
-# References
+## References
 
 \small

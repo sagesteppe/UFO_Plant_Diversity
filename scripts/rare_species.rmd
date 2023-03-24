@@ -12,6 +12,7 @@ bibliography: ../citations/citations/citations.bib
 link-citations: yes
 ---
 
+\pagenumbering{gobble}
 \vspace{-1cm}
 
 ```{r setup, include=FALSE}
@@ -771,7 +772,7 @@ rm(esa, fws_esa, blm, blm_ss, state, global, global_sub, state_sub,
 ```
 
 
-# References
+## References
 
 \small
 
