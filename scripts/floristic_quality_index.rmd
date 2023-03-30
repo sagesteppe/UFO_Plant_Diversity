@@ -54,7 +54,7 @@ Accordingly, in our scenario we are interested in using FQA to identify sites wh
   \caption{FQI Values observed at AIM Plots}
 \end{wrapfigure}
 
-Cleaned AIM species richness data were imported from TerrAdat and joined to the CNHP C-values using the lookup keys developed for the Functional Diversity in Section 11. All species from the plot based species richness which were not unambiguously identified to terminal taxon were removed from analysis. The Mean Coefficient of Conservatism and Floristic Quality Index were calculated via the formulation in Appendix 1. To determine whether their were bias in the Mean-CoC values between the strata, a linear model with a single set categorical predictors and a single continuous response (an 'ANOVA', or Analysis of Variance) was used, with a Kruskall-Wallis Post-hoc test with 95% Confidence Intervals. The strata used for detecting differences were those developed in **SECTION XXX**.
+Cleaned AIM species richness data were imported from TerrAdat and joined to the CNHP C-values using the lookup keys developed for the Functional Diversity in Section 11. All species from the plot based species richness which were not unambiguously identified to terminal taxon were removed from analysis. The Mean Coefficient of Conservatism and Floristic Quality Index were calculated via the formulation in Appendix 1. To determine whether their were bias in the Mean-CoC values between the strata, a linear model with a single set categorical predictors and a single continuous response (an 'ANOVA', or Analysis of Variance) was used, with a Kruskall-Wallis Post-hoc test with 95% Confidence Intervals. The strata used for detecting differences were those developed in Section 2.
 
 ```{r load libraries and define functions}
 library(sf)
