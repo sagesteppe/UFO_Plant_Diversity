@@ -1,5 +1,7 @@
 ---
 title: "Rare Species"
+knit: (function(inputFile, encoding) 
+  { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'Section_13.pdf')) })
 output:
   pdf_document: default
   word_document: default

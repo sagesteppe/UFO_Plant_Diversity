@@ -1,9 +1,9 @@
 ---
 title: "Floristic Quality Index"
+knit: (function(inputFile, encoding) 
+  { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'Section_14.pdf')) })
 output:
   pdf_document: default
-  html_document:
-    df_print: paged
   word_document: default
 header-includes:
 - \usepackage[width=\textwidth]{caption}

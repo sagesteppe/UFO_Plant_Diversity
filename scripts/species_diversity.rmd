@@ -761,16 +761,16 @@ In order to determine whether enough plots have been sampled to reliably estimat
 ```{r Rarefaction by Ecological site - how many species are extrapolated}
 
 rarefaction <- spp_richness %>% 
-  st_drop_geometry() %>% 
+  sf::st_drop_geometry() %>% 
   filter(ECO.SITE != 'UNKNOWN') %>% 
   group_by(ECO.SITE) %>% 
   mutate(Replicates = n_distinct(PLOTID),
          PRESENCE = 1) %>% 
   filter(Replicates >= 2) %>% 
   ungroup() %>% 
-  select(PLOTID, SYMBOL, ECO.SITE, PRESENCE) %>% 
+  dplyr::select(PLOTID, SYMBOL, ECO.SITE, PRESENCE) %>% 
   split(.$ECO.SITE) %>% 
-  map(. %>%     # arrange data into a binary matrix format required for the
+  purrr::map(. %>%     # arrange data into a binary matrix format required for the
         select(-ECO.SITE) %>%  # function
         pivot_wider(
           names_from = 'SYMBOL',
