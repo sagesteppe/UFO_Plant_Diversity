@@ -767,6 +767,80 @@ Of the `r nrow(gastons_rare)` species identified by Gaston's and the Singleton m
 
 As evidenced here, the field office has a variety of rare plant taxa which contribute enormously to the biological diversity of the field office.
 
+
+```{r create table to present results}
+
+fw <- fws_esa %>% 
+  select(PLOTID, SYMBOL_USDA, BINOMIAL_NAT) %>% 
+  mutate(AGENCY = 'FWS') %>% 
+  st_drop_geometry() %>% 
+  arrange(BINOMIAL_NAT)
+
+bl <- blm_ss %>% 
+  select(PLOTID, SYMBOL_USDA, BINOMIAL_NAT) %>% 
+  mutate(AGENCY = 'BLM',  
+         BINOMIAL_NAT = str_remove_all(BINOMIAL_NAT, '[*]')) %>% 
+  st_drop_geometry()  %>% 
+  ungroup()  %>% 
+  arrange(BINOMIAL_NAT)
+
+gl <- global_aim %>% 
+  select(PLOTID, SYMBOL_USDA, BINOMIAL_NAT) %>% 
+  filter(SYMBOL_USDA != 'PHBE2') %>% 
+  mutate(AGENCY = 'NatureServe - Global', 
+         BINOMIAL_NAT = case_when(
+           SYMBOL_USDA == 'CLPA3' ~ 'Cleomella palmeriana', 
+           SYMBOL_USDA == 'CRLO6' ~ 'Oreocarya longiflora', 
+           SYMBOL_USDA == 'DRRE' ~ 'Draba rectifructa',
+           SYMBOL_USDA == 'ERLE10' ~ 'Eriogonum leptophyllum',
+           SYMBOL_USDA == 'ERNE2' ~ 'Erigeron nematophyllus', 
+           SYMBOL_USDA == 'LECR12' ~ 'Lepidium crenatum',
+           SYMBOL_USDA == 'MECR4' ~ 'Mentzelia cronquistii',
+           SYMBOL_USDA == 'PEBR9' ~ 'Penstemon breviculus',
+           SYMBOL_USDA == 'PETE9' ~ 'Penstemon teucrioides',
+           SYMBOL_USDA == 'POSA19' ~ 'Polypodium saximontanum',
+           SYMBOL_USDA == 'STAL2' ~ 'Stanleya albescens',
+           SYMBOL_USDA == 'TOGL4' ~ 'Townsendia glabella'
+         )) %>% 
+  st_drop_geometry()  %>% 
+  arrange(BINOMIAL_NAT)
+
+st <- state_aim %>% 
+  select(PLOTID, SYMBOL_USDA, BINOMIAL_NAT) %>% 
+  filter(!SYMBOL_USDA %in% unique(global_aim$SYMBOL_USDA)) %>% 
+    mutate(AGENCY = 'NatureServe - State', 
+         BINOMIAL_NAT = case_when( 
+           SYMBOL_USDA == 'CODI4' ~ 'Commelina dianthifolia', 
+           SYMBOL_USDA == 'MIAL5' ~ 'Mirabilis alipes', 
+           SYMBOL_USDA == 'PEME7' ~ 'Pediomelum megalanthum',
+           SYMBOL_USDA == 'ENNU' ~ 'Eriogonum leptophyllum',
+           SYMBOL_USDA == 'OXPA2' ~ 'Oxytropis parryi', 
+           SYMBOL_USDA == 'ASMOC2' ~ 'Astragalus monumentalis var. cottamii',
+           SYMBOL_USDA == 'CAFL' ~  'Calochortus flexuosus', 
+           SYMBOL_USDA == 'ERLA' ~ 'Erigeron lanatus'
+         )) %>% 
+  st_drop_geometry() %>% 
+  arrange(BINOMIAL_NAT)
+
+bind_rows(fw, bl, gl, st) %>%
+  ungroup() %>% 
+  select(-SYMBOL_USDA) %>% 
+  group_by(BINOMIAL_NAT) %>% 
+  nest(Plots = PLOTID) %>% 
+  knitr::kable(col.names = c('Scientific Name', 'Authority', 'Plots'), 
+               align = c('c', 'c', 'l'),
+               caption = 'Species found and plots found at.', 
+               format="latex", booktabs = F) %>% 
+  kableExtra::kable_styling(latex_options = "scale_down") %>% 
+  kableExtra::column_spec(1, width = "12em") %>% 
+  kableExtra::column_spec(2, width = "7em") %>% 
+  kableExtra::column_spec(3, width = "30em") %>% 
+  kableExtra::collapse_rows() %>% 
+  kableExtra::landscape()
+  
+```
+
+
 ```{r remove writing variables}
 rm(esa, fws_esa, blm, blm_ss, state, global, global_sub, state_sub, 
    state_sub1, state_aim, global_aim, cc, gr_ncc, gastons, gastons_rare, singletons,
