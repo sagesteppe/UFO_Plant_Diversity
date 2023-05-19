@@ -1,5 +1,7 @@
 ---
 title: "Plant Functional Diversity - Species"
+knit: (function(inputFile, encoding) 
+  { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'Section_12.pdf')) })
 output:
   pdf_document: default
   word_document: default
@@ -780,6 +782,7 @@ rarefaction <- spp_richness %>%
         column_to_rownames('PLOTID') %>% 
         t()
       )  
+
 
 rarefaction <- i_report(rarefaction, conf = 0.8, k = 25)
 ```

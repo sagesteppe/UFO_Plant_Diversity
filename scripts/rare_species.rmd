@@ -147,7 +147,7 @@ rab_tab_examples <- rabinowitz_examples %>%
 gtsave(rab_tab_examples, "../results/rab_tab_examples.png")
 ```
 
-\begin{table}[h]
+\begin{table}[ht]
 \caption{Conceptual forms of Rarity} 
 \includegraphics[width=1\textwidth]{../results/rab_tab.png}
 \end{table}
@@ -163,7 +163,7 @@ These three cells of rare species are less likely to be have special designation
 
 In particular, these common rare species, especially when at the edges of their distributions, either geographically or climatically - often have populations which have notably different genetic constitutions than populations near the centers (@hampe2005conserving, @oldfather2020range, reviewed in @PeclGrettaT2017Bruc). Populations which are expanding into new geographic ranges, largely following shifts in climates are termed *leading edges*, and those populations persisting at the edge of the extent geographic ranges are noted as *trailing edges*. Conserving trailing edge populations at the local level is important as they may contain many forms of genes which are pre-disposed to adapting to climate change (@hampe2005conserving). Further these populations may end up being essential for adaption on up-slope Forest Service Lands, where our border with them faces alterations associated with severe fires and which may require immediate seed sourcing to recover a stable state (@parks2019living). Theoretically the lowlands of the UFO are capable of receiving migrants to them from a *leading edge*, however the up slope travel required to enter the basins (e.g. the Paradox Valley), slows steady-state dispersal, reducing the chances of immigrants to relatively infrequent events, such as seeds being stuck to muddy bird feet (@nathan2008mechanisms, @jordano2017long). While these events have largely shaped the global distribution of biodiversity, their infrequent occurrence generally means they occur on timescales outside of land management considerations (@nathan2008mechanisms). However, that many species which are in the field office via long-distance dispersal, but which are currently uncommon, but may greatly expand under climate change is probable.
 
-\begin{table}[h]
+\begin{table}[ht]
 \caption{Local Examples of Rarity} 
 \includegraphics[width=1\textwidth]{../results/rab_tab_examples.png}
 \end{table}
@@ -832,6 +832,7 @@ bind_rows(fw, bl, gl, st) %>%
                caption = 'Species found and plots found at.', 
                format="latex", booktabs = F) %>% 
   kableExtra::kable_styling(latex_options = "scale_down") %>% 
+  kableExtra::row_spec(0,bold=TRUE) %>% 
   kableExtra::column_spec(1, width = "12em") %>% 
   kableExtra::column_spec(2, width = "7em") %>% 
   kableExtra::column_spec(3, width = "30em") %>% 

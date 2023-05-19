@@ -206,8 +206,7 @@ i_report <- function(x, ...){
     dplyr::mutate(SampleCoverage = SC * 100) %>% 
     dplyr::select(Eco.Site = Assemblage, SampleCoverage) 
   
-  
-  plots <- do.call(rbind, lapply(rarefaction, FUN = ncol)) |> 
+  plots <- do.call(rbind, lapply(x, FUN = ncol)) |> 
     as.data.frame() |>
     tibble::rownames_to_column('Eco.Site')
   colnames(plots) <- c('Eco.Site', 'NoPlots')
